@@ -1,0 +1,21 @@
+// =============================================================================
+// SETTINGS / RADIUS
+// Border-radius design tokens.
+// Uses pixel-clamping ('9999px') for 'full' to avoid elliptical distortion.
+// Consumed via radius() function in tools/_functions.scss, or applied
+// directly with the radius()/radius-corners()/radius-top()/radius-bottom()
+// mixins in tools/_mixins.scss — see that file for uniform vs. per-corner
+// usage (border-top-left-radius, border-top-right-radius,
+// border-bottom-right-radius, border-bottom-left-radius).
+// =============================================================================
+
+$radius: (
+  'none': 0,
+  'xs':   0.125rem,
+  'sm':   0.25rem,
+  'md':   0.5rem,
+  'lg':   0.75rem,
+  'xl':   1rem,
+  '2xl':  1.5rem,
+  'full': 9999px
+) !default;

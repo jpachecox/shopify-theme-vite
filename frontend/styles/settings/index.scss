@@ -1,0 +1,14 @@
+// =============================================================================
+// SETTINGS / INDEX
+// ITCSS "settings" layer — enforced via @layer.
+// Global design tokens and settings for the entire project.
+// =============================================================================
+
+@use 'breakpoints';
+@use 'colors';
+@use 'elevation';
+@use 'opacity';
+@use 'radius';
+@use 'spacing';
+@use 'tokens';
+@use 'typography';

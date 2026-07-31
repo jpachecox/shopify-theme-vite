@@ -1,0 +1,162 @@
+// =============================================================================
+// ELEMENTS / BASE
+// Bare HTML element styles — single-class selectors only (no BEM, no OOCSS).
+// These set sensible defaults for unstyled HTML content using the design
+// system's type scale and spacing tokens.
+// =============================================================================
+
+@use 'sass:map';
+
+@use 'settings/colors' as *;
+@use 'settings/typography' as *;
+@use 'tools/mixins' as mix;
+
+@layer elements {
+  // ---------------------------------------------------------------------------
+  // 1. BODY
+  // ---------------------------------------------------------------------------
+  body {
+    font-family: var(--font-body-family, sans-serif);
+    font-size: map.get($font-size, 'base');
+    font-weight: map.get($font-weight, 'regular');
+    font-style: var(--font-body-style, normal);
+    line-height: map.get($line-height, 'normal');
+    color: rgb(var(--color-foreground));
+
+    background-color: var(--color-background, $light-base);
+  }
+
+  // ---------------------------------------------------------------------------
+  // 2. HEADINGS
+  // ---------------------------------------------------------------------------
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading-family, sans-serif);
+    font-weight: map.get($font-weight, 'semibold');
+    font-style: var(--font-heading-style, normal);
+    line-height: map.get($line-height, 'tight');
+    overflow-wrap: break-word;
+  }
+
+  h1 {
+    font-size: map.get($font-size, '4xl');
+  }
+
+  h2 {
+    font-size: map.get($font-size, '3xl');
+  }
+
+  h3 {
+    font-size: map.get($font-size, '2xl');
+  }
+
+  h4 {
+    font-size: map.get($font-size, 'xl');
+  }
+
+  h5 {
+    font-size: map.get($font-size, 'lg');
+  }
+
+  h6 {
+    font-size: map.get($font-size, 'base');
+  }
+
+  // ---------------------------------------------------------------------------
+  // 3. PARAGRAPHS & INLINE TEXT
+  // ---------------------------------------------------------------------------
+  p {
+    margin-block: 1em;
+  }
+
+  small {
+    font-size: map.get($font-size, 'sm');
+  }
+
+  strong,
+  b {
+    font-weight: map.get($font-weight, 'bold');
+  }
+
+  em,
+  i {
+    font-style: italic;
+  }
+
+  blockquote {
+    margin-block: 1.5em;
+    padding-inline-start: 1em;
+    border-inline-start: 3px solid rgb(var(--color-foreground), 0.15);
+
+    font-style: italic;
+    color: rgb(var(--color-foreground), 0.75);
+  }
+
+  // ---------------------------------------------------------------------------
+  // 4. LISTS
+  // ---------------------------------------------------------------------------
+  ul,
+  ol {
+    padding-inline-start: 1.5em;
+  }
+
+  li {
+    margin-block: 0.25em;
+  }
+
+  // ---------------------------------------------------------------------------
+  // 5. CODE & PRE
+  // ---------------------------------------------------------------------------
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: ui-monospace, SFMono-Regular, 'Cascadia Code', Consolas, monospace;
+    font-size: 0.875em;
+  }
+
+  pre {
+    overflow-x: auto;
+    padding: 1em;
+    border-radius: 0.25rem;
+    background-color: rgb(var(--color-foreground), 0.04);
+  }
+
+  code {
+    padding: 0.1em 0.3em;
+    border-radius: 0.2rem;
+    background-color: rgb(var(--color-foreground), 0.06);
+  }
+
+  // ---------------------------------------------------------------------------
+  // 6. HORIZONTAL RULE
+  // ---------------------------------------------------------------------------
+  hr {
+    margin-block: 2rem;
+    border: none;
+    border-top: 1px solid rgb(var(--color-foreground), 0.1);
+  }
+
+  // ---------------------------------------------------------------------------
+  // 7. LINKS (default <a> — not yet wrapped in .btn or similar)
+  // ---------------------------------------------------------------------------
+  a:not([class]) {
+    color: rgb(var(--color-link), var(--alpha-link, 0.85));
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+
+    @include mix.transition(color, 0.15s, ease-out);
+
+    &:hover {
+      color: rgb(var(--color-link));
+    }
+
+    &:focus-visible {
+      @include mix.focus-outline;
+    }
+  }
+}

@@ -1,0 +1,43 @@
+// =============================================================================
+// SETTINGS / COLORS
+// Grayscale token scale + alpha constants.
+//
+// As of the Dawn theme.liquid color-scheme bridge (see settings/README.md),
+// all merchant-controlled color values (background, text, link, button,
+// etc.) are emitted directly by theme.liquid from settings.color_schemes —
+// Sass no longer derives or stores them. This file
+// only keeps what genuinely doesn't come from the Theme Editor:
+//   - a compile-time-only grayscale fallback (for contexts where a CSS
+//     custom property isn't available, e.g. inline SVGs, @media print)
+//   - alpha constants, which are opacity values, not colors, and stay the
+//     same regardless of scheme/theme
+//
+// Consumed directly in Sass (compile-time fallback) via:
+//   @use '../settings/colors' as *;
+// Consumed at runtime (theme-aware) via:
+//   var(--gray-500)
+// =============================================================================
+
+// Grayscale values — NOT tied to any color scheme, used as a compile-time
+// fallback only. See tools/_functions.scss's gray() for the intended usage.
+$light-base: #ffffff; // 'light' theme base surface
+
+$gray-light: (
+  '50': #fafafa,
+  '100': #f5f5f5,
+  '200': #e5e5e5,
+  '300': #d4d4d4,
+  '400': #a3a3a3,
+  '500': #737373,
+  '600': #525252,
+  '700': #404040,
+  '800': #262626,
+  '900': #171717,
+  '950': #0a0a0a,
+);
+
+// Alpha values — these remain constant across themes and schemes, so they
+// stay in Sass rather than moving to the Liquid bridge.
+$alpha-button-background: 1;
+$alpha-button-border: 1;
+$alpha-link: 0.85;

@@ -1,0 +1,37 @@
+// =============================================================================
+// UTILITIES / TEXT
+// Single-breakpoint-free text utility system supporting alignment (logical
+// start/end and legacy physical values) and truncation.
+//
+// Configurable via local `$prefix` variable. Uses CSS Cascade Layers
+// (@layer utilities) to guarantee override precedence without !important.
+//
+// @see https://developer.mozilla.org/en-US/docs/Web/CSS/text-align
+// =============================================================================
+
+$prefix: 'u-t-';
+
+@layer utilities {
+  .#{$prefix} {
+    // -------------------------------------------------------------------------
+    // 1. TEXT ALIGNMENT (Logical & Physical)
+    // -------------------------------------------------------------------------
+    &start   { text-align: start; }  // Modern RTL-safe (reemplaza left en LTR)
+    &end     { text-align: end; }    // Modern RTL-safe (reemplaza right en LTR)
+    &center  { text-align: center; }
+    &justify { text-align: justify; }
+
+    // Fallbacks o aliases físicos explícitos (opcional si aún usas left/right)
+    &left    { text-align: left; }
+    &right   { text-align: right; }
+
+    // -------------------------------------------------------------------------
+    // 2. TEXT TRUNCATION
+    // -------------------------------------------------------------------------
+    &truncate {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}

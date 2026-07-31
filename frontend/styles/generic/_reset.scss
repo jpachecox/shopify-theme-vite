@@ -1,0 +1,128 @@
+// =============================================================================
+// GENERIC / RESET
+// Low-specificity document-level reset.
+// This is a "generic" layer because it is not a reusable design pattern
+// (object) or a single-responsibility utility. It is a global reset for the entire document.
+// =============================================================================
+
+@layer generic {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100vh;
+    line-height: 1.5;
+
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+    outline: 1px solid var(--outline-color);
+    outline-offset: -1px;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+  }
+
+  ul[class],
+  ol[class] {
+    list-style: none;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  table {
+    border-spacing: 0;
+    border-collapse: collapse;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Default :focus-visible outline for all focusable elements.
+  // Components SHOULD override with @include mix.focus-outline for a
+  // consistent ring; this is a bare-minimum a11y safety net.
+  // ---------------------------------------------------------------------------
+  :focus-visible {
+    outline: 2px solid var(--color-focus, #005fcc);
+    outline-offset: 2px;
+  }
+
+  // Remove the default outline for :focus (non-:focus-visible) —
+  // browsers show both by default on click, which is visually noisy.
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /*
+  * RESPECT USER MOTION PREFERENCE (ACCESSIBILITY)
+  * !important is required here to override any animation or transition
+  * declared elsewhere in the stylesheet, ensuring the user's
+  * prefers-reduced-motion setting is respected.
+ */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      /* stylelint-disable declaration-no-important -- intentional: must
+         override any animation/transition declared elsewhere so
+         prefers-reduced-motion is always respected, regardless of
+         specificity or source order. */
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      /* stylelint-enable declaration-no-important */
+    }
+  }
+
+  // Respect user contrast preference — scoped to text containers so
+  // explicit component borders (buttons, cards, inputs) are not overridden.
+  @media (prefers-contrast: more) {
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    li,
+    blockquote,
+    figcaption,
+    th,
+    td,
+    label {
+      border-color: currentcolor;
+    }
+  }
+}

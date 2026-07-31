@@ -1,0 +1,71 @@
+// =============================================================================
+// SETTINGS / SPACING
+// Multi-purpose spacing scale based on an 8pt system (4pt sub-steps).
+// Key names represent proportional multipliers relative to 0.25rem (4px)
+// to ensure intuitive class generation and maintenance (e.g. "u-margin-4").
+// Consumed via spacing() function in tools/_functions.scss, or via
+// mix.spacing-utility() for margin/padding utility class generation.
+// =============================================================================
+
+$spacing: (
+  '0':   0,        // 0px
+  '0-5': 0.125rem, // 2px
+  '1':   0.25rem,  // 4px
+  '1-5': 0.375rem, // 6px
+  '2':   0.5rem,   // 8px
+  '3':   0.75rem,  // 12px
+  '4':   1rem,     // 16px
+  '5':   1.25rem,  // 20px
+  '6':   1.5rem,   // 24px
+  '8':   2rem,     // 32px
+  '10':  2.5rem,   // 40px
+  '12':  3rem,     // 48px
+  '16':  4rem,     // 64px
+  '20':  5rem,     // 80px
+  '24':  6rem,     // 96px
+  '32':  8rem,     // 128px
+  '40':  10rem     // 160px
+) !default;
+
+// -----------------------------------------------------------------------------
+// SPACING SIDES
+// -----------------------------------------------------------------------------
+// One unified map for every margin/padding variant — physical sides AND
+// logical (RTL-safe) axes, including their -start/-end sub-properties.
+// Key = class-name suffix. Value = the CSS property SEGMENT that gets
+// appended to "margin"/"padding" ('' means the bare shorthand property).
+// Consumed by mix.spacing-utility() in tools/_mixins.scss, shared by both
+// utilities/_margins.scss and utilities/_paddings.scss — one definition,
+// not duplicated per property.
+// -----------------------------------------------------------------------------
+$spacing-sides: (
+  '':             '',
+  'top-':         'top',
+  'right-':       'right',
+  'bottom-':      'bottom',
+  'left-':        'left',
+  'inline-':      'inline',
+  'inline-start-':'inline-start',
+  'inline-end-':  'inline-end',
+  'block-':       'block',
+  'block-start-': 'block-start',
+  'block-end-':   'block-end'
+) !default;
+
+/**
+  * --------------------------------------------------------------------------
+  * OPTICAL ADJUSTMENTS
+  * --------------------------------------------------------------------------
+  *
+  * Optical adjustments for spacing values to account for visual perception.
+  * These adjustments are applied to certain spacing values to ensure that
+  * they appear visually balanced and consistent across different screen sizes
+  * and resolutions.
+  *
+  */
+$optical-adjust: (
+  'xs': 1px,
+  'sm': 2px,
+  'md': 3px,
+  'lg': 4px
+) !default;

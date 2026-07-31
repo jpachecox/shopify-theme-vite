@@ -1,0 +1,48 @@
+# Internal build artifact — not needed at runtime
+
+assets/.vite/
+
+## None of these should ever be uploaded to Shopify
+
+node_modules/
+frontend/
+scripts/
+.shopify/
+.git/
+.yarn/
+.yarnrc.yml
+package.json
+yarn.lock
+utils/
+eslint.config.js
+tsconfig.json
+tsconfig.node.json
+vite.config.js
+.editorconfig
+.gitignore
+.prettierignore
+.prettierrc
+.stylelintignore
+.stylelintrc
+.husky/
+.vscode/
+.claude/
+.agents/
+.codex/
+CLAUDE.md
+README.md
+LICENSE
+
+## Environment / config files (never expose secrets)
+
+.env
+.env.*
+package-lock.json
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+## OS / editor detritus
+
+.DS_Store
+Thumbs.db

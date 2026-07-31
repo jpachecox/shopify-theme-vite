@@ -1,0 +1,14 @@
+{
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "stylelint.enable": true,
+  "stylelint.snippet": ["css", "scss"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": "always"
+  },
+  "stylelint.validate": [
+    "css",
+    "scss"
+  ]
+}

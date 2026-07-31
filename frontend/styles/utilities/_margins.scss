@@ -1,0 +1,34 @@
+// =============================================================================
+// UTILITIES / MARGINS
+// Single-breakpoint-free margin utility system supporting physical sides,
+// logical properties (RTL-safe), auto values, and optical adjustments.
+//
+// Configurable via local `$prefix` variable. Uses CSS Cascade Layers
+// (@layer utilities) to guarantee override precedence without !important.
+//
+// @see https://developer.mozilla.org/en-US/docs/Web/CSS/margin
+// =============================================================================
+
+@use 'sass:map';
+
+@use 'settings/spacing' as *;
+@use 'tools/mixins' as mix;
+
+$prefix: 'u-m-';
+
+@layer utilities {
+  @include mix.spacing-utility($prefix, 'margin');
+
+  // ---------------------------------------------------------------------
+  // OPTICAL ADJUSTMENT REDUCE VARIANTS
+  // ---------------------------------------------------------------------
+  @each $token, $value in $optical-adjust {
+    .#{$prefix}start-reduce-#{$token} {
+      margin-inline-start: calc(#{map.get($spacing, '3')} - #{$value});
+    }
+
+    .#{$prefix}end-reduce-#{$token} {
+      margin-inline-end: calc(#{map.get($spacing, '3')} - #{$value});
+    }
+  }
+}

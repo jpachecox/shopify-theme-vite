@@ -1,0 +1,35 @@
+// =============================================================================
+// UTILITIES / PADDINGS
+// Single-breakpoint-free padding utility system supporting physical sides,
+// logical properties (RTL-safe), and optical adjustments.
+//
+// Configurable via local `$prefix` variable. Uses CSS Cascade Layers
+// (@layer utilities) to guarantee override precedence without !important.
+// Automatically omits invalid CSS 'auto' values.
+//
+// @see https://developer.mozilla.org/en-US/docs/Web/CSS/padding
+// =============================================================================
+
+@use 'sass:map';
+
+@use 'settings/spacing' as *;
+@use 'tools/mixins' as mix;
+
+$prefix: 'u-p-';
+
+@layer utilities {
+  @include mix.spacing-utility($prefix, 'padding');
+
+  // ---------------------------------------------------------------------
+  // OPTICAL ADJUSTMENT REDUCE VARIANTS
+  // ---------------------------------------------------------------------
+  @each $token, $value in $optical-adjust {
+    .#{$prefix}start-reduce-#{$token} {
+      padding-inline-start: calc(#{map.get($spacing, '3')} - #{$value});
+    }
+
+    .#{$prefix}end-reduce-#{$token} {
+      padding-inline-end: calc(#{map.get($spacing, '3')} - #{$value});
+    }
+  }
+}

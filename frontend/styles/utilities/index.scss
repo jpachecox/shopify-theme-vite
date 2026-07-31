@@ -1,0 +1,14 @@
+// =============================================================================
+// UTILITIES (INDEX)
+// ITCSS highest-specificity-in-intent layer — enforced via @layer.
+// Single responsibility per class. "u-" prefix required.
+// =============================================================================
+
+@use 'display';
+@use 'gaps';
+@use 'margins';
+@use 'opacities';
+@use 'overflow';
+@use 'paddings';
+@use 'text';
+@use 'typography';

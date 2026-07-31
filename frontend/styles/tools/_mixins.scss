@@ -1,0 +1,403 @@
+/// =============================================================================
+/// TOOLS / MIXINS
+/// Reusable mixins. No CSS output until explicitly @include'd..
+/// =============================================================================
+
+@use 'sass:math';
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:list';
+
+@use 'functions' as fn;
+
+@use 'settings/elevation' as *;
+@use 'settings/radius' as *;
+@use 'settings/spacing' as *;
+
+/// Emits one --type-{token} custom property per entry in a type-scale map.
+/// usage: @include emit-type-scale-tokens($typography-scale);
+/// @param {Map} $scale-map - e.g. settings/_typography.scss's $typography-scale
+@mixin emit-type-scale-tokens($scale-map) {
+  @if meta.type-of($scale-map) != 'map' {
+    @error "emit-type-scale-tokens() expects a Sass map.";
+  }
+
+  @if list.length(map.keys($scale-map)) == 0 {
+    @warn "emit-type-scale-tokens(): received an empty map.";
+  }
+
+  @each $token, $value in $scale-map {
+    --type-#{$token}: #{$value};
+  }
+}
+
+/// Button variant mixin for consistent button styles with hover and active states.
+/// usage: @include button-variant('color-accent');
+/// @param $base-css-var - The CSS custom property name (without the -- prefix)
+/// @param $border-alpha - Alpha value for the border color (default: 0.55)
+/// @param $hover-bg-alpha - Alpha value for the hover background color (default: 0.05)
+/// @param $active-bg-alpha - Alpha value for the active background color (default: 0.1)
+/// @param $text-alpha - Alpha value for the text color (default: 1)
+@mixin button-variant(
+  $base-css-var,
+  $border-alpha: 0.55,
+  $hover-bg-alpha: 0.05,
+  $active-bg-alpha: 0.1,
+  $text-alpha: 1
+) {
+  $base-var: var(--#{$base-css-var});
+
+  border-color: rgba($base-var, $border-alpha);
+  color: rgba($base-var, $text-alpha);
+  background-color: transparent;
+
+  &:hover {
+    border-color: rgb($base-var);
+    background-color: rgba($base-var, $hover-bg-alpha);
+  }
+
+  &:active,
+  &.btn--pressed {
+    border-color: rgb($base-var);
+    background-color: rgba($base-var, $active-bg-alpha);
+  }
+}
+
+/// Mobile‑media query against a $breakpoints key.
+/// usage: @include respond-to('medium') { ... }
+@mixin respond-to($breakpoint) {
+  $value: fn.breakpoint($breakpoint);
+
+  @media screen and (min-width: $value) {
+    @content;
+  }
+}
+
+/// Inverse (max‑width) media query for overriding mobile‑first styles downward.
+/// usage: @include respond-below('medium') { ... }
+@mixin respond-below($breakpoint) {
+  $value: fn.breakpoint($breakpoint);
+
+  @media screen and (max-width: ($value - 1px)) {
+    @content;
+  }
+}
+
+/// Hides an element visually while keeping it accessible to screen readers.
+/// usage: @include visually-hidden;
+@mixin visually-hidden {
+  position: absolute;
+
+  overflow: hidden;
+
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+
+  white-space: nowrap;
+
+  clip: rect(0, 0, 0, 0);
+}
+
+/// Reverses visually‑hidden — useful for modifier variants.
+/// usage: @include visually-shown;
+@mixin visually-shown {
+  position: static;
+
+  overflow: visible;
+
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+
+  white-space: normal;
+
+  clip: auto;
+}
+
+/// Truncates text to N lines with ellipsis. Requires -webkit-line-clamp
+/// (supported in all evergreen browsers).
+/// usage: @include truncate-lines(2);
+@mixin truncate-lines($lines: 2) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+}
+
+/// Consistent focus‑visible outline that respects accessibility.
+/// usage: @include focus-outline;
+@mixin focus-outline {
+  outline: 2px solid var(--color-focus, #005fcc);
+  outline-offset: 2px;
+}
+
+/// Aspect ratio with fallback for unsupported browsers.
+/// usage: @include aspect-ratio(16, 9);
+/// @param $width - The width of the aspect ratio.
+/// @param $height - The height of the aspect ratio.
+@mixin aspect-ratio($width, $height) {
+  aspect-ratio: #{$width} / #{$height};
+
+  @supports not (aspect-ratio: 1 / 1) {
+    &::before {
+      content: '';
+      display: block;
+      padding-top: math.percentage(math.div($height, $width));
+    }
+  }
+}
+
+/// Applies a border-radius token from settings/_radius.scss uniformly,
+/// via the `border-radius` shorthand.
+/// usage: @include radius('sm');
+/// @param $name - Token key from settings/_radius.scss (e.g. 'sm', 'lg', 'full').
+@mixin radius($name) {
+  @if not map.has-key($radius, $name) {
+    @error "mixin.radius(): '$name' is not a valid radius token. Available: #{map.keys($radius)}";
+  }
+
+  border-radius: fn.radius($name);
+}
+
+/// Applies a border-radius token to each corner independently, using the
+/// four longhand properties documented on MDN's border-radius reference:
+/// border-top-left-radius, border-top-right-radius,
+/// border-bottom-right-radius, border-bottom-left.radius — in that order,
+/// matching the CSS shorthand's own value order.
+/// https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/border-radius
+///
+/// All four corners are required and positional, so the applied radius is
+/// always explicit at the call site — no implicit defaulting to reason about.
+///
+/// usage: @include radius-corners('lg', 'lg', 'none', 'none');
+/// @param $top-left / $top-right / $bottom-right / $bottom-left -
+///        Token key from settings/_radius.scss for that corner.
+@mixin radius-corners($top-left, $top-right, $bottom-right, $bottom-left) {
+  border-radius: fn.radius($top-left) fn.radius($top-right) fn.radius($bottom-right) fn.radius($bottom-left);
+}
+
+/// Rounds only the top corners, zeroing the bottom ones. Common for
+/// elements that sit flush against something below them (accordion
+/// panels, dropdowns, bottom sheets).
+/// usage: @include radius-top('lg');
+@mixin radius-top($name) {
+  @include radius-corners($name, $name, 'none', 'none');
+}
+
+/// Rounds only the bottom corners, zeroing the top ones. Mirror of
+/// radius-top — for elements flush against something above them.
+/// usage: @include radius-bottom('lg');
+@mixin radius-bottom($name) {
+  @include radius-corners('none', 'none', $name, $name);
+}
+
+/// Applies an elevation (box‑shadow) token from settings/_elevation.scss directly.
+/// usage: @include elevation('2');
+/// @param $name - Token key from settings/_elevation.scss ('0' through '5').
+@mixin elevation($name) {
+  box-shadow: fn.elevation($name);
+}
+
+/// Builds a dual-layer (umbra + penumbra) box-shadow for a given elevation
+/// level from $elevation-offset + $elevation-opacity (settings/_elevation.scss),
+/// instead of reading the precomputed string from $elevation. Use this when
+/// a component needs a shadow tinted with something other than the default
+/// --color-shadow — e.g. a colored/glow shadow on a specific element.
+///
+/// usage:
+///   @include elevation-shadow('2');                       // default --color-shadow
+///   @include elevation-shadow('2', $color: '83 74 183');  // tinted (purple) shadow
+///
+/// @param $level - key from $elevation-offset / $elevation-opacity ('0'..'5').
+/// @param $color - shadow color as an "R G B" triplet string (same format as
+///                  --color-shadow itself). Defaults to var(--color-shadow, 0 0 0).
+@mixin elevation-shadow($level, $color: 'var(--color-shadow, 0 0 0)') {
+  $offsets: map.get($elevation-offset, $level);
+  $opacities: map.get($elevation-opacity, $level);
+
+  @if not $offsets or not $opacities {
+    @error "mix.elevation-shadow(): unknown elevation level '#{$level}' — check settings/_elevation.scss.";
+  }
+
+  $umbra-offset: list.nth($offsets, 1);
+  $penumbra-offset: list.nth($offsets, 2);
+  $umbra-opacity: list.nth($opacities, 1);
+  $penumbra-opacity: list.nth($opacities, 2);
+
+  // Built as a plain string, not a real Sass rgba() call: Sass's built-in
+  // rgba() type-checks its $color argument and rejects anything that isn't
+  // a literal Color or a source-level var(...) — an interpolated variable
+  // (even one holding "83 74 183" or "var(--color-shadow, 0 0 0)") fails
+  // that check. Concatenating the text ourselves sidesteps it entirely and
+  // works identically for both a raw "R G B" triplet and a var() fallback.
+  $umbra: #{'rgba(' + $color + ', ' + $umbra-opacity + ')'};
+  $penumbra: #{'rgba(' + $color + ', ' + $penumbra-opacity + ')'};
+
+  box-shadow:
+    #{$umbra-offset} #{$umbra},
+    #{$penumbra-offset} #{$penumbra};
+}
+
+/// Applies a shadow border (replaces traditional border with adaptive shadow)
+/// usage: @include shadow-border;
+/// @param $state - 'default' or 'hover' (optional, defaults to 'default')
+@mixin shadow-border($state: 'default') {
+  box-shadow: fn.shadow-border($state);
+}
+
+/// Applies transition to box-shadow property for smooth hover effects
+/// usage: @include shadow-transition;
+@mixin shadow-transition {
+  transition-timing-function: ease-out;
+  transition-duration: 150ms;
+  transition-property: box-shadow;
+}
+
+/// Optical alignment utility for buttons with icons
+/// Reduces padding on icon side by optical adjustment compared to text side
+/// usage: @include icon-padding-adjust($side: 'end', $size: 'sm');
+/// @param $side - 'start' or 'end' (which side has the icon)
+/// @param $size - optical adjustment size from $optical-adjust map ('xs', 'sm', 'md', 'lg')
+@mixin icon-padding-adjust($side: 'end', $size: 'sm') {
+  $adj: map.get($optical-adjust, $size);
+  $base: fn.spacing('3');
+
+  @if $side == 'start' {
+    padding-inline: calc(#{$base} - #{$adj}) #{$base};
+  } @else {
+    padding-inline: #{$base} calc(#{$base} - #{$adj});
+  }
+}
+
+/// Concentric border radius utility for nested elements
+/// Calculates outer radius based on inner radius and padding
+/// usage: @include concentric-radius($inner-radius, $padding);
+/// @param $inner-radius - radius token for inner element (e.g., 'sm', 'md')
+/// @param $padding - padding value between elements
+@mixin concentric-radius($inner-radius, $padding) {
+  $inner: fn.radius($inner-radius);
+  $outer: $inner + $padding;
+
+  border-radius: $outer;
+}
+
+/// Custom font loading. No eot/svg — woff2 + woff only.
+/// usage: @include font-face('Assistant', '../fonts/assistant-regular', 400);
+/// @param $name - The font-family name.
+/// @param $path - The path to the font file (without extension).
+/// @param $weight - The font-weight (default: 400).
+/// @param $style - The font-style (default: normal).
+@mixin font-face($name, $path, $weight: 400, $style: normal) {
+  @font-face {
+    font-family: $name;
+    font-weight: $weight;
+    font-style: $style;
+
+    font-display: swap;
+
+    src:
+      url('#{$path}.woff2') format('woff2'),
+      url('#{$path}.woff') format('woff');
+  }
+}
+
+/// Styles the native placeholder text of an input.
+/// usage: @include input-placeholder { color: var(--color-text-subdued); }
+@mixin input-placeholder {
+  &::placeholder {
+    @content;
+  }
+}
+
+/// Clears floated children. Needed for CSS migrated from a theme's
+/// original stylesheet that still relies on float‑based layout.
+/// Prefer flex/grid for new components.
+/// usage: @include clearfix;
+@mixin clearfix {
+  &::after {
+    content: '';
+    clear: both;
+    display: table;
+  }
+}
+
+/// Shorthand for a single‑property transition.
+/// usage: @include transition(background-color, 0.2s, ease-out);
+@mixin transition($property: all, $duration: 0.2s, $easing: ease) {
+  transition: $property $duration $easing;
+}
+
+/// Applies the same styles at all breakpoints (mobile‑first: from each breakpoint up).
+/// usage: @include respond-to-all($breakpoints) { ... }
+/// @param $breakpoints - Breakpoint map (e.g. from settings/_breakpoints.scss)
+/// @content - Styles to apply at each breakpoint
+@mixin respond-to-all($breakpoints) {
+  @each $bp in map.keys($breakpoints) {
+    @include respond-to($bp) {
+      @content;
+    }
+  }
+}
+
+/// Applies styles to hover, active, and pressed states.
+/// Useful for interactive elements like buttons and links.
+/// usage: @include hover-active-pressed { background-color: var(--color-accent); }
+@mixin hover-active-pressed {
+  &:hover,
+  &:active,
+  &.btn--pressed {
+    @content;
+  }
+}
+
+/// Applies styles to active and pressed states.
+/// Useful for active/pressed states of interactive elements.
+/// usage: @include active-pressed { background-color: var(--color-accent); }
+@mixin active-pressed {
+  &:active,
+  &.btn--pressed {
+    @content;
+  }
+}
+
+/// Serves high-density assets (Retina and similar) via min-resolution.
+/// Targets viewport DENSITY, not width — unrelated to $breakpoints/respond-to,
+/// which target layout width. A Retina MacBook still has a normal CSS-pixel
+/// viewport width; only its pixel density differs, which is what this
+/// mixin checks. Use for CSS background-image only — <img>/image_url in
+/// Liquid should use srcset/sizes instead, which already handles this.
+/// usage: @include retina { background-image: url('hero@2x.jpg'); }
+@mixin retina {
+  @media (resolution >= 2dppx), (min-device-pixel-ratio: 2) {
+    @content;
+  }
+}
+
+/// Generates margin utilities for all sides and spacing tokens.
+/// usage: @include spacing-utility('u-m-', 'margin');
+/// @param $prefix - The prefix for the utility class (e.g., 'u-m-' for margin).
+/// @param $property - The CSS property to apply (e.g., 'margin').
+@mixin spacing-utility($prefix, $property) {
+  @each $side-key, $side-segment in $spacing-sides {
+    $css-property: $property;
+    @if $side-segment != '' {
+      $css-property: '#{$property}-#{$side-segment}';
+    }
+
+    @if $property == 'margin' {
+      .#{$prefix}#{$side-key}auto {
+        #{$css-property}: auto;
+      }
+    }
+
+    @each $token, $value in $spacing {
+      .#{$prefix}#{$side-key}#{$token} {
+        #{$css-property}: $value;
+      }
+    }
+  }
+}

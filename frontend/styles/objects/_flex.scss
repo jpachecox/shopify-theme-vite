@@ -1,0 +1,263 @@
+// =============================================================================
+// OBJECTS / FLEX
+// Reusable Flexbox layout system with no visual skin (OOCSS).
+// "o-" prefix distinguishes from BEM components.
+//
+// HTML usage:
+//   <div class="o-flex o-flex--gap-0-5 o-flex--wrap">
+//     <div>...</div>
+//     <div class="o-flex__cell--grow">...</div>
+//     <div>...</div>
+//   </div>
+//
+// Mobile-first: inline-flex by default (use --row or --col for block flex).
+// Responsive variants use breakpoint suffixes:
+//   o-flex--col\@sm  → column direction from 'sm' (750px) and up
+// =============================================================================
+
+@use 'sass:map';
+
+@use 'tools/mixins' as mix;
+@use 'settings/spacing' as *;
+@use 'settings/breakpoints' as *;
+
+@layer objects {
+  // -----------------------------------------------------------------------------
+  // 1. BASE CONTAINER
+  // -----------------------------------------------------------------------------
+
+  .o-flex {
+    display: flex;
+
+    // ---------------------------------------------------------------------------
+    // 2. DIRECTION
+    // ---------------------------------------------------------------------------
+
+    &--row {
+      flex-direction: row;
+    }
+
+    &--row-reverse {
+      flex-direction: row-reverse;
+    }
+
+    &--col {
+      flex-direction: column;
+    }
+
+    &--col-reverse {
+      flex-direction: column-reverse;
+    }
+
+    // ---------------------------------------------------------------------------
+    // 3. WRAP
+    // ---------------------------------------------------------------------------
+
+    &--wrap {
+      flex-wrap: wrap;
+    }
+
+    &--nowrap {
+      flex-wrap: nowrap;
+    }
+
+    &--wrap-reverse {
+      flex-wrap: wrap-reverse;
+    }
+
+    // ---------------------------------------------------------------------------
+    // 4. ALIGN ITEMS (cross-axis)
+    // ---------------------------------------------------------------------------
+
+    &--align-start {
+      align-items: flex-start;
+    }
+
+    &--align-center {
+      align-items: center;
+    }
+
+    &--align-end {
+      align-items: flex-end;
+    }
+
+    &--align-stretch {
+      align-items: stretch;
+    }
+
+    &--align-baseline {
+      align-items: baseline;
+    }
+
+    // ---------------------------------------------------------------------------
+    // 5. JUSTIFY CONTENT (main-axis)
+    // ---------------------------------------------------------------------------
+
+    &--justify-start {
+      justify-content: flex-start;
+    }
+
+    &--justify-center {
+      justify-content: center;
+    }
+
+    &--justify-end {
+      justify-content: flex-end;
+    }
+
+    &--justify-between {
+      justify-content: space-between;
+    }
+
+    &--justify-around {
+      justify-content: space-around;
+    }
+
+    &--justify-evenly {
+      justify-content: space-evenly;
+    }
+
+    // ---------------------------------------------------------------------------
+    // 6. GAP — uses the $spacing scale
+    // ---------------------------------------------------------------------------
+
+    @each $token, $value in $spacing {
+      &--gap-#{$token} {
+        gap: $value;
+      }
+    }
+
+    // Note: no separate &--gap-0 rule needed — $spacing already has a '0'
+    // key, so the loop above already generates &--gap-0 { gap: 0; }.
+
+    // ---------------------------------------------------------------------------
+    // 7. RESPONSIVE VARIANTS
+    //    Generated for each breakpoint key in settings.
+    //    e.g. o-flex--col\@md  → column direction from 'md' (990px)
+    // ---------------------------------------------------------------------------
+
+    @each $bp in map.keys($breakpoints) {
+      @include mix.respond-to($bp) {
+        &--row\@#{$bp} {
+          flex-direction: row;
+        }
+        &--row-reverse\@#{$bp} {
+          flex-direction: row-reverse;
+        }
+        &--col\@#{$bp} {
+          flex-direction: column;
+        }
+        &--col-reverse\@#{$bp} {
+          flex-direction: column-reverse;
+        }
+
+        &--wrap\@#{$bp} {
+          flex-wrap: wrap;
+        }
+        &--nowrap\@#{$bp} {
+          flex-wrap: nowrap;
+        }
+
+        &--align-start\@#{$bp} {
+          align-items: flex-start;
+        }
+        &--align-center\@#{$bp} {
+          align-items: center;
+        }
+        &--align-end\@#{$bp} {
+          align-items: flex-end;
+        }
+        &--align-stretch\@#{$bp} {
+          align-items: stretch;
+        }
+        &--align-baseline\@#{$bp} {
+          align-items: baseline;
+        }
+
+        &--justify-start\@#{$bp} {
+          justify-content: flex-start;
+        }
+        &--justify-center\@#{$bp} {
+          justify-content: center;
+        }
+        &--justify-end\@#{$bp} {
+          justify-content: flex-end;
+        }
+        &--justify-between\@#{$bp} {
+          justify-content: space-between;
+        }
+        &--justify-around\@#{$bp} {
+          justify-content: space-around;
+        }
+        &--justify-evenly\@#{$bp} {
+          justify-content: space-evenly;
+        }
+      }
+    }
+
+    // ---------------------------------------------------------------------------
+    // 8. CELLS (optional direct children)
+    //    For controlling flex grow/shrink/basis per-item.
+    // ---------------------------------------------------------------------------
+
+    &__cell {
+      min-width: 0; // Prevents overflow in nested flex layouts.
+
+      &--grow {
+        flex-grow: 1;
+      }
+
+      &--shrink {
+        flex-shrink: 1;
+      }
+
+      &--no-shrink {
+        flex-shrink: 0;
+      }
+
+      &--fill {
+        flex: 1 1 0%;
+      }
+
+      &--auto {
+        flex: 1 1 auto;
+      }
+
+      // Per-cell alignment (overrides container align-items)
+      &--align-start {
+        align-self: flex-start;
+      }
+
+      &--align-center {
+        align-self: center;
+      }
+
+      &--align-end {
+        align-self: flex-end;
+      }
+
+      &--align-stretch {
+        align-self: stretch;
+      }
+
+      &--align-baseline {
+        align-self: baseline;
+      }
+
+      // Responsive variants
+      @each $bp in map.keys($breakpoints) {
+        @include mix.respond-to($bp) {
+          &--grow\@#{$bp} {
+            flex-grow: 1;
+          }
+          &--shrink\@#{$bp} {
+            flex-shrink: 1;
+          }
+          &--fill\@#{$bp} {
+            flex: 1 1 0%;
+          }
+        }
+      }
+    }
+  }
+}

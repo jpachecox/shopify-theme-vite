@@ -1,0 +1,16 @@
+// =============================================================================
+// GENERIC / LAYER ORDER
+// Establishes the CSS Cascade Layer precedence ONCE, as the very first
+// thing emitted in the compiled CSS. This MUST be @use'd before any other
+// partial in entrypoints/base.scss — layer order in CSS is fixed by
+// whichever name appears FIRST in the output, so if this statement were
+// written after other @layer blocks, those blocks would have already
+// claimed their position, silently producing the wrong precedence.
+//
+// "settings" was added as the very first (lowest-precedence) layer to
+// support token-emission files that output real CSS custom properties
+// (settings/_tokens.scss, settings/_typography.scss) — everything
+// in later layers can freely override a token if it ever needs to.
+// =============================================================================
+
+@layer settings, generic, elements, objects, components, sections, snippets, utilities;

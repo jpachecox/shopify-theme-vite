@@ -1,0 +1,19 @@
+// =============================================================================
+// UTILITIES / GAP
+// Generates utility classes for layout gaps using $spacing scale.
+// Example: .u-gap-4 { gap: 1rem; }
+// =============================================================================
+
+@use 'settings/spacing' as *;
+
+$prefix: 'u-gap-';
+
+@layer utilities {
+  @each $token, $value in $spacing {
+    .#{$prefix} {
+      &#{$token} { gap: $value; }
+      &x-#{$token} { column-gap: $value; }
+      &y-#{$token} { row-gap: $value; }
+    }
+  }
+}

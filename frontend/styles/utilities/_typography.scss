@@ -1,0 +1,126 @@
+// =============================================================================
+// UTILITIES / TYPOGRAPHY
+// Single-breakpoint-free typography utility system (font-size, font-weight,
+// line-height, letter-spacing, font-style, text-transform, text-decoration,
+// numeric alignment, and text wrapping) consuming design tokens.
+//
+// Uses CSS Cascade Layers (@layer utilities) to guarantee override precedence
+// without !important. Uses distinct prefixes to prevent namespace collisions:
+// - Font Size:        u-font-size-*
+// - Font Weight:      u-font-*
+// - Line Height:      u-leading-*
+// - Letter Spacing:   u-tracking-*
+// - Font Style:       u-font-style-*
+// - Text Transform:   u-text-transform-*
+// - Text Decoration:  u-text-decoration-*
+// - Text Wrapping:    u-text-wrap-*
+// - Numeric Feature:  u-font-nums-*
+//
+// @see https://developer.mozilla.org/en-US/docs/Web/CSS/font
+// =============================================================================
+
+@use 'settings/typography' as *;
+
+$prefix: 'u-font-';
+
+@layer utilities {
+  // ---------------------------------------------------------------------------
+  // 1. FONT SIZE — u-font-size-{key}
+  // @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-size
+  // ---------------------------------------------------------------------------
+  @each $key, $value in $font-size {
+    .#{$prefix}size-#{$key} {
+      font-size: var(--font-size-#{$key}, #{$value});
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 2. FONT WEIGHT — u-font-{key}
+  // @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight
+  // ---------------------------------------------------------------------------
+  @each $key, $value in $font-weight {
+    .#{$prefix}-#{$key} {
+      font-weight: var(--font-weight-#{$key}, #{$value});
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 3. LINE HEIGHT — u-leading-{key}
+  // @see https://developer.mozilla.org/en-US/docs/Web/CSS/line-height
+  // ---------------------------------------------------------------------------
+  @each $key, $value in $line-height {
+    .u-leading-#{$key} {
+      line-height: var(--line-height-#{$key}, #{$value});
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 4. LETTER SPACING — u-tracking-{key}
+  // @see https://developer.mozilla.org/en-US/docs/Web/CSS/letter-spacing
+  // ---------------------------------------------------------------------------
+  @each $key, $value in $letter-spacing {
+    .u-tracking-#{$key} {
+      letter-spacing: var(--letter-spacing-#{$key}, #{$value});
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 5. FONT STYLE — u-font-style-{key}
+  // @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-style
+  // ---------------------------------------------------------------------------
+  @each $key, $value in $font-style {
+    .#{$prefix}style-#{$key} {
+      font-style: #{$value};
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 6. TEXT TRANSFORM — u-text-transform-{key}
+  // @see https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform
+  // ---------------------------------------------------------------------------
+  .u-text-transform {
+    &-uppercase  { text-transform: uppercase; }
+    &-lowercase  { text-transform: lowercase; }
+    &-capitalize { text-transform: capitalize; }
+    &-none       { text-transform: none; }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 7. TEXT DECORATION — u-text-decoration-{key}
+  // @see https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration
+  // ---------------------------------------------------------------------------
+  .u-text-decoration {
+    &-underline    { text-decoration: underline; }
+    &-line-through { text-decoration: line-through; }
+    &-none         { text-decoration: none; }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 8. TEXT WRAPPING & BREAKING — u-text-wrap-{key}
+  // @see https://developer.mozilla.org/en-US/docs/Web/CSS/white-space
+  // @see https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap
+  // ---------------------------------------------------------------------------
+  .u-text-wrap {
+    &-nowrap { white-space: nowrap; }
+
+    &-break {
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+
+    &-normal {
+      word-break: normal;
+      overflow-wrap: normal;
+      white-space: normal;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 9. TABULAR NUMBERS (UI Tables / Dashboards)
+  // @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-numeric
+  // ---------------------------------------------------------------------------
+  .#{$prefix}nums {
+    &-tabular { font-variant-numeric: tabular-nums; }
+    &-proportional { font-variant-numeric: proportional-nums; }
+  }
+}

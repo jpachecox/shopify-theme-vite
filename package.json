@@ -1,0 +1,78 @@
+{
+  "name": "shopify-theme-vite",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k -n VITE,SHOPIFY -c blue,green \"vite\" \"shopify theme dev\"",
+    "dev:vite": "vite",
+    "build": "vite build",
+    "build:verify": "yarn build && node scripts/verify-assets.mjs",
+    "check:entrypoints": "node --test utils/entrypoints.test.mjs",
+    "check:types": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
+    "clean": "rimraf node_modules .vite dist .shopify/.cache assets/.vite .eslintcache .stylelintcache tsconfig.node.tsbuildinfo",
+    "clean:build": "rimraf dist .vite assets/.vite",
+    "fresh": "yarn clean && yarn install && yarn build:verify",
+    "format": "prettier --write \"frontend/**/*.{js,jsx,ts,tsx,scss,css,json,md}\" \"{scripts,utils}/**/*.{js,mjs}\" \"*.{js,json,md}\"",
+    "lint": "yarn lint:scss && yarn lint:js",
+    "lint:fix": "yarn lint:scss --fix && yarn lint:js --fix",
+    "lint:js": "eslint \"frontend/**/*.{js,jsx,ts,tsx}\" \"{scripts,utils}/**/*.{js,mjs}\" eslint.config.js --cache",
+    "lint:scss": "stylelint \"frontend/styles/**/*.scss\" --cache"
+  },
+  "devDependencies": {
+    "@driver-digital/vite-plugin-shopify-clean": "^2.0.0",
+    "@eslint/js": "^9.39.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "@typescript-eslint/parser": "^8.65.0",
+    "@vitejs/plugin-react": "6.0.3",
+    "concurrently": "^10.0.3",
+    "eslint": "^9.39.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.8.0",
+    "postcss": "^8.5.24",
+    "prettier": "^3.9.6",
+    "rimraf": "^6.1.3",
+    "sass-embedded": "^1.100.0",
+    "sharp": "^0.35.3",
+    "stylelint": "^17.14.1",
+    "stylelint-config-clean-order": "^10.0.0",
+    "stylelint-config-standard-scss": "^17.0.0",
+    "stylelint-declaration-strict-value": "^1.11.1",
+    "stylelint-order": "^8.1.1",
+    "stylelint-scss": "^7.2.0",
+    "stylelint-selector-bem-pattern": "^5.0.0",
+    "svgo": "^4.0.2",
+    "typescript": "^5.0.0",
+    "vite": "8.1.5",
+    "vite-plugin-image-optimizer": "^2.0.3",
+    "vite-plugin-shopify": "^4.1.2"
+  },
+  "dependencies": {
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "lint-staged": {
+    "frontend/styles/**/*.scss": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "frontend/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "utils/**/*.{js,mjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "scripts/**/*.{js,mjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "packageManager": "yarn@4.17.1+sha512.ccbfabf7d7b6b32075088be9386fb9a2e00bb6887ef07fa56effabc890a56d53da1ccc4128d62db245fcbd3961b236d75335bdf7d5320ed6eafb7588b7ad4697"
+}

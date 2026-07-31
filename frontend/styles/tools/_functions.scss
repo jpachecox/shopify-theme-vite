@@ -1,0 +1,172 @@
+// =============================================================================
+// TOOLS / FUNCTIONS
+// Pure Sass functions. No CSS output — consumed via @use 'tools/functions' as fn.
+// =============================================================================
+
+@use 'sass:math';
+@use 'sass:map';
+@use 'sass:string';
+@use 'sass:meta';
+
+@use 'settings/breakpoints' as *;
+@use 'settings/colors' as *;
+@use 'settings/elevation' as *;
+@use 'settings/radius' as *;
+@use 'settings/spacing' as *;
+
+/// Converts px to rem (assumes 16px base).
+/// usage: fn.rem(16px) => 1rem
+/// @param {Number} $px - pixel value (with or without unit)
+/// @param {Number} $base - base font-size in px (default: 16)
+/// @return {Number} value in rem
+@function rem($px, $base: 16) {
+  $value: math.div(strip-unit($px), $base);
+
+  @return #{$value}rem;
+}
+
+/// Removes unit from a numeric value.
+/// usage: fn.strip-unit(16px) => 16
+/// @param {Number} $value
+/// @return {Number} unitless value
+@function strip-unit($value) {
+  @if meta.type-of($value) == 'number' and not math.is-unitless($value) {
+    @return math.div($value, ($value * 0 + 1));
+  }
+
+  @return $value;
+}
+
+/// Reads a value from a settings map with strict validation.
+/// Fails the build if the key doesn't exist (instead of returning silently wrong).
+/// usage: fn.map-get-strict($map, 'key', '$map-name');
+/// @param {Map} $map
+/// @param {String} $key
+/// @param {String} $map-name - for the error message
+/// @return {*} the value for $key
+@function map-get-strict($map, $key, $map-name: 'map') {
+  @if not map.has-key($map, $key) {
+    @error "Key \"#{$key}\" not found in #{$map-name}. Available keys: #{map.keys($map)}";
+  }
+
+  @return map.get($map, $key);
+}
+
+/// Shorthand to read a breakpoint value from settings/_breakpoints.scss.
+/// usage: fn.breakpoint('medium') => 768px
+/// @param {String} $name
+/// @return {Number} breakpoint value in px
+@function breakpoint($name) {
+  @return map-get-strict($breakpoints, $name, '$breakpoints');
+}
+
+/// Shorthand to read a spacing token from settings/_spacing.scss.
+/// usage: fn.spacing('small') => 8px
+/// @param {String} $name
+/// @return {Number} spacing value
+@function spacing($name) {
+  @return map-get-strict($spacing, $name, '$spacing');
+}
+
+/// Shorthand to read a radius token from settings/_radius.scss.
+/// usage: fn.radius('sm') => 4px
+/// @param {String} $name - 'none' | 'sm' | 'md' | 'lg' | 'full'
+/// @return {Number} radius value
+@function radius($name) {
+  @return map-get-strict($radius, $name, '$radius');
+}
+
+/// Shorthand to read an elevation (box-shadow) token from settings/_elevation.scss.
+/// usage: fn.elevation('1') => (0 1px 2px -1px rgba(var(--color-shadow, 0 0 0), 0.1), 0 1px 3px 0 rgba(var(--color-shadow, 0 0 0), 0.1))
+/// @param {String} $name - '0' | '1' | '2' | '3' | '4' | '5'
+/// @return {List|String} box-shadow value, ready to interpolate directly
+@function elevation($name) {
+  @return map-get-strict($elevation, $name, '$elevation');
+}
+
+/// Reads a grayscale token from the light scale (compile-time fallback only).
+/// For theme-aware color that respects the dark-mode toggle at runtime,
+/// use var(--gray-#{$step}) directly in components instead — see
+/// @param {String} $step - '50' | '950' | 'base'
+/// @return {Color} step value from $gray-light map
+@function gray($step) {
+  @if $step == 'base' {
+    @return $light-base;
+  }
+
+  @return map-get-strict($gray-light, $step, '$gray-light');
+}
+
+/// Shadow border helper function
+/// Returns the shadow border value for light or dark mode states
+/// @param $state - 'default' or 'hover'
+/// @return {String} CSS custom property reference for shadow border
+@function shadow-border($state: 'default') {
+  $property: '--shadow-border-default';
+
+  @if $state == 'hover' {
+    $property: '--shadow-border-hover';
+  }
+
+  @return string.unquote('var(' + $property + ')');
+}
+
+/// Builds a comma-separated font-family stack: "Family", fallback, fallback...
+/// Moved from settings/_typography.scss (was labeled "HELPERS" there) —
+/// it's a pure Sass function with no CSS output, same category as every
+/// other function in this file.
+/// usage: fn.font-stack('Arial', ('Helvetica', 'sans-serif')) => "Arial", "Helvetica", "sans-serif"
+/// @param {String} $family - primary font name
+/// @param {List} $fallback-list - ordered fallback font names
+/// @return {List} comma-separated stack, quoted family first
+@function font-stack($family, $fallback-list) {
+  $stack: string.quote($family);
+
+  @each $fallback in $fallback-list {
+    $stack: $stack, $fallback;
+  }
+
+  @return $stack;
+}
+
+/// Returns the value associated with a design token from a Sass map.
+///
+/// Validates that the provided map contains the requested token before
+/// returning its value. Throws a descriptive error when the token does
+/// not exist.
+///
+/// usage: border-radius: token-get($radius-scale, $name, "radius");
+///
+/// @param {Map} $map
+///   The token map to search.
+///
+/// @param {*} $key
+///   The token key to retrieve.
+///
+/// @param {String} $type ['token']
+///   Human-readable token category used in error messages
+///   (e.g. 'radius', 'spacing', 'color').
+///
+/// @return {*}
+///   The value associated with the requested token.
+///
+/// @throws
+///   If `$map` is not a Sass map.
+///
+/// @throws
+///   If `$key` does not exist in `$map`.
+@function token-get($map, $key, $type: "token") {
+  @if meta.type-of($map) != "map" {
+    @error "token-get(): First argument must be a Sass map.";
+  }
+
+  @if meta.type-of($key) != "string" {
+    @return $key;
+  }
+
+  @if not map.has-key($map, $key) {
+    @error "Unknown #{$type} token '#{$key}'. Available: #{map.keys($map)}";
+  }
+
+  @return map.get($map, $key);
+}

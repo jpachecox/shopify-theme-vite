@@ -1,0 +1,226 @@
+// =============================================================================
+// OBJECTS / GRID
+// Reusable CSS Grid layout system with no visual skin (OOCSS).
+// "o-" prefix distinguishes from BEM components.
+// HTML usage:
+//   <div class="o-grid o-grid--cols-3 o-grid--gap-06">
+//     <div>...</div>
+//     <div class="o-grid__cell--span-2">...</div>
+//     <div>...</div>
+//   </div>
+// Mobile-first: items stack to 1 column by default.
+// Responsive variants use breakpoint suffixes:
+//   o-grid--cols-2\@sm  → 2 columns from 'sm' (750px) and up
+// =============================================================================
+
+@use 'sass:map';
+
+@use 'tools/mixins' as mix;
+@use 'settings/spacing' as *;
+@use 'settings/breakpoints' as *;
+
+@layer objects {
+  // =============================================================================
+  // OBJECTS / GRID
+  // Reusable CSS Grid layout system with no visual skin (OOCSS).
+  // "o-" prefix distinguishes from BEM components.
+  //
+  // HTML usage:
+  //   <div class="o-grid o-grid--cols-3 o-grid--gap-06">
+  //     <div>...</div>
+  //     <div class="o-grid__cell--span-2">...</div>
+  //     <div>...</div>
+  //   </div>
+  //
+  // Mobile-first: items stack to 1 column by default.
+  // Responsive variants use breakpoint suffixes:
+  //   o-grid--cols-2\@sm  → 2 columns from 'sm' (750px) and up
+  // =============================================================================
+
+  // -----------------------------------------------------------------------------
+  // 1. BASE CONTAINER
+  // -----------------------------------------------------------------------------
+
+  .o-grid {
+    display: grid;
+    grid-template-columns: 1fr; // stacked on mobile
+    gap: 1rem; // minimum gap
+
+    // ---------------------------------------------------------------------------
+    // 2. COLUMN COUNT
+    //    Global classes (no suffix) apply at all breakpoints.
+    //    Suffixed variants (\@sm, \@md, \@lg) are generated below.
+    // ---------------------------------------------------------------------------
+
+    &--cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    &--cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    &--cols-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    &--cols-5 {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    &--cols-6 {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    // Auto-fill: browser decides column count based on --o-grid-min (default 16rem).
+    &--auto {
+      grid-template-columns: repeat(auto-fill, minmax(var(--o-grid-min, 16rem), 1fr));
+    }
+
+    // Single column — explicit reset for responsive overrides.
+    &--cols-1 {
+      grid-template-columns: 1fr;
+    }
+
+    // ---------------------------------------------------------------------------
+    // 3. GAP — uses the $spacing scale
+    // ---------------------------------------------------------------------------
+
+    @each $token, $value in $spacing {
+      &--gap-#{$token} {
+        gap: $value;
+      }
+    }
+
+    // Row-gap only — useful for vertical layouts.
+    &--row-gap-0 {
+      row-gap: 0;
+    }
+
+    // ---------------------------------------------------------------------------
+    // 4. ALIGNMENT
+    // ---------------------------------------------------------------------------
+
+    &--align-start {
+      align-items: start;
+    }
+
+    &--align-center {
+      align-items: center;
+    }
+
+    &--align-end {
+      align-items: end;
+    }
+
+    &--align-stretch {
+      align-items: stretch;
+    }
+
+    &--justify-start {
+      justify-items: start;
+    }
+
+    &--justify-center {
+      justify-items: center;
+    }
+
+    &--justify-end {
+      justify-items: end;
+    }
+
+    &--justify-stretch {
+      justify-items: stretch;
+    }
+
+    // ---------------------------------------------------------------------------
+    // 5. RESPONSIVE VARIANTS
+    //    Generated for each breakpoint key in settings.
+    //    e.g. o-grid--cols-3\@md  → 3 columns from 'md' (990px)
+    // ---------------------------------------------------------------------------
+
+    @each $bp in map.keys($breakpoints) {
+      @include mix.respond-to($bp) {
+        &--cols-1\@#{$bp} {
+          grid-template-columns: 1fr;
+        }
+        &--cols-2\@#{$bp} {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        &--cols-3\@#{$bp} {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        &--cols-4\@#{$bp} {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        &--cols-5\@#{$bp} {
+          grid-template-columns: repeat(5, 1fr);
+        }
+        &--cols-6\@#{$bp} {
+          grid-template-columns: repeat(6, 1fr);
+        }
+      }
+    }
+
+    // -----------------------------------------------------------------------------
+    // 6. CELLS (optional direct children)
+    //    For spanning multiple columns or overriding alignment.
+    // -----------------------------------------------------------------------------
+
+    &__cell {
+      min-width: 0; // Prevents overflow in nested grids.
+
+      // Column span
+      &--span-2 {
+        grid-column: span 2;
+      }
+
+      &--span-3 {
+        grid-column: span 3;
+      }
+
+      &--span-4 {
+        grid-column: span 4;
+      }
+
+      &--span-full {
+        grid-column: 1 / -1;
+      }
+
+      // Per-cell alignment (overrides container alignment)
+      &--align-start {
+        align-self: start;
+      }
+
+      &--align-center {
+        align-self: center;
+      }
+
+      &--align-end {
+        align-self: end;
+      }
+
+      &--align-stretch {
+        align-self: stretch;
+      }
+
+      // Responsive span variants
+      @each $bp in map.keys($breakpoints) {
+        @include mix.respond-to($bp) {
+          &--span-2\@#{$bp} {
+            grid-column: span 2;
+          }
+          &--span-3\@#{$bp} {
+            grid-column: span 3;
+          }
+          &--span-4\@#{$bp} {
+            grid-column: span 4;
+          }
+          &--span-full\@#{$bp} {
+            grid-column: 1 / -1;
+          }
+        }
+      }
+    }
+  }
+}

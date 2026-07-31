@@ -1,0 +1,31 @@
+// =============================================================================
+// COMPONENTS / CARD
+// Container component used to group related content, media, and actions.
+//
+// BEM Block: .card
+//
+// Structural Elements (BEM Children):
+//   - .card__header       (Title, subtitle, and top actions/badges)
+//   - .card__media        (Hero image, video, or background media wrapper)
+//   - .card__body         (Main content area / text body)
+//   - .card__footer       (Bottom action buttons, links, or metadata)
+//
+// Modifiers:
+//   - Variants: --elevated (default), --filled, --outlined
+//   - Layout:   --horizontal, --clickable (pointer cursor & full overlay)
+//
+// States (primarily for interactive/clickable cards):
+//   - Native:   :hover, :focus-visible, :active, [aria-disabled="true"]
+//   - Modifiers / Classes: .is-hovered, .is-focused, .is-pressed, .is-dragged, .is-disabled
+//
+// Uses CSS Cascade Layers (@layer components) to respect ITCSS specificity hierarchy.
+// @see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/card_role
+// =============================================================================
+
+$prefix: 'card';
+
+@layer components {
+  .#{$prefix} {
+    display: block;
+  }
+}

@@ -1,0 +1,175 @@
+// =============================================================================
+// SETTINGS / TYPOGRAPHY
+// Design-decision typography tokens: modular type scale, font-size/line-height/
+// letter-spacing/font-style scales, and a generic numeric font-weight naming
+// scale (--font-weight-bold: 700, etc. — NOT tied to any specific font choice).
+//
+// Font FAMILY, STYLE, WEIGHT, and SCALE for body/heading are NOT defined here
+// anymore. Dawn's stock layout/theme.liquid already emits these from the
+// merchant's font_picker choice (settings.type_body_font /
+// settings.type_header_font / settings.body_scale / settings.heading_scale)
+// via the font_face / font_modify Liquid filters, straight into a <style>
+// block in <head> — see Dawn's theme.liquid for the exact block. That's
+// the single source of truth for:
+//   --font-body-family     --font-heading-family
+//   --font-body-style      --font-heading-style
+//   --font-body-weight     --font-heading-weight
+//   --font-body-weight-bold
+//   --font-body-scale      --font-heading-scale
+//
+// If your theme.liquid has that stock Dawn block intact, there is nothing
+// to bridge here — components just keep reading var(--font-body-family)
+// etc. and it works. See settings/README.md for the full contract if
+// your theme.liquid was stripped of that block and needs it rebuilt.
+// =============================================================================
+
+@use 'sass:map';
+@use 'sass:string';
+
+@use 'tools/mixins' as mix;
+
+$typography-scale: (
+  base-size: 16px,
+  base-line-height: 1.5,
+  heading-line-height: 1.2,
+  scale-ratio: 1.25,
+);
+
+@layer settings {
+  :root {
+    @include mix.emit-type-scale-tokens($typography-scale);
+  }
+}
+
+/**
+  * --------------------------------------------------------------------------
+  * FONT SIZE
+  * --------------------------------------------------------------------------
+  *
+  * Rem values relative to 16px browser default. Follows a ~1.25 modular ratio.
+  *
+  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-size
+  */
+$font-size: (
+  'xs': 0.75rem,  // 12px
+  'sm': 0.875rem, // 14px
+  'base': 1rem,   // 16px
+  'md': 1.125rem, // 18px
+  'lg': 1.25rem,  // 20px
+  'xl': 1.5rem,   // 24px
+  '2xl': 2rem,    // 32px
+  '3xl': 2.5rem,  // 40px
+  '4xl': 3rem,    // 48px
+  '5xl': 4rem,    // 64px
+  '6xl': 5rem,    // 80px
+);
+
+/**
+  * --------------------------------------------------------------------------
+  * FONT STYLE
+  * --------------------------------------------------------------------------
+  *
+  * Font style (normal, italic, oblique).
+  *
+  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-style
+  */
+$font-style: (
+  'normal': normal,
+  'italic': italic,
+  'oblique': oblique,
+);
+
+/**
+  * --------------------------------------------------------------------------
+  * FONT WEIGHT
+  * --------------------------------------------------------------------------
+  *
+  * Numerical weight 100–900 per CSS spec. The key names are generic and not tied to any specific font choice.
+  *
+  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight
+  */
+$font-weight: (
+  'hairline': 100,
+  'extra-light': 200,
+  'light': 300,
+  'regular': 400,
+  'medium': 500,
+  'semibold': 600,
+  'bold': 700,
+  'extra-bold': 800,
+  'black': 900,
+);
+
+/**
+  * --------------------------------------------------------------------------
+  * FONT STRETCH
+  * --------------------------------------------------------------------------
+  *
+  * Numerical stretch 100–200 per CSS spec. The key names are generic and not tied to any specific font choice.
+  *
+  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-stretch
+  */
+$font-stretch: (
+  'ultra-condensed': 50%,
+  'extra-condensed': 62.5%,
+  'condensed': 75%,
+  'semi-condensed': 87.5%,
+  'normal': 100%,
+  'semi-expanded': 112.5%,
+  'expanded': 125%,
+  'extra-expanded': 150%,
+  'ultra-expanded': 200%
+);
+
+/**
+  * --------------------------------------------------------------------------
+  * LINE HEIGHT
+  * --------------------------------------------------------------------------
+  *
+  * Unitless multiplier of font-size.
+  *
+  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/line-height
+  */
+$line-height: (
+  'tight': 1,
+  'snug': 1.25,
+  'normal': 1.5,
+  'relaxed': 1.75,
+  'loose': 2,
+);
+
+/**
+  * --------------------------------------------------------------------------
+  * LINE BREAK
+  * --------------------------------------------------------------------------
+  *
+  * CSS line-break property values.
+  *
+  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/line-break
+  */
+$line-break: (
+  'auto': auto,
+  'anywhere': anywhere,
+  'loose': loose,
+  'normal': normal,
+  'strict': strict
+);
+
+/**
+  * --------------------------------------------------------------------------
+  * LETTER SPACING
+  * --------------------------------------------------------------------------
+  *
+  * Length relative to font-size (commonly expressed in em).
+  *
+  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/letter-spacing
+  */
+$letter-spacing: (
+  'tight': -0.025em,
+  'normal': 0,
+  'wide': 0.05em,
+  'wider': 0.1em,
+  'widest': 0.2em,
+);
+
+

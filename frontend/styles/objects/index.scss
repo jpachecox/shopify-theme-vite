@@ -1,0 +1,10 @@
+// =============================================================================
+// OBJECTS / INDEX
+// ITCSS "objects" layer — enforced via @layer.
+// Reusable, non-visual design patterns (OOCSS).
+// "o-" prefix distinguishes from BEM components.
+// =============================================================================
+
+@use 'container';
+@use 'grid';
+@use 'flex';

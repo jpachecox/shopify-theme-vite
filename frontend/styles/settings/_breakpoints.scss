@@ -1,0 +1,12 @@
+// =============================================================================
+// SETTINGS / BREAKPOINTS
+// Breakpoint map for mobile-first media queries.
+// Consumed by tools/_mixins.scss via fn.breakpoint().
+// =============================================================================
+
+$breakpoints: (
+  'sm': 750px,
+  'md': 990px,
+  'lg': 1200px,
+  'xl': 1400px,
+);

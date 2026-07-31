@@ -1,0 +1,33 @@
+// =============================================================================
+// UTILITIES / DISPLAY
+// Single-breakpoint-free display utility system supporting fundamental CSS
+// layout modes and accessibility pattern.
+//
+// Configurable via local `$prefix` variable. Uses CSS Cascade Layers
+// (@layer utilities) to guarantee override precedence without !important.
+//
+// @see https://developer.mozilla.org/en-US/docs/Web/CSS/display
+// =============================================================================
+
+@use 'tools/mixins' as mix;
+
+$prefix: 'u-d-';
+
+@layer utilities {
+  .#{$prefix} {
+    // Core display modes
+    &none         { display: none; }
+    &block        { display: block; }
+    &inline       { display: inline; }
+    &inline-block { display: inline-block; }
+    &flex         { display: flex; }
+    &inline-flex  { display: inline-flex; }
+    &grid         { display: grid; }
+    &contents     { display: contents; }
+  }
+
+  // Accessibility pattern (screen-reader only)
+  .u-visually-hidden {
+    @include mix.visually-hidden;
+  }
+}

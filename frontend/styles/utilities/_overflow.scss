@@ -1,0 +1,49 @@
+// =============================================================================
+// UTILITIES / OVERFLOW
+// Single-breakpoint-free overflow utility system supporting physical axes,
+// and modern logical properties (inline/block).
+//
+// Configurable via local `$prefix` variable. Uses CSS Cascade Layers
+// (@layer utilities) to guarantee override precedence without !important.
+//
+// @see https://developer.mozilla.org/en-US/docs/Web/CSS/overflow
+// =============================================================================
+
+$prefix: 'u-overflow-';
+
+@layer utilities {
+  .#{$prefix} {
+    // -------------------------------------------------------------------------
+    // 1. GLOBAL OVERFLOW
+    // -------------------------------------------------------------------------
+    &auto    { overflow: auto; }
+    &hidden  { overflow: hidden; }
+    &clip    { overflow: clip; }
+    &visible { overflow: visible; }
+    &scroll  { overflow: scroll; }
+
+    // -------------------------------------------------------------------------
+    // 2. PHYSICAL AXES (overflow-x / overflow-y)
+    // -------------------------------------------------------------------------
+    &x-auto    { overflow-x: auto; }
+    &x-hidden  { overflow-x: hidden; }
+    &x-clip    { overflow-x: clip; }
+    &x-scroll  { overflow-x: scroll; }
+
+    &y-auto    { overflow-y: auto; }
+    &y-hidden  { overflow-y: hidden; }
+    &y-clip    { overflow-y: clip; }
+    &y-scroll  { overflow-y: scroll; }
+
+    // -------------------------------------------------------------------------
+    // 3. LOGICAL PROPERTIES (MDN overflow-inline / overflow-block)
+    // -------------------------------------------------------------------------
+    &inline-auto   { overflow-inline: auto; }
+    &inline-hidden { overflow-inline: hidden; }
+    &inline-clip   { overflow-inline: clip; }
+
+    &block-auto    { overflow-block: auto; }
+    &block-hidden  { overflow-block: hidden; }
+    &block-clip    { overflow-block: clip; }
+  }
+}

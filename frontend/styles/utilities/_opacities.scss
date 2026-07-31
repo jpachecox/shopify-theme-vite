@@ -1,0 +1,25 @@
+// =============================================================================
+// UTILITIES / OPACITIES
+// Single-breakpoint-free opacity utility system.
+//
+// Configurable via local `$prefix` variable. Uses CSS Cascade Layers
+// (@layer utilities) to guarantee override precedence without !important.
+// Consumes CSS custom properties defined in base/_tokens.scss.
+//
+// @see https://developer.mozilla.org/en-US/docs/Web/CSS/opacity
+// =============================================================================
+
+@use 'sass:map';
+@use 'settings/opacity' as *;
+
+$prefix: 'u-opacity-';
+
+@layer utilities {
+  .#{$prefix} {
+    @each $token, $value in $opacity {
+      &#{$token} {
+        opacity: var(--opacity-#{$token}, #{$value});
+      }
+    }
+  }
+}

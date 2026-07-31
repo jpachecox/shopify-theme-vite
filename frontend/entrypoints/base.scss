@@ -1,0 +1,12 @@
+// =============================================================================
+// ENTRYPPOINTS / BASE
+// Base entrypoint for the design system's SCSS. Imports all ITCSS layers in
+// the correct order, and enforces @layer usage for each layer.
+// =============================================================================
+
+@use '../styles/generic/layer-order';
+@use '../styles/settings';
+@use '../styles/generic';
+@use '../styles/elements';
+@use '../styles/objects';
+@use '../styles/utilities';

@@ -1,0 +1,37 @@
+# LocalSettings folders
+
+node_modules/
+assets/
+.vite/
+.shopify/
+.yarn/
+.vscode/
+.agents/
+.codex/
+.claude/worktrees/
+yarn.lock
+package-lock.json
+*.tsbuildinfo
+
+## Sass/CSS formatting is owned by Stylelint (.stylelintrc), not Prettier —
+
+## Prettier's built-in CSS parser strips this codebase's deliberate map
+
+## column-alignment and doesn't know about SCSS-specific conventions
+
+## (interpolated selectors, @use/@forward order) the way stylelint-scss does
+
+## Running both on the same files means two tools disagreeing about the
+
+## "correct" formatting — same problem as ESLint's core stylistic rules vs
+
+## Prettier for JS, just for the CSS side instead
+
+*.scss
+*.css
+
+## Auto-generated Vite entrypoints — always overwritten on next build
+
+frontend/entrypoints/component-*.scss
+frontend/entrypoints/section-*.scss
+frontend/entrypoints/snippet-*.scss

@@ -1,0 +1,88 @@
+{
+  "extends": ["stylelint-config-standard-scss", "stylelint-config-clean-order"],
+  "plugins": [
+    "stylelint-order",
+    "stylelint-selector-bem-pattern",
+    "stylelint-declaration-strict-value"
+  ],
+  "rules": {
+    "declaration-no-important": true,
+    "max-nesting-depth": [
+      2,
+      {
+        "ignore": ["blockless-at-rules", "pseudo-classes"],
+        "ignoreAtRules": ["media", "supports", "layer", "container"]
+      }
+    ],
+    "selector-max-id": 0,
+    "selector-max-compound-selectors": 3,
+    "selector-max-type": [
+      0,
+      {
+        "ignore": ["child", "compounded", "descendant"],
+        "ignoreTypes": ["/^html/", "/^body/"]
+      }
+    ],
+    "scss/at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["layer", "container", "custom-media"]
+      }
+    ],
+    "at-rule-no-unknown": null,
+    "plugin/selector-bem-pattern": {
+      "componentName": "^[a-z0-9-]+$",
+      "componentSelectors": "^\\.(?:c|o|u)-[a-z0-9-]+(?:__[a-z0-9-/]+)?(?:--[a-z0-9-/]+)?$|^\\.(?:is|has)-[a-z0-9-/]+$",
+      "utilitySelectors": "^\\.u-[a-z0-9-/]+$",
+      "ignoreSelectors": [
+        "/^\\[data-theme=.*?\\]/",
+        "/^\\[aria-.*?\\]/",
+        "/^\\[disabled\\]/",
+        "/^\\[data-.*?\\]/",
+        "/^:root$/",
+        "/^:host$/"
+      ]
+    },
+    "scale-unlimited/declaration-strict-value": [
+      ["/color/", "fill", "stroke", "z-index"],
+      {
+        "ignoreValues": [
+          "transparent",
+          "inherit",
+          "initial",
+          "currentcolor",
+          "none",
+          "0",
+          "1",
+          "-1",
+          "/^rgba?\\(var\\(--/"
+        ],
+        "message": "Avoid hard-coded values. Use a design token or var(--...)."
+      }
+    ],
+    "color-named": "never",
+    "color-hex-length": "long",
+    "selector-class-pattern": null,
+    "no-descending-specificity": null,
+    "scss/dollar-variable-pattern": null,
+
+    "custom-property-pattern": "^_?([a-z][a-z0-9]*)(-[a-z0-9]+)*$",
+    "scss/comment-no-empty": null,
+    "declaration-property-value-keyword-no-deprecated": null,
+    "property-no-deprecated": null,
+    "media-feature-name-no-unknown": null,
+    "at-rule-empty-line-before": null,
+
+    "color-function-notation": null,
+    "color-function-alias-notation": null,
+    "alpha-value-notation": null
+  },
+  "overrides": [
+    {
+      "files": ["frontend/styles/generic/**/*.scss", "frontend/styles/elements/**/*.scss"],
+      "rules": {
+        "selector-max-type": null
+      }
+    }
+  ]
+}
