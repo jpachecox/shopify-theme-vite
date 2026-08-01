@@ -1,5 +1,12 @@
 # Shopify Theme Vite
 
+![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen)
+![Vite](https://img.shields.io/badge/Vite-8.1.5-646CFF?logo=vite&logoColor=white)
+![Sass](https://img.shields.io/badge/Sass-1.100-CC6699?logo=sass&logoColor=white)
+![Shopify](https://img.shields.io/badge/Shopify-95BF47?logo=shopify&logoColor=white)
+![GitHub repo size](https://img.shields.io/github/repo-size/jpachecox/shopify-theme-vite)
+![GitHub Actions](https://img.shields.io/github/actions/workflow/status/jpachecox/shopify-theme-vite/ci.yml?label=CI)
+
 Build tooling for Shopify themes using Vite, Sass, optional React, and a flat
 `assets/` output compatible with Shopify's CDN.
 
@@ -65,6 +72,7 @@ Do not edit generated entrypoints or `snippets/vite-tag.liquid` directly.
 | `yarn format`            | Formats source, utility, root configuration, and documentation files.                   |
 | `yarn check:types`       | Checks frontend and Node/Vite configuration types without emitting files.               |
 | `yarn check:entrypoints` | Tests generated-entrypoint naming rules.                                                |
+| `yarn check:sass`        | Compiles Sass fixtures to validate function and mixin arguments.                        |
 | `yarn clean`             | Removes dependencies, build artifacts, and caches.                                      |
 | `yarn clean:build`       | Removes build artifacts and Vite caches only.                                           |
 | `yarn fresh`             | Cleans, installs, builds, and verifies.                                                 |
