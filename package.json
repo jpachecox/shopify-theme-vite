@@ -8,6 +8,7 @@
     "build": "vite build",
     "build:verify": "yarn build && node scripts/verify-assets.mjs",
     "check:entrypoints": "node --test utils/entrypoints.test.mjs",
+    "check:sass": "node --test utils/sass-validation.test.mjs",
     "check:types": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
     "clean": "rimraf node_modules .vite dist .shopify/.cache assets/.vite .eslintcache .stylelintcache tsconfig.node.tsbuildinfo",
     "clean:build": "rimraf dist .vite assets/.vite",
