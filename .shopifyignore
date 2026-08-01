@@ -29,7 +29,6 @@ vite.config.js
 .claude/
 .agents/
 .codex/
-CLAUDE.md
 README.md
 LICENSE
 
