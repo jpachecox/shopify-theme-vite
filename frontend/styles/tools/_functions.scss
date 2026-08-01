@@ -3,16 +3,110 @@
 // Pure Sass functions. No CSS output — consumed via @use 'tools/functions' as fn.
 // =============================================================================
 
+@use 'sass:meta';
 @use 'sass:math';
+@use 'sass:list';
 @use 'sass:map';
 @use 'sass:string';
-@use 'sass:meta';
 
+@use 'settings/radius' as *;
 @use 'settings/breakpoints' as *;
 @use 'settings/colors' as *;
-@use 'settings/elevation' as *;
-@use 'settings/radius' as *;
 @use 'settings/spacing' as *;
+@use 'settings/elevation' as *;
+
+/// Validates that a value is of a specific type.
+/// @param $value - The value to validate
+/// @param $type - The expected type as a string (e.g. 'string', 'number', 'map')
+/// @param $name - Parameter name used in the error message
+/// @throws Error if the type does not match
+@function assert-type($value, $type, $name) {
+  @if meta.type-of($value) != $type {
+    @error "Invalid argument: '#{$name}' must be a #{$type}, got #{meta.type-of($value)}.";
+  }
+  @return true;
+}
+
+/// Validates that a value is one of the allowed values.
+/// @param $value - The value to validate
+/// @param $allowed-list - List of allowed values
+/// @param $name - Parameter name used in the error message
+/// @throws Error if the value is not in the list
+@function assert-in-list($value, $allowed-list, $name) {
+  @if not list.index($allowed-list, $value) {
+    @error "Invalid argument: '#{$name}' must be one of #{$allowed-list}, got #{$value}.";
+  }
+  @return true;
+}
+
+/// Validates that a value is a positive integer.
+/// @param $value - The value to validate
+/// @param $name - Parameter name used in the error message
+/// @throws Error if it is not a positive integer
+@function assert-positive-integer($value, $name) {
+  @if meta.type-of($value) != 'number' {
+    @error "Invalid argument: '#{$name}' must be a number, got #{meta.type-of($value)}.";
+  } @else if not math.is-unitless($value) {
+    @error "Invalid argument: '#{$name}' must be a unitless number, got #{$value}.";
+  } @else if $value < 1 {
+    @error "Invalid argument: '#{$name}' must be greater than or equal to 1, got #{$value}.";
+  } @else if math.round($value) != $value {
+    @error "Invalid argument: '#{$name}' must be an integer, got #{$value}.";
+  }
+  @return true;
+}
+
+/// Validates that a value is a positive unitless number (greater than 0).
+/// @param $value - The value to validate
+/// @param $name - Parameter name used in the error message
+/// @throws Error if it is not a positive unitless number
+@function assert-unitless-positive($value, $name) {
+  @if meta.type-of($value) != 'number' {
+    @error "Invalid argument: '#{$name}' must be a number, got #{meta.type-of($value)}.";
+  } @else if not math.is-unitless($value) {
+    @error "Invalid argument: '#{$name}' must be a unitless number, got #{$value}.";
+  } @else if $value <= 0 {
+    @error "Invalid argument: '#{$name}' must be greater than 0, got #{$value}.";
+  }
+  @return true;
+}
+
+/// Validates that a value is a non-negative number (greater than or equal to 0).
+/// @param $value - The value to validate
+/// @param $name - Parameter name used in the error message
+/// @throws Error if it is not a non-negative number
+@function assert-non-negative($value, $name) {
+  @if meta.type-of($value) != 'number' {
+    @error "Invalid argument: '#{$name}' must be a number, got #{meta.type-of($value)}.";
+  } @else if $value < 0 {
+    @error "Invalid argument: '#{$name}' must be greater than or equal to 0, got #{$value}.";
+  }
+  @return true;
+}
+
+/// Validates that a string is not empty.
+/// @param $value - The value to validate
+/// @param $name - Parameter name used in the error message (must be a string literal like '$variable-name')
+/// @throws Error if the string is empty
+@function assert-non-empty-string($value, $name) {
+  @if meta.type-of($value) != 'string' {
+    @error "Invalid argument: '#{$name}' must be a string, got #{meta.type-of($value)}.";
+  } @else if $value == '' {
+    @error "Invalid argument: '#{$name}' must be a non-empty string.";
+  }
+  @return true;
+}
+
+/// Validates that a value is a string (empty allowed).
+/// @param $value - The value to validate
+/// @param $name - Parameter name used in the error message (must be a string literal like '$variable-name')
+/// @throws Error if it is not a string
+@function assert-string($value, $name) {
+  @if meta.type-of($value) != 'string' {
+    @error "Invalid argument: '#{$name}' must be a string, got #{meta.type-of($value)}.";
+  }
+  @return true;
+}
 
 /// Converts px to rem (assumes 16px base).
 /// usage: fn.rem(16px) => 1rem
@@ -25,7 +119,7 @@
   @return #{$value}rem;
 }
 
-/// Removes unit from a numeric value.
+/// Removes the unit from a numeric value.
 /// usage: fn.strip-unit(16px) => 16
 /// @param {Number} $value
 /// @return {Number} unitless value
@@ -37,58 +131,88 @@
   @return $value;
 }
 
-/// Reads a value from a settings map with strict validation.
-/// Fails the build if the key doesn't exist (instead of returning silently wrong).
-/// usage: fn.map-get-strict($map, 'key', '$map-name');
-/// @param {Map} $map
-/// @param {String} $key
-/// @param {String} $map-name - for the error message
-/// @return {*} the value for $key
-@function map-get-strict($map, $key, $map-name: 'map') {
+/// Reads a radius token from the radius map with strict validation.
+/// @param $key - The radius token key (e.g. 'sm', 'md')
+/// @return The corresponding radius value
+/// @throws Error if $key does not exist in the radius map
+@function radius($key) {
+  @return map-get-strict($radius, $key, '$radius');
+}
+
+/// Reads a breakpoint value from the breakpoints map with strict validation.
+/// @param $key - The breakpoint key (e.g. 'sm', 'md')
+/// @param $map - (Optional) Breakpoint map to use (defaults to $breakpoints)
+/// @return The corresponding breakpoint value
+/// @throws Error if $key does not exist in the breakpoints map
+@function breakpoint($key, $map: null) {
+  $map-name: '$map';
+
+  @if not $map {
+    $map: $breakpoints;
+    $map-name: '$breakpoints';
+  }
+
+  @return map-get-strict($map, $key, $map-name);
+}
+
+/// Reads a spacing token from the spacing map with strict validation.
+/// @param $key - The spacing token key (e.g. '1', '2')
+/// @return The corresponding spacing value
+/// @throws Error if $key does not exist in the spacing map
+@function spacing($key) {
+  @return map-get-strict($spacing, $key, '$spacing');
+}
+
+/// Returns the shadow-border value for the given state.
+/// @param $state - The state ('default' or 'hover') (default: 'default')
+/// @return The corresponding shadow-border value
+/// @throws Error if $state is neither 'default' nor 'hover'
+@function shadow-border($state: 'default') {
+  @if $state == 'default' {
+    @return var(--shadow-border-default);
+  } @else if $state == 'hover' {
+    @return var(--shadow-border-hover);
+  }
+  @error "shadow-border(): '$state' must be 'default' or 'hover', got #{$state}.";
+}
+
+/// Reads an elevation token from the elevation map with strict validation.
+/// @param $key - The elevation level key (e.g. '1', '2')
+/// @return The corresponding elevation value
+/// @throws Error if $key does not exist in the elevation map
+@function elevation($key) {
+  @return map-get-strict($elevation, $key, '$elevation');
+}
+
+/// Reads a value from a token map with strict validation.
+/// Fails the build if the key doesn't exist (instead of silently returning null).
+/// usage: fn.map-get-strict($radius, 'sm', '$radius');
+/// @param {Map} $map - The map to read the value from
+/// @param {String} $key - The key whose value to retrieve
+/// @param {String} $map-name - Map name used in the error message (default: '$map')
+/// @return The value associated with the key in the map
+/// @throws Error if $map is not a map, if $key is not a string, or if $key does not exist
+@function map-get-strict($map, $key, $map-name: '$map') {
+  @if meta.type-of($map) != 'map' {
+    @error "map-get-strict(): '#{$map-name}' must be a Sass map, got #{meta.type-of($map)}.";
+  }
+
+  @if meta.type-of($key) != "string" {
+    @error "map-get-strict(): token key must be a string, got #{meta.type-of($key)}.";
+  }
+
   @if not map.has-key($map, $key) {
-    @error "Key \"#{$key}\" not found in #{$map-name}. Available keys: #{map.keys($map)}";
+    @error "map-get-strict(): Key \"#{$key}\" not found in #{$map-name}. Available keys: #{map.keys($map)}.";
   }
 
   @return map.get($map, $key);
 }
 
-/// Shorthand to read a breakpoint value from settings/_breakpoints.scss.
-/// usage: fn.breakpoint('medium') => 768px
-/// @param {String} $name
-/// @return {Number} breakpoint value in px
-@function breakpoint($name) {
-  @return map-get-strict($breakpoints, $name, '$breakpoints');
-}
-
-/// Shorthand to read a spacing token from settings/_spacing.scss.
-/// usage: fn.spacing('small') => 8px
-/// @param {String} $name
-/// @return {Number} spacing value
-@function spacing($name) {
-  @return map-get-strict($spacing, $name, '$spacing');
-}
-
-/// Shorthand to read a radius token from settings/_radius.scss.
-/// usage: fn.radius('sm') => 4px
-/// @param {String} $name - 'none' | 'sm' | 'md' | 'lg' | 'full'
-/// @return {Number} radius value
-@function radius($name) {
-  @return map-get-strict($radius, $name, '$radius');
-}
-
-/// Shorthand to read an elevation (box-shadow) token from settings/_elevation.scss.
-/// usage: fn.elevation('1') => (0 1px 2px -1px rgba(var(--color-shadow, 0 0 0), 0.1), 0 1px 3px 0 rgba(var(--color-shadow, 0 0 0), 0.1))
-/// @param {String} $name - '0' | '1' | '2' | '3' | '4' | '5'
-/// @return {List|String} box-shadow value, ready to interpolate directly
-@function elevation($name) {
-  @return map-get-strict($elevation, $name, '$elevation');
-}
-
 /// Reads a grayscale token from the light scale (compile-time fallback only).
 /// For theme-aware color that respects the dark-mode toggle at runtime,
-/// use var(--gray-#{$step}) directly in components instead — see
+/// use var(--gray-#{$step}) directly in components instead.
 /// @param {String} $step - '50' | '950' | 'base'
-/// @return {Color} step value from $gray-light map
+/// @return {Color} step value from the $gray-light map
 @function gray($step) {
   @if $step == 'base' {
     @return $light-base;
@@ -97,24 +221,7 @@
   @return map-get-strict($gray-light, $step, '$gray-light');
 }
 
-/// Shadow border helper function
-/// Returns the shadow border value for light or dark mode states
-/// @param $state - 'default' or 'hover'
-/// @return {String} CSS custom property reference for shadow border
-@function shadow-border($state: 'default') {
-  $property: '--shadow-border-default';
-
-  @if $state == 'hover' {
-    $property: '--shadow-border-hover';
-  }
-
-  @return string.unquote('var(' + $property + ')');
-}
-
 /// Builds a comma-separated font-family stack: "Family", fallback, fallback...
-/// Moved from settings/_typography.scss (was labeled "HELPERS" there) —
-/// it's a pure Sass function with no CSS output, same category as every
-/// other function in this file.
 /// usage: fn.font-stack('Arial', ('Helvetica', 'sans-serif')) => "Arial", "Helvetica", "sans-serif"
 /// @param {String} $family - primary font name
 /// @param {List} $fallback-list - ordered fallback font names
@@ -130,43 +237,30 @@
 }
 
 /// Returns the value associated with a design token from a Sass map.
-///
 /// Validates that the provided map contains the requested token before
-/// returning its value. Throws a descriptive error when the token does
-/// not exist.
-///
-/// usage: border-radius: token-get($radius-scale, $name, "radius");
-///
-/// @param {Map} $map
-///   The token map to search.
-///
-/// @param {*} $key
-///   The token key to retrieve.
-///
-/// @param {String} $type ['token']
-///   Human-readable token category used in error messages
-///   (e.g. 'radius', 'spacing', 'color').
-///
-/// @return {*}
-///   The value associated with the requested token.
-///
-/// @throws
-///   If `$map` is not a Sass map.
-///
-/// @throws
-///   If `$key` does not exist in `$map`.
-@function token-get($map, $key, $type: "token") {
-  @if meta.type-of($map) != "map" {
-    @error "token-get(): First argument must be a Sass map.";
-  }
-
-  @if meta.type-of($key) != "string" {
-    @return $key;
+/// returning its value. Throws a descriptive error when the token does not exist.
+/// @param $map - The token map to search
+/// @param $key - The token key to retrieve
+/// @param $type - (Optional) Expected value type (e.g. 'string', 'number')
+/// @return The value associated with the requested token
+/// @throws Error if $map is not a Sass map, if $key does not exist in the map,
+///         or if $type is provided and the value is not of the expected type
+@function token-get($map, $key, $type: null) {
+  @if meta.type-of($map) != 'map' {
+    @error "token-get(): First argument must be a Sass map, got #{meta.type-of($map)}.";
   }
 
   @if not map.has-key($map, $key) {
-    @error "Unknown #{$type} token '#{$key}'. Available: #{map.keys($map)}";
+    @error "token-get(): Key \"#{$key}\" not found in map.";
   }
 
-  @return map.get($map, $key);
+  $value: map.get($map, $key);
+
+  @if $type {
+    @if meta.type-of($value) != $type {
+      @error "token-get(): '" + $key + "' must be a #{$type}, got #{meta.type-of($value)}.";
+    }
+  }
+
+  @return $value;
 }
