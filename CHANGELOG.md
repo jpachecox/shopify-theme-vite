@@ -75,6 +75,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `mix.radius()` error messages now use a consistent `radius():` prefix.
 - `mix.transition()` now requires a time unit (`s`/`ms`) for `$duration`,
   rejecting unitless zero and other units that produce invalid CSS.
+- `mix.transition()` test coverage now exercises every validation branch
+  (non-numeric, negative, unitless-zero, and wrong-unit durations, plus
+  invalid property/easing).
 - `fn.token-get()` validates the optional `$type` argument itself, replacing
   the previous confusing `must be a 123` error with a clear type error.
 - `fn.token-get()` no longer silently skips type validation for falsy `$type`

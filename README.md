@@ -75,7 +75,7 @@ Do not edit generated entrypoints or `snippets/vite-tag.liquid` directly.
 | `yarn format`            | Formats source, utility, root configuration, and documentation files.                   |
 | `yarn check:types`       | Checks frontend and Node/Vite configuration types without emitting files.               |
 | `yarn check:entrypoints` | Tests generated-entrypoint naming rules.                                                |
-| `yarn check:sass`        | Compiles Sass fixtures to validate function and mixin arguments.                        |
+| `yarn check:sass`        | Compiles Sass fixtures to validate function and mixin arguments (27 tests).             |
 | `yarn clean`             | Removes dependencies, build artifacts, and caches.                                      |
 | `yarn clean:build`       | Removes build artifacts and Vite caches only.                                           |
 | `yarn fresh`             | Cleans, installs, builds, and verifies.                                                 |

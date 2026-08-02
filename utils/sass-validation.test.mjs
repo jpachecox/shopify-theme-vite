@@ -474,6 +474,12 @@ test('transition: validates parameters', async (t) => {
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$property' must be a string, got number/);
 
+  // Invalid duration (not a number)
+  const scssBadDurType = createTestScss('@include m.transition(background-color, "fast");');
+  ({ css, error } = compileScss(scssBadDurType));
+  assert.ok(error, 'Expected Sass error but got none');
+  assert.match(error, /transition\(\): '\$duration' must be a non-negative time value, got fast/);
+
   // Invalid duration (negative)
   const scssBadDur = createTestScss('@include m.transition(background-color, -0.1s);');
   ({ css, error } = compileScss(scssBadDur));
