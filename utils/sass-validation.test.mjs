@@ -161,7 +161,12 @@ test('token-get: validates inputs correctly', async (t) => {
   const scssBadType = createTestScss('$result: fn.token-get((key1: "value1"), "key1", 123);');
   ({ css, error } = compileScss(scssBadType));
   assert.ok(error, 'Expected Sass error but got none');
-  assert.match(error, /token-get\(\): 'key1' must be a 123, got string./);
+  assert.match(error, /Invalid argument: '\$type' must be a string, got number/);
+
+  // Valid type argument
+  const scssGoodType = createTestScss('$result: fn.token-get((key1: "value1"), "key1", "string");');
+  ({ css, error } = compileScss(scssGoodType));
+  assert.ifError(error, `Unexpected Sass error: ${error}`);
 });
 
 // Test token accessors — shared validation via map-get-strict
@@ -178,22 +183,10 @@ test('token accessors: spacing/radius/elevation/breakpoint reject unknown keys',
   }
 
   const invalidCases = [
-    [
-      'fn.spacing("bogus")',
-      /map-get-strict\(\): Key "bogus" not found in \$spacing\. Available keys: 0, 0-5, 1/,
-    ],
-    [
-      'fn.radius("bogus")',
-      /map-get-strict\(\): Key "bogus" not found in \$radius\. Available keys: none, xs, sm/,
-    ],
-    [
-      'fn.elevation("bogus")',
-      /map-get-strict\(\): Key "bogus" not found in \$elevation\. Available keys: 0, 1, 2/,
-    ],
-    [
-      'fn.breakpoint("bogus")',
-      /map-get-strict\(\): Key "bogus" not found in \$breakpoints\. Available keys: sm, md/,
-    ],
+    ['fn.spacing("bogus")', /map-get-strict\(\): Key "bogus" not found in \$spacing\./],
+    ['fn.radius("bogus")', /map-get-strict\(\): Key "bogus" not found in \$radius\./],
+    ['fn.elevation("bogus")', /map-get-strict\(\): Key "bogus" not found in \$elevation\./],
+    ['fn.breakpoint("bogus")', /map-get-strict\(\): Key "bogus" not found in \$breakpoints\./],
   ];
   for (const [call, regex] of invalidCases) {
     const { css, error } = compileScss(createTestScss(`$result: ${call};`));
@@ -204,6 +197,23 @@ test('token accessors: spacing/radius/elevation/breakpoint reject unknown keys',
   // null $map must resolve to the global $breakpoints (regression guard)
   const nullMap = compileScss(createTestScss('$result: fn.breakpoint("md", null);'));
   assert.ifError(nullMap.error, `Unexpected Sass error: ${nullMap.error}`);
+
+  // Custom map: valid key resolves against it
+  const customMap = compileScss(
+    createTestScss('width: fn.breakpoint("sm", (sm: 100px, md: 200px));')
+  );
+  assert.ifError(customMap.error, `Unexpected Sass error: ${customMap.error}`);
+  assert.match(customMap.css, /width: 100px/);
+
+  // Custom map: unknown key reports the custom map, not $breakpoints
+  const customMapBad = compileScss(createTestScss('$result: fn.breakpoint("bogus", (sm: 100px));'));
+  assert.ok(customMapBad.error, 'Expected Sass error but got none');
+  assert.match(customMapBad.error, /Key "bogus" not found in \$map\./);
+
+  // Empty map must not fall back to the global map (only null does)
+  const emptyMap = compileScss(createTestScss('$result: fn.breakpoint("md", ());'));
+  assert.ok(emptyMap.error, 'Expected Sass error but got none');
+  assert.match(emptyMap.error, /map-get-strict\(\): '\$map' must be a Sass map, got list/);
 });
 
 // Test button-variant mixin
@@ -294,10 +304,13 @@ test('elevation-shadow: validates level and color', async (t) => {
   const scssBadLevel = createTestScss('@include m.elevation-shadow("invalid-level");');
   ({ css, error } = compileScss(scssBadLevel));
   assert.ok(error, 'Expected Sass error but got none');
-  assert.match(
-    error,
-    /elevation-shadow\(\): '\$level' is not a valid elevation token\. Available: 0, 1, 2, 3, 4, 5/
-  );
+  assert.match(error, /elevation-shadow\(\): 'invalid-level' is not a valid elevation token\./);
+
+  // Invalid level type (non-string)
+  const scssBadLevelType = createTestScss('@include m.elevation-shadow(123);');
+  ({ css, error } = compileScss(scssBadLevelType));
+  assert.ok(error, 'Expected Sass error but got none');
+  assert.match(error, /elevation-shadow\(\): '123' is not a valid elevation token\./);
 
   // Invalid color type
   const scssBadColor = createTestScss('@include m.elevation-shadow("2", 123);');
@@ -332,7 +345,7 @@ test('radius mixin: rejects unknown tokens', async (t) => {
   const scssBad = createTestScss('@include m.radius("bogus");');
   ({ css, error } = compileScss(scssBad));
   assert.ok(error, 'Expected Sass error but got none');
-  assert.match(error, /radius\(\): '\$name' is not a valid radius token\. Available: none, xs, sm/);
+  assert.match(error, /radius\(\): 'bogus' is not a valid radius token\./);
 });
 
 test('radius-corners: rejects unknown tokens', async (t) => {
@@ -365,10 +378,7 @@ test('icon-padding-adjust: validates parameters', async (t) => {
   const scssBadSize = createTestScss('@include m.icon-padding-adjust("end", "invalid-size");');
   ({ css, error } = compileScss(scssBadSize));
   assert.ok(error, 'Expected Sass error but got none');
-  assert.match(
-    error,
-    /icon-padding-adjust\(\): '\$size' is not a valid optical-adjustment token\. Available: xs, sm, md, lg/
-  );
+  assert.match(error, /icon-padding-adjust\(\): 'invalid-size' is not a valid optical-adjustment token\./);
 });
 
 // Test concentric-radius mixin
@@ -443,6 +453,31 @@ test('transition: validates parameters', async (t) => {
   ({ css, error } = compileScss(scssBadDur));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /transition\(\): '\$duration' must be a non-negative time value/);
+
+  // Invalid duration (unitless zero — duration requires a time unit)
+  const scssUnitlessZero = createTestScss('@include m.transition(background-color, 0);');
+  ({ css, error } = compileScss(scssUnitlessZero));
+  assert.ok(error, 'Expected Sass error but got none');
+  assert.match(
+    error,
+    /transition\(\): '\$duration' must be a time value with unit 's' or 'ms', got 0/
+  );
+
+  // Invalid duration (wrong unit)
+  const scssWrongUnit = createTestScss('@include m.transition(background-color, 10px);');
+  ({ css, error } = compileScss(scssWrongUnit));
+  assert.ok(error, 'Expected Sass error but got none');
+  assert.match(
+    error,
+    /transition\(\): '\$duration' must be a time value with unit 's' or 'ms', got 10px/
+  );
+
+  // Valid durations: zero with time unit, s and ms
+  for (const duration of ['0s', '0ms', '150ms']) {
+    const scssValid = createTestScss(`@include m.transition(background-color, ${duration});`);
+    ({ css, error } = compileScss(scssValid));
+    assert.ifError(error, `Unexpected Sass error for ${duration}: ${error}`);
+  }
 
   // Invalid easing (not string)
   const scssBadEase = createTestScss('@include m.transition(background-color, 0.2s, 123);');

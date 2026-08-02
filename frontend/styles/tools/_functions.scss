@@ -31,9 +31,14 @@
 /// @param $value - The value to validate
 /// @param $allowed-list - List of allowed values
 /// @param $name - Parameter name used in the error message
+/// @param $message - (Optional) Custom error message; replaces the default when provided
 /// @throws Error if the value is not in the list
-@function assert-in-list($value, $allowed-list, $name) {
+@function assert-in-list($value, $allowed-list, $name, $message: null) {
   @if not list.index($allowed-list, $value) {
+    @if $message {
+      @error $message;
+    }
+
     @error "Invalid argument: '#{$name}' must be one of #{$allowed-list}, got #{$value}.";
   }
   @return true;
@@ -42,16 +47,25 @@
 /// Validates that a value is a positive integer.
 /// @param $value - The value to validate
 /// @param $name - Parameter name used in the error message
+/// @param $message - (Optional) Custom error message; replaces the default when provided
 /// @throws Error if it is not a positive integer
-@function assert-positive-integer($value, $name) {
-  @if meta.type-of($value) != 'number' {
-    @error "Invalid argument: '#{$name}' must be a number, got #{meta.type-of($value)}.";
-  } @else if not math.is-unitless($value) {
-    @error "Invalid argument: '#{$name}' must be a unitless number, got #{$value}.";
-  } @else if $value < 1 {
-    @error "Invalid argument: '#{$name}' must be greater than or equal to 1, got #{$value}.";
-  } @else if math.round($value) != $value {
-    @error "Invalid argument: '#{$name}' must be an integer, got #{$value}.";
+@function assert-positive-integer($value, $name, $message: null) {
+  $valid: meta.type-of($value) == 'number' and math.is-unitless($value) and $value >= 1 and math.round($value) == $value;
+
+  @if not $valid {
+    @if $message {
+      @error $message;
+    }
+
+    @if meta.type-of($value) != 'number' {
+      @error "Invalid argument: '#{$name}' must be a number, got #{meta.type-of($value)}.";
+    } @else if not math.is-unitless($value) {
+      @error "Invalid argument: '#{$name}' must be a unitless number, got #{$value}.";
+    } @else if $value < 1 {
+      @error "Invalid argument: '#{$name}' must be greater than or equal to 1, got #{$value}.";
+    } @else {
+      @error "Invalid argument: '#{$name}' must be an integer, got #{$value}.";
+    }
   }
   @return true;
 }
@@ -257,8 +271,10 @@
   $value: map.get($map, $key);
 
   @if $type {
+    $__: assert-string($type, '$type');
+
     @if meta.type-of($value) != $type {
-      @error "token-get(): '" + $key + "' must be a #{$type}, got #{meta.type-of($value)}.";
+      @error "token-get(): '#{$key}' must be a #{$type}, got #{meta.type-of($value)}.";
     }
   }
 
