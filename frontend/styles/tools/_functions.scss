@@ -47,16 +47,11 @@
 /// Validates that a value is a positive integer.
 /// @param $value - The value to validate
 /// @param $name - Parameter name used in the error message
-/// @param $message - (Optional) Custom error message; replaces the default when provided
 /// @throws Error if it is not a positive integer
-@function assert-positive-integer($value, $name, $message: null) {
+@function assert-positive-integer($value, $name) {
   $valid: meta.type-of($value) == 'number' and math.is-unitless($value) and $value >= 1 and math.round($value) == $value;
 
   @if not $valid {
-    @if $message {
-      @error $message;
-    }
-
     @if meta.type-of($value) != 'number' {
       @error "Invalid argument: '#{$name}' must be a number, got #{meta.type-of($value)}.";
     } @else if not math.is-unitless($value) {
@@ -164,6 +159,8 @@
   @if not $map {
     $map: $breakpoints;
     $map-name: '$breakpoints';
+  } @else if list.length($map) == 0 {
+    @error "breakpoint(): '$map' must be a non-empty map, got an empty one.";
   }
 
   @return map-get-strict($map, $key, $map-name);
@@ -182,12 +179,18 @@
 /// @return The corresponding shadow-border value
 /// @throws Error if $state is neither 'default' nor 'hover'
 @function shadow-border($state: 'default') {
+  $__: assert-in-list(
+    $state,
+    ('default', 'hover'),
+    '$state',
+    "shadow-border(): '#{$state}' must be 'default' or 'hover', got #{$state}."
+  );
+
   @if $state == 'default' {
     @return var(--shadow-border-default);
-  } @else if $state == 'hover' {
-    @return var(--shadow-border-hover);
   }
-  @error "shadow-border(): '$state' must be 'default' or 'hover', got #{$state}.";
+
+  @return var(--shadow-border-hover);
 }
 
 /// Reads an elevation token from the elevation map with strict validation.
@@ -211,7 +214,7 @@
     @error "map-get-strict(): '#{$map-name}' must be a Sass map, got #{meta.type-of($map)}.";
   }
 
-  @if meta.type-of($key) != "string" {
+  @if meta.type-of($key) != 'string' {
     @error "map-get-strict(): token key must be a string, got #{meta.type-of($key)}.";
   }
 
@@ -251,8 +254,9 @@
 }
 
 /// Returns the value associated with a design token from a Sass map.
-/// Validates that the provided map contains the requested token before
-/// returning its value. Throws a descriptive error when the token does not exist.
+/// Delegates map/key validation to map-get-strict(), so errors are
+/// consistent with the other token accessors (and list available keys).
+/// Throws a descriptive error when the token does not exist.
 /// @param $map - The token map to search
 /// @param $key - The token key to retrieve
 /// @param $type - (Optional) Expected value type (e.g. 'string', 'number')
@@ -260,17 +264,9 @@
 /// @throws Error if $map is not a Sass map, if $key does not exist in the map,
 ///         or if $type is provided and the value is not of the expected type
 @function token-get($map, $key, $type: null) {
-  @if meta.type-of($map) != 'map' {
-    @error "token-get(): First argument must be a Sass map, got #{meta.type-of($map)}.";
-  }
+  $value: map-get-strict($map, $key, '$map');
 
-  @if not map.has-key($map, $key) {
-    @error "token-get(): Key \"#{$key}\" not found in map.";
-  }
-
-  $value: map.get($map, $key);
-
-  @if $type {
+  @if meta.type-of($type) != 'null' {
     $__: assert-string($type, '$type');
 
     @if meta.type-of($value) != $type {

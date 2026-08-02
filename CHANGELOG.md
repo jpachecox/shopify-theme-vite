@@ -56,6 +56,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `radius()`, `elevation-shadow()`, and `icon-padding-adjust()` error messages
   now interpolate the offending token value instead of printing the literal
   parameter name.
+- `fn.token-get()` delegates map/key validation to `map-get-strict()`, so its
+  errors are consistent with the other accessors and list available keys.
+- `fn.shadow-border()` reuses `assert-in-list()` (same error message as before).
+- `fn.breakpoint()` reports an explicitly passed empty map clearly instead of
+  the generic `got list` error from `map-get-strict()`.
 - `tools/README.md` documents the validation behavior of accessors and mixins.
 - Function and mixin doc comments translated to English.
 - README badges restyled with `style=for-the-badge`; `yarn check:sass` entry
@@ -72,3 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   rejecting unitless zero and other units that produce invalid CSS.
 - `fn.token-get()` validates the optional `$type` argument itself, replacing
   the previous confusing `must be a 123` error with a clear type error.
+- `fn.token-get()` no longer silently skips type validation for falsy `$type`
+  values (`''`/`false`).
+- `mix.elevation-shadow()` rejects an empty `$color` string, which previously
+  compiled to invalid `rgba()` CSS.

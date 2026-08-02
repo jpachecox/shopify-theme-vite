@@ -98,7 +98,7 @@ test('shadow-border: rejects invalid state', async (t) => {
   const scss = createTestScss('$result: fn.shadow-border(invalid);');
   const { css, error } = compileScss(scss);
   assert.ok(error, 'Expected Sass error but got none');
-  assert.match(error, /shadow-border\(\): '\$state' must be 'default' or 'hover', got invalid./);
+  assert.match(error, /shadow-border\(\): 'invalid' must be 'default' or 'hover', got invalid./);
 });
 
 // Test shadow-border mixin
@@ -114,7 +114,7 @@ test('shadow-border mixin: accepts valid states and rejects invalid ones', async
   const invalid = createTestScss('@include m.shadow-border("invalid");');
   ({ css, error } = compileScss(invalid));
   assert.ok(error, 'Expected Sass error but got none');
-  assert.match(error, /shadow-border\(\): '\$state' must be 'default' or 'hover', got invalid./);
+  assert.match(error, /shadow-border\(\): 'invalid' must be 'default' or 'hover', got invalid./);
 });
 
 // Test emit-type-scale-tokens mixin
@@ -155,13 +155,28 @@ test('token-get: validates inputs correctly', async (t) => {
   const scssBadMap = createTestScss('$result: fn.token-get("not-a-map", "key");');
   ({ css, error } = compileScss(scssBadMap));
   assert.ok(error, 'Expected Sass error but got none');
-  assert.match(error, /token-get\(\): First argument must be a Sass map, got string./);
+  assert.match(error, /map-get-strict\(\): '\$map' must be a Sass map, got string./);
+
+  // Missing key reports the map name and available keys (via map-get-strict)
+  const scssMissingKey = createTestScss('$result: fn.token-get((key1: "value1"), "bogus");');
+  ({ css, error } = compileScss(scssMissingKey));
+  assert.ok(error, 'Expected Sass error but got none');
+  assert.match(error, /map-get-strict\(\): Key "bogus" not found in \$map\. Available keys: key1/);
 
   // Invalid type argument
   const scssBadType = createTestScss('$result: fn.token-get((key1: "value1"), "key1", 123);');
   ({ css, error } = compileScss(scssBadType));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$type' must be a string, got number/);
+
+  // Falsy type arguments are validated too — no silent skip
+  for (const badType of ['false', "''"]) {
+    const scssFalsyType = createTestScss(
+      `$result: fn.token-get((key1: "value1"), "key1", ${badType});`
+    );
+    ({ css, error } = compileScss(scssFalsyType));
+    assert.ok(error, `Expected Sass error for \$type ${badType} but got none`);
+  }
 
   // Valid type argument
   const scssGoodType = createTestScss('$result: fn.token-get((key1: "value1"), "key1", "string");');
@@ -213,7 +228,7 @@ test('token accessors: spacing/radius/elevation/breakpoint reject unknown keys',
   // Empty map must not fall back to the global map (only null does)
   const emptyMap = compileScss(createTestScss('$result: fn.breakpoint("md", ());'));
   assert.ok(emptyMap.error, 'Expected Sass error but got none');
-  assert.match(emptyMap.error, /map-get-strict\(\): '\$map' must be a Sass map, got list/);
+  assert.match(emptyMap.error, /breakpoint\(\): '\$map' must be a non-empty map, got an empty one/);
 });
 
 // Test button-variant mixin
@@ -317,6 +332,12 @@ test('elevation-shadow: validates level and color', async (t) => {
   ({ css, error } = compileScss(scssBadColor));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$color' must be a string, got number/);
+
+  // Empty color would produce invalid rgba() CSS
+  const scssEmptyColor = createTestScss('@include m.elevation-shadow("2", "");');
+  ({ css, error } = compileScss(scssEmptyColor));
+  assert.ok(error, 'Expected Sass error but got none');
+  assert.match(error, /Invalid argument: '\$color' must be a non-empty string/);
 });
 
 // Test elevation mixin
@@ -339,6 +360,8 @@ test('radius mixin: rejects unknown tokens', async (t) => {
   const scss = createTestScss('@include m.radius("sm");');
   let { css, error } = compileScss(scss);
   assert.ifError(error, `Unexpected Sass error: ${error}`);
+  // Intentional: asserts the mixin emits the token's actual CSS value;
+  // this is the one assertion coupled to $radius contents on purpose.
   assert.match(css, /border-radius: 0\.25rem/);
 
   // Invalid token
@@ -378,7 +401,10 @@ test('icon-padding-adjust: validates parameters', async (t) => {
   const scssBadSize = createTestScss('@include m.icon-padding-adjust("end", "invalid-size");');
   ({ css, error } = compileScss(scssBadSize));
   assert.ok(error, 'Expected Sass error but got none');
-  assert.match(error, /icon-padding-adjust\(\): 'invalid-size' is not a valid optical-adjustment token\./);
+  assert.match(
+    error,
+    /icon-padding-adjust\(\): 'invalid-size' is not a valid optical-adjustment token\./
+  );
 });
 
 // Test concentric-radius mixin
@@ -424,7 +450,7 @@ test('font-face: validates all parameters', async (t) => {
   const scssBadWeight = createTestScss('@include m.font-face("TestFont", "/path/to/font", -1);');
   ({ css, error } = compileScss(scssBadWeight));
   assert.ok(error, 'Expected Sass error but got none');
-  assert.match(error, /font-face\(\): '\$weight' must be a positive unitless number, got -1/);
+  assert.match(error, /Invalid argument: '\$weight' must be greater than or equal to 1, got -1/);
 
   // Invalid style type
   const scssBadStyle = createTestScss(
@@ -509,6 +535,8 @@ test('respond-to / respond-below: reject unknown breakpoints', async (t) => {
   const scss = createTestScss('@include m.respond-to("md") { color: red; }');
   let { css, error } = compileScss(scss);
   assert.ifError(error, `Unexpected Sass error: ${error}`);
+  // Intentional: verifies the media query resolves against the real
+  // $breakpoints contents (coupled on purpose, like the radius assertion).
   assert.match(css, /@media screen and \(min-width: 990px\)/);
 
   // Invalid breakpoint

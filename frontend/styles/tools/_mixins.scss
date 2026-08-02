@@ -1,7 +1,7 @@
-/// =============================================================================
-/// TOOLS / MIXINS
-/// Reusable mixins. No CSS output until explicitly @include'd..
-/// =============================================================================
+// =============================================================================
+// TOOLS / MIXINS
+// Reusable mixins. No CSS output until explicitly @include'd.
+// =============================================================================
 
 @use 'sass:math';
 @use 'sass:map';
@@ -249,8 +249,8 @@
     @error "elevation-shadow(): '#{$level}' is not a valid elevation token. Available: #{map.keys($elevation-offset)}";
   }
 
-  // Validate that $color is a string (can be RGB triplet or CSS variable)
-  $__: fn.assert-string($color, '$color');
+  // Validate that $color is a non-empty string (can be RGB triplet or CSS variable)
+  $__: fn.assert-non-empty-string($color, '$color');
   $offsets: map.get($elevation-offset, $level);
   $opacities: map.get($elevation-opacity, $level);
   $umbra-offset: list.nth($offsets, 1);
@@ -339,11 +339,7 @@
   $__: fn.assert-non-empty-string($path, '$path');
 
   // Validate that $weight is a positive unitless number
-  $__: fn.assert-positive-integer(
-    $weight,
-    '$weight',
-    "font-face(): '$weight' must be a positive unitless number, got #{$weight}."
-  );
+  $__: fn.assert-positive-integer($weight, '$weight');
 
   // Validate that $style is a string (we don't validate specific values here)
   $__: fn.assert-string($style, '$style');
