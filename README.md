@@ -1,11 +1,14 @@
 # Shopify Theme Vite
 
-![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen)
-![Vite](https://img.shields.io/badge/Vite-8.1.5-646CFF?logo=vite&logoColor=white)
-![Sass](https://img.shields.io/badge/Sass-1.100-CC6699?logo=sass&logoColor=white)
-![Shopify](https://img.shields.io/badge/Shopify-95BF47?logo=shopify&logoColor=white)
-![GitHub repo size](https://img.shields.io/github/repo-size/jpachecox/shopify-theme-vite)
-![GitHub Actions](https://img.shields.io/github/actions/workflow/status/jpachecox/shopify-theme-vite/ci.yml?label=CI)
+![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen?style=for-the-badge)
+![Vite](https://img.shields.io/badge/Vite-8.1.5-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Sass](https://img.shields.io/badge/Sass-1.100-CC6699?style=for-the-badge&logo=sass&logoColor=white)
+![Shopify](https://img.shields.io/badge/Shopify-95BF47?style=for-the-badge&logo=shopify&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-grey?style=for-the-badge&logo=javascript&logoColor=white)
+![Build](https://img.shields.io/badge/build-passing-brightgreen?style=for-the-badge)
+![CI](https://img.shields.io/github/actions/workflow/status/jpachecox/shopify-theme-vite/ci.yml?style=for-the-badge&label=CI)
+![Tests](https://img.shields.io/github/actions/workflow/status/jpachecox/shopify-theme-vite/ci.yml?style=for-the-badge&label=Tests)
+![GitHub repo size](https://img.shields.io/github/repo-size/jpachecox/shopify-theme-vite?style=for-the-badge)
 
 Build tooling for Shopify themes using Vite, Sass, optional React, and a flat
 `assets/` output compatible with Shopify's CDN.

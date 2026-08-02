@@ -14,6 +14,39 @@ properties under `@layer settings`; it does not style application elements.
 | `_tokens.scss`      | Emits shared custom properties in `@layer settings`: alpha, image outline, shadow-border, font-weight scale, and grayscale fallback.                                                               |
 | `_typography.scss`  | Modular type scale, `$font-size`/`$line-height`/`$letter-spacing`/`$font-style`/generic `$font-weight` maps. Does **not** hold body/heading font family, style, or scale — see "Typography" below. |
 
+## Editable token flow
+
+Merchant-editable values are never hard-coded or re-derived in Sass. They
+flow through three stages, re-rendered on every request so Theme Editor
+changes apply without a Sass rebuild:
+
+1. `config/settings_schema.json` — defines the merchant-facing settings
+   (e.g. the `color_schemes` picker and its scheme settings).
+2. `layout/theme.liquid` — the stock Dawn `{% style %}` block bridges
+   `settings.color_schemes` into CSS custom properties, once per
+   `.color-{{ scheme.id }}` block plus a `:root` default from the first scheme.
+3. Sass — consumes those custom properties via `var()`, never defines them.
+
+Concrete example (real consumption sites in this repo):
+
+```scss
+// settings_schema.json -> layout/theme.liquid {% style %}, per scheme
+.color-scheme-1 {
+  --color-background: {{ scheme.settings.background }};
+  --color-shadow: {{ scheme.settings.shadow }};
+}
+
+// Sass consumption — settings/_elevation.scss
+'1': (0 1px 2px -1px rgba(var(--color-shadow, 0 0 0), 0.1), ...);
+
+// Sass consumption — settings/_tokens.scss
+--focus-ring-color: var(--color-link, oklch(50% 0.2 250deg));
+```
+
+The `var()` fallbacks (`0 0 0`, `oklch(50% 0.2 250deg)`) are compile-time
+defaults used only when the runtime bridge is missing; they are not values
+the merchant edits.
+
 ## Colors
 
 There is no `_color-scheme.scss` / `$color-schemes` map in this folder, and
