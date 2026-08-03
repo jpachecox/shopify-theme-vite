@@ -72,6 +72,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   changes sections, verification checklist) with `Closes #` linking guidance.
 - Added `CLAUDE.md` with PR conventions (template usage, one-line change
   bullets, issue-linking notes).
+- Added `.github/ISSUE_TEMPLATE/` with three issue templates: `bug_report.md`
+  (labels `bug`), `feature_request.md` (labels `enhancement`), and `task.md`
+  (labels `chore`), each with scope, tasks, and acceptance criteria sections.
 - `.gitignore`/`.prettierignore` now exclude the whole `.claude/` directory
   instead of only `settings.local.json`/`worktrees/`.
 
