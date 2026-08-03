@@ -17,8 +17,7 @@ assets/.vite/
 # Local agent/editor state. Project skills under .claude/ may be versioned.
 .agents/
 .codex/
-.claude/settings.local.json
-.claude/worktrees/
+.claude/
 
 # Snippet generado automáticamente por vite-plugin-shopify (no editar a mano)
 snippets/vite-tag.liquid

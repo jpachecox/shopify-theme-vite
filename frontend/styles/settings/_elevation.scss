@@ -3,6 +3,7 @@
 // Box-shadow design tokens for realistic depth perception in UI layers.
 // Uses a 5-level elevation scale (0–5) with umbra and penumbra shadows
 // for each level. Consumed via elevation() function in tools/_functions.scss.
+// Shadow color: merchant-editable --color-shadow — see settings/README.md.
 //
 // @see https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow
 // =============================================================================

@@ -8,7 +8,7 @@ assets/
 .vscode/
 .agents/
 .codex/
-.claude/worktrees/
+.claude/
 yarn.lock
 package-lock.json
 *.tsbuildinfo

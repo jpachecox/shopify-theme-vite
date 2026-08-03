@@ -3,6 +3,7 @@
 // Non-color, non-font-family design tokens translated into CSS custom
 // properties: alpha values, image outline, shadow-border, generic font
 // weight scale, focus rings, link defaults, and compile-time grayscale fallbacks.
+// Editable tokens: --color-link fallback for focus rings — see settings/README.md.
 // =============================================================================
 
 @use 'settings/colors' as *;

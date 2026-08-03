@@ -1,7 +1,7 @@
-/// =============================================================================
-/// TOOLS / MIXINS
-/// Reusable mixins. No CSS output until explicitly @include'd..
-/// =============================================================================
+// =============================================================================
+// TOOLS / MIXINS
+// Reusable mixins. No CSS output until explicitly @include'd.
+// =============================================================================
 
 @use 'sass:math';
 @use 'sass:map';
@@ -18,9 +18,7 @@
 /// usage: @include emit-type-scale-tokens($typography-scale);
 /// @param {Map} $scale-map - e.g. settings/_typography.scss's $typography-scale
 @mixin emit-type-scale-tokens($scale-map) {
-  @if meta.type-of($scale-map) != 'map' {
-    @error "emit-type-scale-tokens() expects a Sass map.";
-  }
+  $__: fn.assert-type($scale-map, 'map', '$scale-map');
 
   @if list.length(map.keys($scale-map)) == 0 {
     @warn "emit-type-scale-tokens(): received an empty map.";
@@ -45,6 +43,23 @@
   $active-bg-alpha: 0.1,
   $text-alpha: 1
 ) {
+  // Validate base-css-var (string)
+  $__: fn.assert-string($base-css-var, '$base-css-var');
+
+  // Validate each alpha value (number between 0 and 1)
+  @each $alpha-name, $alpha-value in (
+    'border-alpha': $border-alpha,
+    'hover-bg-alpha': $hover-bg-alpha,
+    'active-bg-alpha': $active-bg-alpha,
+    'text-alpha': $text-alpha
+  ) {
+    @if meta.type-of($alpha-value) != 'number' {
+      @error "button-variant(): '#{$alpha-name}' must be a number between 0 and 1, got #{meta.type-of($alpha-value)}.";
+    } @else if $alpha-value < 0 or $alpha-value > 1 {
+      @error "button-variant(): '#{$alpha-name}' must be between 0 and 1, got #{$alpha-value}.";
+    }
+  }
+
   $base-var: var(--#{$base-css-var});
 
   border-color: rgba($base-var, $border-alpha);
@@ -65,8 +80,10 @@
 
 /// Mobile‑media query against a $breakpoints key.
 /// usage: @include respond-to('medium') { ... }
-@mixin respond-to($breakpoint) {
-  $value: fn.breakpoint($breakpoint);
+/// @param $breakpoint - The breakpoint key to query
+/// @param $map - (Optional) Breakpoint map to use, defaults to global $breakpoints
+@mixin respond-to($breakpoint, $map: null) {
+  $value: fn.breakpoint($breakpoint, $map);
 
   @media screen and (min-width: $value) {
     @content;
@@ -75,8 +92,10 @@
 
 /// Inverse (max‑width) media query for overriding mobile‑first styles downward.
 /// usage: @include respond-below('medium') { ... }
-@mixin respond-below($breakpoint) {
-  $value: fn.breakpoint($breakpoint);
+/// @param $breakpoint - The breakpoint key to query
+/// @param $map - (Optional) Breakpoint map to use, defaults to global $breakpoints
+@mixin respond-below($breakpoint, $map: null) {
+  $value: fn.breakpoint($breakpoint, $map);
 
   @media screen and (max-width: ($value - 1px)) {
     @content;
@@ -121,7 +140,11 @@
 /// Truncates text to N lines with ellipsis. Requires -webkit-line-clamp
 /// (supported in all evergreen browsers).
 /// usage: @include truncate-lines(2);
+/// @param $lines - Number of lines to show before truncating
 @mixin truncate-lines($lines: 2) {
+  // Validate that $lines is a positive integer
+  $__: fn.assert-positive-integer($lines, '$lines');
+
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -140,6 +163,10 @@
 /// @param $width - The width of the aspect ratio.
 /// @param $height - The height of the aspect ratio.
 @mixin aspect-ratio($width, $height) {
+  // Validate that both width and height are positive unitless numbers
+  $__: fn.assert-unitless-positive($width, '$width');
+  $__: fn.assert-unitless-positive($height, '$height');
+
   aspect-ratio: #{$width} / #{$height};
 
   @supports not (aspect-ratio: 1 / 1) {
@@ -156,8 +183,9 @@
 /// usage: @include radius('sm');
 /// @param $name - Token key from settings/_radius.scss (e.g. 'sm', 'lg', 'full').
 @mixin radius($name) {
+  // Validate that $name is a valid radius token
   @if not map.has-key($radius, $name) {
-    @error "mixin.radius(): '$name' is not a valid radius token. Available: #{map.keys($radius)}";
+    @error "radius(): '#{$name}' is not a valid radius token. Available: #{map.keys($radius)}";
   }
 
   border-radius: fn.radius($name);
@@ -216,13 +244,15 @@
 /// @param $color - shadow color as an "R G B" triplet string (same format as
 ///                  --color-shadow itself). Defaults to var(--color-shadow, 0 0 0).
 @mixin elevation-shadow($level, $color: 'var(--color-shadow, 0 0 0)') {
-  $offsets: map.get($elevation-offset, $level);
-  $opacities: map.get($elevation-opacity, $level);
-
-  @if not $offsets or not $opacities {
-    @error "mix.elevation-shadow(): unknown elevation level '#{$level}' — check settings/_elevation.scss.";
+  // Validate that $level is a valid elevation token (exists in both maps)
+  @if meta.type-of($level) != 'string' or not map.has-key($elevation-offset, $level) or not map.has-key($elevation-opacity, $level) {
+    @error "elevation-shadow(): '#{$level}' is not a valid elevation token. Available: #{map.keys($elevation-offset)}";
   }
 
+  // Validate that $color is a non-empty string (can be RGB triplet or CSS variable)
+  $__: fn.assert-non-empty-string($color, '$color');
+  $offsets: map.get($elevation-offset, $level);
+  $opacities: map.get($elevation-opacity, $level);
   $umbra-offset: list.nth($offsets, 1);
   $penumbra-offset: list.nth($offsets, 2);
   $umbra-opacity: list.nth($opacities, 1);
@@ -263,6 +293,14 @@
 /// @param $side - 'start' or 'end' (which side has the icon)
 /// @param $size - optical adjustment size from $optical-adjust map ('xs', 'sm', 'md', 'lg')
 @mixin icon-padding-adjust($side: 'end', $size: 'sm') {
+  // Validate that $side is either 'start' or 'end'
+  $__: fn.assert-in-list($side, ('start', 'end'), '$side');
+
+  // Validate that $size is a valid key in the $optical-adjust map
+  @if meta.type-of($size) != 'string' or not map.has-key($optical-adjust, $size) {
+    @error "icon-padding-adjust(): '#{$size}' is not a valid optical-adjustment token. Available: #{map.keys($optical-adjust)}";
+  }
+
   $adj: map.get($optical-adjust, $size);
   $base: fn.spacing('3');
 
@@ -279,6 +317,8 @@
 /// @param $inner-radius - radius token for inner element (e.g., 'sm', 'md')
 /// @param $padding - padding value between elements
 @mixin concentric-radius($inner-radius, $padding) {
+  // Validate that $padding is a non-negative number
+  $__: fn.assert-non-negative($padding, '$padding');
   $inner: fn.radius($inner-radius);
   $outer: $inner + $padding;
 
@@ -292,6 +332,18 @@
 /// @param $weight - The font-weight (default: 400).
 /// @param $style - The font-style (default: normal).
 @mixin font-face($name, $path, $weight: 400, $style: normal) {
+  // Validate that $name is a non-empty string
+  $__: fn.assert-non-empty-string($name, '$name');
+
+  // Validate that $path is a non-empty string
+  $__: fn.assert-non-empty-string($path, '$path');
+
+  // Validate that $weight is a positive unitless number
+  $__: fn.assert-positive-integer($weight, '$weight');
+
+  // Validate that $style is a string (we don't validate specific values here)
+  $__: fn.assert-string($style, '$style');
+
   @font-face {
     font-family: $name;
     font-weight: $weight;
@@ -327,7 +379,25 @@
 
 /// Shorthand for a single‑property transition.
 /// usage: @include transition(background-color, 0.2s, ease-out);
+/// @param $property - The CSS property to transition.
+/// @param $duration - The duration of the transition.
+/// @param $easing - The easing function for the transition.
 @mixin transition($property: all, $duration: 0.2s, $easing: ease) {
+  // Validate that $property is a string
+  $__: fn.assert-string($property, '$property');
+
+  // Validate that $duration is a non-negative time value with unit 's' or 'ms'
+  @if meta.type-of($duration) != 'number' {
+    @error "transition(): '$duration' must be a non-negative time value, got #{$duration}.";
+  } @else if $duration < 0 {
+    @error "transition(): '$duration' must be a non-negative time value, got #{$duration}.";
+  } @else if not (math.unit($duration) == 's' or math.unit($duration) == 'ms') {
+    @error "transition(): '$duration' must be a time value with unit 's' or 'ms', got #{$duration}.";
+  }
+
+  // Validate that $easing is a string
+  $__: fn.assert-string($easing, '$easing');
+
   transition: $property $duration $easing;
 }
 
@@ -336,8 +406,11 @@
 /// @param $breakpoints - Breakpoint map (e.g. from settings/_breakpoints.scss)
 /// @content - Styles to apply at each breakpoint
 @mixin respond-to-all($breakpoints) {
+  // Validate that $breakpoints is a Sass map
+  $__: fn.assert-type($breakpoints, 'map', '$breakpoints');
+
   @each $bp in map.keys($breakpoints) {
-    @include respond-to($bp) {
+    @include respond-to($bp, $breakpoints) {
       @content;
     }
   }
@@ -346,10 +419,14 @@
 /// Applies styles to hover, active, and pressed states.
 /// Useful for interactive elements like buttons and links.
 /// usage: @include hover-active-pressed { background-color: var(--color-accent); }
-@mixin hover-active-pressed {
+/// @param $prefix - The prefix for the pressed utility class (default: 'btn', matches the original .btn--pressed selector).
+@mixin hover-active-pressed($prefix: 'btn') {
+  // Validate that $prefix is a non-empty string
+  $__: fn.assert-non-empty-string($prefix, '$prefix');
+
   &:hover,
   &:active,
-  &.btn--pressed {
+  &.#{$prefix}--pressed {
     @content;
   }
 }
@@ -357,9 +434,13 @@
 /// Applies styles to active and pressed states.
 /// Useful for active/pressed states of interactive elements.
 /// usage: @include active-pressed { background-color: var(--color-accent); }
-@mixin active-pressed {
+/// @param $prefix - The prefix for the pressed utility class (default: 'btn', matches the original .btn--pressed selector).
+@mixin active-pressed($prefix: 'btn') {
+  // Validate that $prefix is a non-empty string
+  $__: fn.assert-non-empty-string($prefix, '$prefix');
+
   &:active,
-  &.btn--pressed {
+  &.#{$prefix}--pressed {
     @content;
   }
 }
@@ -382,6 +463,17 @@
 /// @param $prefix - The prefix for the utility class (e.g., 'u-m-' for margin).
 /// @param $property - The CSS property to apply (e.g., 'margin').
 @mixin spacing-utility($prefix, $property) {
+  // Validate that $prefix is a non-empty string
+  $__: fn.assert-non-empty-string($prefix, '$prefix');
+
+  // Validate that $property is either 'margin' or 'padding'
+  $__: fn.assert-in-list(
+    $property,
+    ('margin', 'padding'),
+    '$property',
+    "spacing-utility(): '$property' must be 'margin' or 'padding', got #{$property}."
+  );
+
   @each $side-key, $side-segment in $spacing-sides {
     $css-property: $property;
     @if $side-segment != '' {
