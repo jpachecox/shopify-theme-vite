@@ -66,6 +66,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README badges restyled with `style=for-the-badge`; `yarn check:sass` entry
   added to the commands table.
 
+### Docs
+
+- Added `.github/PULL_REQUEST_TEMPLATE.md`: structured PR template (description,
+  changes sections, verification checklist) with `Closes #` linking guidance.
+- Added `CLAUDE.md` with PR conventions (template usage, one-line change
+  bullets, issue-linking notes).
+- `.gitignore`/`.prettierignore` now exclude the whole `.claude/` directory
+  instead of only `settings.local.json`/`worktrees/`.
+
 ### Fixed
 
 - `fn.breakpoint()` no longer fails when called without an explicit map (build
