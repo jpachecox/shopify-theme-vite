@@ -9,6 +9,12 @@ updates:
       npm-dependencies:
         patterns:
           - "*"
+    ignore:
+      # typescript-eslint and type-coverage crash on the native TS 7 API;
+      # re-enable once the toolchain supports it (tracked upstream #10940).
+      - dependency-name: "typescript"
+        update-types:
+          - "version-update:semver-major"
     open-pull-requests-limit: 10
     commit-message:
       prefix: "build(deps)"

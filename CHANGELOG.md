@@ -93,6 +93,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Dependency migration (declined dependabot PR #48, minus the breaking
+  `typescript 7.0.2` bump): `eslint` 10.8.0 + `@eslint/js` 10.0.1 (flat
+  config), `vite` 8.2.0, `@vitejs/plugin-react` 6.0.5, `@types/node` 26.1.2,
+  `@types/react` 19.2.18, `@types/react-dom` 19.2.4.
+- Dependabot now ignores `typescript` major updates in the npm group until
+  typescript-eslint and type-coverage support the native TS 7 API.
 - Remaining tooling migrated to TypeScript: `utils/tools.ts`, both
   `utils/*.test.ts` suites, and `scripts/verify-assets.ts` (Spanish comments
   translated to English); `node --test` runs the `.ts` files directly via
