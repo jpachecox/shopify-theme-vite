@@ -106,7 +106,7 @@ export default [
     // TypeScript (frontend components, utils, scripts): TS parser with the
     // two explicit projects (frontend tsconfig.json, node tsconfig.node.json)
     // so type-aware rules run on real types instead of surface syntax.
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{ts,tsx,mts}'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {

@@ -15,6 +15,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": true,
+    "incremental": true
   }
 }

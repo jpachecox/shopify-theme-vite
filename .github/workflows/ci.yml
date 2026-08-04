@@ -55,7 +55,7 @@ jobs:
           path: |
             .eslintcache
             .stylelintcache
-          key: ${{ runner.os }}-lint-cache-${{ hashFiles('yarn.lock', 'frontend/**/*.{js,jsx,ts,tsx,scss}', '{scripts,utils}/**/*.ts') }}
+          key: ${{ runner.os }}-lint-cache-${{ hashFiles('yarn.lock', 'frontend/**/*.{js,jsx,ts,tsx,mts,scss}', '{scripts,utils}/**/*.ts') }}
           restore-keys: |
             ${{ runner.os }}-lint-cache-
 
@@ -70,6 +70,9 @@ jobs:
 
       - name: Type check
         run: yarn check:types
+
+      - name: Type coverage
+        run: yarn check:types:coverage
 
       - name: Entrypoints check
         run: yarn check:entrypoints
