@@ -74,6 +74,9 @@ jobs:
       - name: Entrypoints check
         run: yarn check:entrypoints
 
+      - name: Component tests (Vitest)
+        run: yarn test
+
       - name: Build and verify assets
         run: yarn build:verify
 
