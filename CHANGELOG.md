@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `.github/workflows/ci.yml`: `actionlint` job validating workflow files;
+  Yarn dependency caching and an ESLint/Stylelint cache on `build-and-verify`;
+  `permissions: contents: read` and `timeout-minutes` on every job.
+- `.github/workflows/release-please.yml`, `release-please-config.json`,
+  `.release-please-manifest.json`: automated version bump, `CHANGELOG.md`
+  update, and GitHub release/tag from conventional commits merged to `main`.
+- `DEPLOYMENT.md`: documents the `develop`=QA / `main`=production branch
+  convention and the rollback procedure (Shopify admin republish,
+  `shopify theme pull`/`push`, and `git revert`).
 - `yarn check:sass` script: compiles Sass fixtures to validate function and mixin
   arguments (`utils/sass-validation.test.mjs`).
 - Strict token accessors: `fn.radius()`, `fn.breakpoint()`, `fn.spacing()`,
