@@ -26,6 +26,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   reflect the real workflow status.
 - `.github/workflows/ci.yml`: runs `lint`, `check:sass`, `check:types`, and
   `build:verify` on pull requests and pushes to `main`/`develop`.
+- `.github/workflows/ci.yml`: `yarn audit` step (fails on moderate+ severity
+  advisories) and a `theme-check` job running `Shopify/theme-check-action`.
+- `.github/workflows/deploy.yml`: manual (`workflow_dispatch`) deploy
+  scaffold for `development`/`production` environments. The actual
+  `shopify theme push` step is commented out pending store/theme
+  provisioning; see the workflow's header comment for required secrets.
+- `.github/dependabot.yml`: weekly grouped version updates for `npm` and
+  `github-actions` ecosystems.
+- `yarn check:theme` and `yarn audit` scripts.
 - `settings/README.md` documents the end-to-end editable-token flow:
   `config/settings_schema.json` → `layout/theme.liquid` `{% style %}` → CSS
   custom properties → Sass `var()` consumption, with a concrete example.
@@ -38,6 +47,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   breaks tests.
 
 ### Changed
+
+- `.yarnrc.yml`: `npmMinimalAgeGate` raised from `0` to `1` (rejects
+  packages published in the last 24h); `approvedGitRepositories` restricted
+  from `"**"` to an explicit (currently empty) allowlist.
 
 - `fn.map-get-strict()` error messages now include the available map keys.
 - `fn.breakpoint()` reports the actual map name in errors when a custom map is
