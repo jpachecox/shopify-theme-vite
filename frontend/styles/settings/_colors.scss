@@ -22,7 +22,7 @@
 // fallback only. See tools/_functions.scss's gray() for the intended usage.
 $light-base: #ffffff; // 'light' theme base surface
 
-$gray-light: (
+$gray-values: (
   '50': #fafafa,
   '100': #f5f5f5,
   '200': #e5e5e5,
@@ -34,7 +34,10 @@ $gray-light: (
   '800': #262626,
   '900': #171717,
   '950': #0a0a0a,
-);
+) !default;
+
+// Light-theme alias — same scale as $gray-values (single source of truth).
+$gray-light: $gray-values;
 
 // Alpha values — these remain constant across themes and schemes, so they
 // stay in Sass rather than moving to the Liquid bridge.
