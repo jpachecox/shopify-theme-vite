@@ -9,7 +9,7 @@ import {
   cleanupOrphanedEntrypoints,
   generateEntrypointsFromSources,
   getEntrypointBaseName,
-} from './entrypoints.mjs';
+} from './entrypoints.ts';
 
 /**
  * @param {(paths: {
