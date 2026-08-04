@@ -122,7 +122,9 @@
 /// @param {Number} $px - pixel value (with or without unit)
 /// @param {Number} $base - base font-size in px (default: 16)
 /// @return {Number} value in rem
+/// @throws Error if $base is not a positive unitless number
 @function rem($px, $base: 16) {
+  $__: assert-unitless-positive($base, '$base');
   $value: math.div(strip-unit($px), $base);
 
   @return #{$value}rem;
@@ -132,12 +134,15 @@
 /// usage: fn.strip-unit(16px) => 16
 /// @param {Number} $value
 /// @return {Number} unitless value
+/// @throws Error if $value is not a number
 @function strip-unit($value) {
-  @if meta.type-of($value) == 'number' and not math.is-unitless($value) {
-    @return math.div($value, ($value * 0 + 1));
+  $__: assert-type($value, 'number', '$value');
+
+  @if math.is-unitless($value) {
+    @return $value;
   }
 
-  @return $value;
+  @return math.div($value, ($value * 0 + 1));
 }
 
 /// Reads a radius token from the radius map with strict validation.
