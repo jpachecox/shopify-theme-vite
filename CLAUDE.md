@@ -19,10 +19,12 @@ runner, no `node --test` anywhere in the project anymore.
 - `yarn check:sass` / `yarn check:entrypoints`: targeted `vitest run` on a
   single file, kept as named scripts so CI shows them as distinct,
   separately-failing steps instead of one big "test" step.
-- Test environment is per-glob (`environmentMatchGlobs` in
-  `vitest.config.mjs`): `frontend/**` runs under `jsdom` (for React/DOM
-  tests), `utils/**` and `scripts/**` run under plain `node` (build
-  tooling and Sass-compilation checks have no DOM).
+- Test environment defaults to plain `node` (build tooling and
+  Sass-compilation checks have no DOM). Files that render components opt
+  into `jsdom` via a `// @vitest-environment jsdom` docblock comment at
+  the top of the file (see `frontend/components/counter.test.tsx`).
+  Note: `environmentMatchGlobs` does not exist in Vitest 4 — do not use
+  it in config.
 - Assertions use Vitest's `expect(...)` API (`toBe`, `toEqual`, `toMatch`,
   `toThrow`, `toBeNull`, `toBeTruthy`) — not `node:assert`.
 
