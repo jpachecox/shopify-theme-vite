@@ -125,6 +125,12 @@
 /// @throws Error if $base is not a positive unitless number
 @function rem($px, $base: 16) {
   $__: assert-unitless-positive($base, '$base');
+  $unit: math.unit($px);
+
+  @if not math.is-unitless($px) and $unit != 'px' {
+    @error "Invalid argument: '#{$px}' must be a px or unitless number, got '#{$unit}'.";
+  }
+
   $value: math.div(strip-unit($px), $base);
 
   @return #{$value}rem;
