@@ -11,14 +11,13 @@ import {
   getEntrypointBaseName,
 } from './entrypoints.ts';
 
-/**
- * @param {(paths: {
- *   root: string;
- *   stylesDirectory: string;
- *   entrypointsDirectory: string;
- * }) => void} callback
- */
-const withTemporaryDirectories = (callback) => {
+type TemporaryPaths = {
+  root: string;
+  stylesDirectory: string;
+  entrypointsDirectory: string;
+};
+
+const withTemporaryDirectories = (callback: (paths: TemporaryPaths) => void): void => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'shopify-entrypoints-'));
   const stylesDirectory = path.join(root, 'styles', 'component');
   const entrypointsDirectory = path.join(root, 'entrypoints');
@@ -33,7 +32,7 @@ const withTemporaryDirectories = (callback) => {
   }
 };
 
-test('preserves valid lowercase kebab-case entrypoint names', () => {
+await test('preserves valid lowercase kebab-case entrypoint names', () => {
   assert.equal(getEntrypointBaseName('component', 'button-group'), 'component-button-group');
   assert.equal(
     getEntrypointBaseName('component', 'component-button-group'),
@@ -42,7 +41,7 @@ test('preserves valid lowercase kebab-case entrypoint names', () => {
   assert.equal(getEntrypointBaseName('section', 'rich-text'), 'section-rich-text');
 });
 
-test('rejects digits, underscores, uppercase characters, and symbols in partial names', () => {
+await test('rejects digits, underscores, uppercase characters, and symbols in partial names', () => {
   assert.throws(() => getEntrypointBaseName('component', 'button-group-2'), /invalid partial name/);
   assert.throws(
     () => getEntrypointBaseName('component', 'button_group'),
@@ -55,7 +54,7 @@ test('rejects digits, underscores, uppercase characters, and symbols in partial 
   assert.throws(() => getEntrypointBaseName('component', 'button.group'), /invalid partial name/);
 });
 
-test('generates an entrypoint from a valid partial and preserves its source name', () => {
+await test('generates an entrypoint from a valid partial and preserves its source name', () => {
   withTemporaryDirectories(({ stylesDirectory, entrypointsDirectory }) => {
     fs.writeFileSync(
       path.join(stylesDirectory, '_button-group.scss'),
@@ -77,7 +76,7 @@ test('generates an entrypoint from a valid partial and preserves its source name
   });
 });
 
-test('rejects an entrypoint collision and never overwrites a manual file', () => {
+await test('rejects an entrypoint collision and never overwrites a manual file', () => {
   withTemporaryDirectories(({ stylesDirectory, entrypointsDirectory }) => {
     fs.writeFileSync(path.join(stylesDirectory, '_card.scss'), '.card { display: block; }');
     fs.writeFileSync(
@@ -112,7 +111,7 @@ test('rejects an entrypoint collision and never overwrites a manual file', () =>
   });
 });
 
-test('removes orphaned generated entrypoints while preserving manual files', () => {
+await test('removes orphaned generated entrypoints while preserving manual files', () => {
   withTemporaryDirectories(({ entrypointsDirectory }) => {
     const orphanedEntrypoint = path.join(entrypointsDirectory, 'component-orphan.scss');
     const manualEntrypoint = path.join(entrypointsDirectory, 'base.scss');

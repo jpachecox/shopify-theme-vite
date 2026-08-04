@@ -6,11 +6,12 @@ import { compileString } from 'sass-embedded';
 
 const projectRoot = process.cwd();
 
-/**
- * @param {string} content
- * @returns {{ css: string; error: string | null }}
- */
-function compileScss(content) {
+type CompileResult = {
+  css: string;
+  error: string | null;
+};
+
+function compileScss(content: string): CompileResult {
   try {
     const result = compileString(content, {
       loadPaths: [
@@ -33,11 +34,7 @@ function compileScss(content) {
   }
 }
 
-/**
- * @param {string} content
- * @returns {string}
- */
-function createTestScss(content) {
+function createTestScss(content: string): string {
   const imports = `@use "functions" as fn;
 @use "mixins" as m;
 @use "settings/colors" as *;
@@ -54,7 +51,7 @@ function createTestScss(content) {
 }
 
 // Test map-get-strict function
-test('map-get-strict: valid map and string key returns value', async () => {
+await test('map-get-strict: valid map and string key returns value', () => {
   // Valid map and string key
   const scss = createTestScss(
     '$result: fn.map-get-strict((key1: "value1", key2: "value2"), "key1");'
@@ -64,21 +61,21 @@ test('map-get-strict: valid map and string key returns value', async () => {
   // If we get here, the function worked correctly
 });
 
-test('map-get-strict: rejects non-map first argument', async () => {
+await test('map-get-strict: rejects non-map first argument', () => {
   const scss = createTestScss('$result: fn.map-get-strict("not-a-map", "key");');
   const { error } = compileScss(scss);
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /map-get-strict\(\): '\$map' must be a Sass map, got string./);
 });
 
-test('map-get-strict: non-string key throws error', async () => {
+await test('map-get-strict: non-string key throws error', () => {
   const scss = createTestScss('$map: (key1: "value1"); $result: fn.map-get-strict($map, 123);');
   const { error } = compileScss(scss);
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /map-get-strict\(\): token key must be a string, got number./);
 });
 
-test('map-get-strict: missing key throws error with available keys', async () => {
+await test('map-get-strict: missing key throws error with available keys', () => {
   const scss = createTestScss('$result: fn.map-get-strict((key1: "value1"), "bogus");');
   const { error } = compileScss(scss);
   assert.ok(error, 'Expected Sass error but got none');
@@ -86,7 +83,7 @@ test('map-get-strict: missing key throws error with available keys', async () =>
 });
 
 // Test shadow-border function
-test('shadow-border: accepts valid states', async () => {
+await test('shadow-border: accepts valid states', () => {
   const scss = createTestScss('$result: fn.shadow-border(default);');
   let { error } = compileScss(scss);
   assert.ifError(error);
@@ -101,7 +98,7 @@ test('shadow-border: accepts valid states', async () => {
   assert.ifError(error);
 });
 
-test('shadow-border: rejects invalid state', async () => {
+await test('shadow-border: rejects invalid state', () => {
   const scss = createTestScss('$result: fn.shadow-border(invalid);');
   const { error } = compileScss(scss);
   assert.ok(error, 'Expected Sass error but got none');
@@ -109,7 +106,7 @@ test('shadow-border: rejects invalid state', async () => {
 });
 
 // Test shadow-border mixin
-test('shadow-border mixin: accepts valid states and rejects invalid ones', async () => {
+await test('shadow-border mixin: accepts valid states and rejects invalid ones', () => {
   const valid = createTestScss('@include m.shadow-border;');
   let { error } = compileScss(valid);
   assert.ifError(error);
@@ -125,7 +122,7 @@ test('shadow-border mixin: accepts valid states and rejects invalid ones', async
 });
 
 // Test emit-type-scale-tokens mixin
-test('emit-type-scale-tokens: validates map argument', async () => {
+await test('emit-type-scale-tokens: validates map argument', () => {
   const valid = createTestScss('@include m.emit-type-scale-tokens((s: 1rem, l: 2rem));');
   let { css, error } = compileScss(valid);
   assert.ifError(error);
@@ -138,7 +135,7 @@ test('emit-type-scale-tokens: validates map argument', async () => {
 });
 
 // Test restored utilities (rem, strip-unit, gray, font-stack)
-test('restored utilities: rem, strip-unit, gray, font-stack compile', async () => {
+await test('restored utilities: rem, strip-unit, gray, font-stack compile', () => {
   const validCases = [
     'fn.rem(16px)',
     'fn.strip-unit(16px)',
@@ -152,7 +149,7 @@ test('restored utilities: rem, strip-unit, gray, font-stack compile', async () =
 });
 
 // Test token-get function
-test('token-get: validates inputs correctly', async () => {
+await test('token-get: validates inputs correctly', () => {
   // Valid inputs
   const scss = createTestScss('$map: (key1: "value1"); $result: fn.token-get($map, "key1");');
   let { error } = compileScss(scss);
@@ -192,7 +189,7 @@ test('token-get: validates inputs correctly', async () => {
 });
 
 // Test token accessors — shared validation via map-get-strict
-test('token accessors: spacing/radius/elevation/breakpoint reject unknown keys', async () => {
+await test('token accessors: spacing/radius/elevation/breakpoint reject unknown keys', () => {
   const validCases = [
     'fn.spacing("2")',
     'fn.radius("sm")',
@@ -207,7 +204,7 @@ test('token accessors: spacing/radius/elevation/breakpoint reject unknown keys',
   /**
    * @type {Array<[string, RegExp]>}
    */
-  const invalidCases = [
+  const invalidCases: Array<[string, RegExp]> = [
     ['fn.spacing("bogus")', /map-get-strict\(\): Key "bogus" not found in \$spacing\./],
     ['fn.radius("bogus")', /map-get-strict\(\): Key "bogus" not found in \$radius\./],
     ['fn.elevation("bogus")', /map-get-strict\(\): Key "bogus" not found in \$elevation\./],
@@ -242,7 +239,7 @@ test('token accessors: spacing/radius/elevation/breakpoint reject unknown keys',
 });
 
 // Test button-variant mixin
-test('button-variant: validates all parameters', async () => {
+await test('button-variant: validates all parameters', () => {
   // Valid usage
   const scss = createTestScss('@include m.button-variant("color-base");');
   let { error } = compileScss(scss);
@@ -271,7 +268,7 @@ test('button-variant: validates all parameters', async () => {
 });
 
 // Test truncate-lines mixin
-test('truncate-lines: validates line count', async () => {
+await test('truncate-lines: validates line count', () => {
   // Valid value
   const scss = createTestScss('@include m.truncate-lines(2);');
   let { error } = compileScss(scss);
@@ -295,7 +292,7 @@ test('truncate-lines: validates line count', async () => {
 });
 
 // Test aspect-ratio mixin
-test('aspect-ratio: validates dimensions', async () => {
+await test('aspect-ratio: validates dimensions', () => {
   // Valid values
   const scss = createTestScss('@include m.aspect-ratio(16, 9);');
   let { error } = compileScss(scss);
@@ -319,7 +316,7 @@ test('aspect-ratio: validates dimensions', async () => {
 });
 
 // Test elevation-shadow mixin
-test('elevation-shadow: validates level and color', async () => {
+await test('elevation-shadow: validates level and color', () => {
   // Valid level
   const scss = createTestScss('@include m.elevation-shadow("2");');
   let { error } = compileScss(scss);
@@ -351,7 +348,7 @@ test('elevation-shadow: validates level and color', async () => {
 });
 
 // Test elevation mixin
-test('elevation mixin: rejects unknown tokens', async () => {
+await test('elevation mixin: rejects unknown tokens', () => {
   // Valid level
   const scss = createTestScss('@include m.elevation("2");');
   let { error } = compileScss(scss);
@@ -365,7 +362,7 @@ test('elevation mixin: rejects unknown tokens', async () => {
 });
 
 // Test radius mixin and radius-corners
-test('radius mixin: rejects unknown tokens', async () => {
+await test('radius mixin: rejects unknown tokens', () => {
   // Valid token
   const scss = createTestScss('@include m.radius("sm");');
   let { css, error } = compileScss(scss);
@@ -381,7 +378,7 @@ test('radius mixin: rejects unknown tokens', async () => {
   assert.match(error, /radius\(\): 'bogus' is not a valid radius token\./);
 });
 
-test('radius-corners: rejects unknown tokens', async () => {
+await test('radius-corners: rejects unknown tokens', () => {
   // Valid tokens
   const scss = createTestScss('@include m.radius-corners("lg", "lg", "none", "none");');
   let { error } = compileScss(scss);
@@ -395,7 +392,7 @@ test('radius-corners: rejects unknown tokens', async () => {
 });
 
 // Test icon-padding-adjust mixin
-test('icon-padding-adjust: validates parameters', async () => {
+await test('icon-padding-adjust: validates parameters', () => {
   // Valid values
   const scss = createTestScss('@include m.icon-padding-adjust("end", "sm");');
   let { error } = compileScss(scss);
@@ -418,7 +415,7 @@ test('icon-padding-adjust: validates parameters', async () => {
 });
 
 // Test concentric-radius mixin
-test('concentric-radius: validates padding', async () => {
+await test('concentric-radius: validates padding', () => {
   // Valid value (including zero)
   const scss = createTestScss('@include m.concentric-radius("md", 0);');
   let { error } = compileScss(scss);
@@ -438,7 +435,7 @@ test('concentric-radius: validates padding', async () => {
 });
 
 // Test font-face mixin
-test('font-face: validates all parameters', async () => {
+await test('font-face: validates all parameters', () => {
   // Valid parameters
   const scss = createTestScss('@include m.font-face("TestFont", "/path/to/font", 400);');
   let { error } = compileScss(scss);
@@ -472,7 +469,7 @@ test('font-face: validates all parameters', async () => {
 });
 
 // Test transition mixin
-test('transition: validates parameters', async () => {
+await test('transition: validates parameters', () => {
   // Valid parameters
   const scss = createTestScss('@include m.transition(background-color, 0.2s, ease-out);');
   let { error } = compileScss(scss);
@@ -529,7 +526,7 @@ test('transition: validates parameters', async () => {
 });
 
 // Test respond-to-all mixin
-test('respond-to-all: validates breakpoint map', async () => {
+await test('respond-to-all: validates breakpoint map', () => {
   // Valid map
   const scss = createTestScss('@include m.respond-to-all((sm: 576px, md: 768px)) { color: red; }');
   let { css, error } = compileScss(scss);
@@ -546,7 +543,7 @@ test('respond-to-all: validates breakpoint map', async () => {
 });
 
 // Test respond-to / respond-below mixins
-test('respond-to / respond-below: reject unknown breakpoints', async () => {
+await test('respond-to / respond-below: reject unknown breakpoints', () => {
   // Valid breakpoint
   const scss = createTestScss('@include m.respond-to("md") { color: red; }');
   let { css, error } = compileScss(scss);
@@ -569,7 +566,7 @@ test('respond-to / respond-below: reject unknown breakpoints', async () => {
 });
 
 // Test spacing-utility mixin
-test('spacing-utility: validates parameters', async () => {
+await test('spacing-utility: validates parameters', () => {
   // Valid parameters
   const scss = createTestScss('@include m.spacing-utility("u-m-", "margin");');
   let { error } = compileScss(scss);
@@ -592,7 +589,7 @@ test('spacing-utility: validates parameters', async () => {
 });
 
 // Test hover-active-pressed and active-pressed (they share similar validation via prefix)
-test('hover-active-pressed: validates prefix parameter', async () => {
+await test('hover-active-pressed: validates prefix parameter', () => {
   // No-argument call must default to 'btn' (original .btn--pressed selector)
   const scssDefault = createTestScss('@include m.hover-active-pressed { color: red; }');
   let { css, error } = compileScss(scssDefault);
@@ -618,7 +615,7 @@ test('hover-active-pressed: validates prefix parameter', async () => {
   assert.match(error, /Invalid argument: '\$prefix' must be a non-empty string/);
 });
 
-test('active-pressed: validates prefix parameter', async () => {
+await test('active-pressed: validates prefix parameter', () => {
   // Valid prefix
   const scss = createTestScss('@include m.active-pressed("test-prefix") { color: red; }');
   let { error } = compileScss(scss);
