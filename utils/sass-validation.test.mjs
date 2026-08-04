@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
-import { compileString } from 'sass-embedded';
 import path from 'node:path';
 import test from 'node:test';
+
+import { compileString } from 'sass-embedded';
 
 const projectRoot = process.cwd();
 
@@ -53,39 +54,39 @@ function createTestScss(content) {
 }
 
 // Test map-get-strict function
-test('map-get-strict: valid map and string key returns value', async (t) => {
+test('map-get-strict: valid map and string key returns value', async () => {
   // Valid map and string key
   const scss = createTestScss(
     '$result: fn.map-get-strict((key1: "value1", key2: "value2"), "key1");'
   );
-  const { css, error } = compileScss(scss);
+  const { error } = compileScss(scss);
   assert.ifError(error);
   // If we get here, the function worked correctly
 });
 
-test('map-get-strict: rejects non-map first argument', async (t) => {
+test('map-get-strict: rejects non-map first argument', async () => {
   const scss = createTestScss('$result: fn.map-get-strict("not-a-map", "key");');
-  const { css, error } = compileScss(scss);
+  const { error } = compileScss(scss);
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /map-get-strict\(\): '\$map' must be a Sass map, got string./);
 });
 
-test('map-get-strict: non-string key throws error', async (t) => {
+test('map-get-strict: non-string key throws error', async () => {
   const scss = createTestScss('$map: (key1: "value1"); $result: fn.map-get-strict($map, 123);');
-  const { css, error } = compileScss(scss);
+  const { error } = compileScss(scss);
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /map-get-strict\(\): token key must be a string, got number./);
 });
 
-test('map-get-strict: missing key throws error with available keys', async (t) => {
+test('map-get-strict: missing key throws error with available keys', async () => {
   const scss = createTestScss('$result: fn.map-get-strict((key1: "value1"), "bogus");');
-  const { css, error } = compileScss(scss);
+  const { error } = compileScss(scss);
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /map-get-strict\(\): Key "bogus" not found in \$map\. Available keys: key1/);
 });
 
 // Test shadow-border function
-test('shadow-border: accepts valid states', async (t) => {
+test('shadow-border: accepts valid states', async () => {
   const scss = createTestScss('$result: fn.shadow-border(default);');
   let { error } = compileScss(scss);
   assert.ifError(error);
@@ -100,31 +101,31 @@ test('shadow-border: accepts valid states', async (t) => {
   assert.ifError(error);
 });
 
-test('shadow-border: rejects invalid state', async (t) => {
+test('shadow-border: rejects invalid state', async () => {
   const scss = createTestScss('$result: fn.shadow-border(invalid);');
-  const { css, error } = compileScss(scss);
+  const { error } = compileScss(scss);
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /shadow-border\(\): 'invalid' must be 'default' or 'hover', got invalid./);
 });
 
 // Test shadow-border mixin
-test('shadow-border mixin: accepts valid states and rejects invalid ones', async (t) => {
+test('shadow-border mixin: accepts valid states and rejects invalid ones', async () => {
   const valid = createTestScss('@include m.shadow-border;');
-  let { css, error } = compileScss(valid);
+  let { error } = compileScss(valid);
   assert.ifError(error);
 
   const validHover = createTestScss('@include m.shadow-border("hover");');
-  ({ css, error } = compileScss(validHover));
+  ({ error } = compileScss(validHover));
   assert.ifError(error);
 
   const invalid = createTestScss('@include m.shadow-border("invalid");');
-  ({ css, error } = compileScss(invalid));
+  ({ error } = compileScss(invalid));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /shadow-border\(\): 'invalid' must be 'default' or 'hover', got invalid./);
 });
 
 // Test emit-type-scale-tokens mixin
-test('emit-type-scale-tokens: validates map argument', async (t) => {
+test('emit-type-scale-tokens: validates map argument', async () => {
   const valid = createTestScss('@include m.emit-type-scale-tokens((s: 1rem, l: 2rem));');
   let { css, error } = compileScss(valid);
   assert.ifError(error);
@@ -137,7 +138,7 @@ test('emit-type-scale-tokens: validates map argument', async (t) => {
 });
 
 // Test restored utilities (rem, strip-unit, gray, font-stack)
-test('restored utilities: rem, strip-unit, gray, font-stack compile', async (t) => {
+test('restored utilities: rem, strip-unit, gray, font-stack compile', async () => {
   const validCases = [
     'fn.rem(16px)',
     'fn.strip-unit(16px)',
@@ -145,33 +146,33 @@ test('restored utilities: rem, strip-unit, gray, font-stack compile', async (t) 
     'fn.font-stack("Arial", ("Helvetica", "sans-serif"))',
   ];
   for (const call of validCases) {
-    const { css, error } = compileScss(createTestScss(`$result: ${call};`));
+    const { error } = compileScss(createTestScss(`$result: ${call};`));
     assert.ifError(error);
   }
 });
 
 // Test token-get function
-test('token-get: validates inputs correctly', async (t) => {
+test('token-get: validates inputs correctly', async () => {
   // Valid inputs
   const scss = createTestScss('$map: (key1: "value1"); $result: fn.token-get($map, "key1");');
-  let { css, error } = compileScss(scss);
+  let { error } = compileScss(scss);
   assert.ifError(error);
 
   // Invalid map
   const scssBadMap = createTestScss('$result: fn.token-get("not-a-map", "key");');
-  ({ css, error } = compileScss(scssBadMap));
+  ({ error } = compileScss(scssBadMap));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /map-get-strict\(\): '\$map' must be a Sass map, got string./);
 
   // Missing key reports the map name and available keys (via map-get-strict)
   const scssMissingKey = createTestScss('$result: fn.token-get((key1: "value1"), "bogus");');
-  ({ css, error } = compileScss(scssMissingKey));
+  ({ error } = compileScss(scssMissingKey));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /map-get-strict\(\): Key "bogus" not found in \$map\. Available keys: key1/);
 
   // Invalid type argument
   const scssBadType = createTestScss('$result: fn.token-get((key1: "value1"), "key1", 123);');
-  ({ css, error } = compileScss(scssBadType));
+  ({ error } = compileScss(scssBadType));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$type' must be a string, got number/);
 
@@ -180,18 +181,18 @@ test('token-get: validates inputs correctly', async (t) => {
     const scssFalsyType = createTestScss(
       `$result: fn.token-get((key1: "value1"), "key1", ${badType});`
     );
-    ({ css, error } = compileScss(scssFalsyType));
-    assert.ok(error, `Expected Sass error for \$type ${badType} but got none`);
+    ({ error } = compileScss(scssFalsyType));
+    assert.ok(error, `Expected Sass error for $type ${badType} but got none`);
   }
 
   // Valid type argument
   const scssGoodType = createTestScss('$result: fn.token-get((key1: "value1"), "key1", "string");');
-  ({ css, error } = compileScss(scssGoodType));
+  ({ error } = compileScss(scssGoodType));
   assert.ifError(error);
 });
 
 // Test token accessors — shared validation via map-get-strict
-test('token accessors: spacing/radius/elevation/breakpoint reject unknown keys', async (t) => {
+test('token accessors: spacing/radius/elevation/breakpoint reject unknown keys', async () => {
   const validCases = [
     'fn.spacing("2")',
     'fn.radius("sm")',
@@ -199,7 +200,7 @@ test('token accessors: spacing/radius/elevation/breakpoint reject unknown keys',
     'fn.breakpoint("md")',
   ];
   for (const call of validCases) {
-    const { css, error } = compileScss(createTestScss(`$result: ${call};`));
+    const { error } = compileScss(createTestScss(`$result: ${call};`));
     assert.ifError(error);
   }
 
@@ -213,7 +214,7 @@ test('token accessors: spacing/radius/elevation/breakpoint reject unknown keys',
     ['fn.breakpoint("bogus")', /map-get-strict\(\): Key "bogus" not found in \$breakpoints\./],
   ];
   for (const [call, regex] of invalidCases) {
-    const { css, error } = compileScss(createTestScss(`$result: ${call};`));
+    const { error } = compileScss(createTestScss(`$result: ${call};`));
     assert.ok(error, `Expected Sass error for ${call} but got none`);
     assert.match(error, regex);
   }
@@ -241,27 +242,27 @@ test('token accessors: spacing/radius/elevation/breakpoint reject unknown keys',
 });
 
 // Test button-variant mixin
-test('button-variant: validates all parameters', async (t) => {
+test('button-variant: validates all parameters', async () => {
   // Valid usage
   const scss = createTestScss('@include m.button-variant("color-base");');
-  let { css, error } = compileScss(scss);
+  let { error } = compileScss(scss);
   assert.ifError(error);
 
   // Invalid base-css-var (not string)
   const scssBadBase = createTestScss('@include m.button-variant(123);');
-  ({ css, error } = compileScss(scssBadBase));
+  ({ error } = compileScss(scssBadBase));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$base-css-var' must be a string, got number/);
 
   // Invalid alpha (out of range)
   const scssBadAlpha = createTestScss('@include m.button-variant("color-base", 1.5);');
-  ({ css, error } = compileScss(scssBadAlpha));
+  ({ error } = compileScss(scssBadAlpha));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /button-variant\(\): 'border-alpha' must be between 0 and 1, got 1\.5/);
 
   // Invalid alpha (wrong type)
   const scssBadAlphaType = createTestScss('@include m.button-variant("color-base", "invalid");');
-  ({ css, error } = compileScss(scssBadAlphaType));
+  ({ error } = compileScss(scssBadAlphaType));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(
     error,
@@ -270,101 +271,101 @@ test('button-variant: validates all parameters', async (t) => {
 });
 
 // Test truncate-lines mixin
-test('truncate-lines: validates line count', async (t) => {
+test('truncate-lines: validates line count', async () => {
   // Valid value
   const scss = createTestScss('@include m.truncate-lines(2);');
-  let { css, error } = compileScss(scss);
+  let { error } = compileScss(scss);
   assert.ifError(error);
 
   // Invalid values
   const scssZero = createTestScss('@include m.truncate-lines(0);');
-  ({ css, error } = compileScss(scssZero));
+  ({ error } = compileScss(scssZero));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$lines' must be greater than or equal to 1, got 0./);
 
   const scssNegative = createTestScss('@include m.truncate-lines(-1);');
-  ({ css, error } = compileScss(scssNegative));
+  ({ error } = compileScss(scssNegative));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$lines' must be greater than or equal to 1, got -1./);
 
   const scssFraction = createTestScss('@include m.truncate-lines(1.5);');
-  ({ css, error } = compileScss(scssFraction));
+  ({ error } = compileScss(scssFraction));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$lines' must be an integer, got 1\.5/);
 });
 
 // Test aspect-ratio mixin
-test('aspect-ratio: validates dimensions', async (t) => {
+test('aspect-ratio: validates dimensions', async () => {
   // Valid values
   const scss = createTestScss('@include m.aspect-ratio(16, 9);');
-  let { css, error } = compileScss(scss);
+  let { error } = compileScss(scss);
   assert.ifError(error);
 
   // Invalid width
   const scssBadWidth = createTestScss('@include m.aspect-ratio(-2, 3);');
-  ({ css, error } = compileScss(scssBadWidth));
+  ({ error } = compileScss(scssBadWidth));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$width' must be greater than 0, got -2./);
 
   const scssZeroWidth = createTestScss('@include m.aspect-ratio(0, 3);');
-  ({ css, error } = compileScss(scssZeroWidth));
+  ({ error } = compileScss(scssZeroWidth));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$width' must be greater than 0, got 0./);
 
   const scssWithUnit = createTestScss('@include m.aspect-ratio(2px, 3);');
-  ({ css, error } = compileScss(scssWithUnit));
+  ({ error } = compileScss(scssWithUnit));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$width' must be a unitless number, got 2px/);
 });
 
 // Test elevation-shadow mixin
-test('elevation-shadow: validates level and color', async (t) => {
+test('elevation-shadow: validates level and color', async () => {
   // Valid level
   const scss = createTestScss('@include m.elevation-shadow("2");');
-  let { css, error } = compileScss(scss);
+  let { error } = compileScss(scss);
   assert.ifError(error);
 
   // Invalid level
   const scssBadLevel = createTestScss('@include m.elevation-shadow("invalid-level");');
-  ({ css, error } = compileScss(scssBadLevel));
+  ({ error } = compileScss(scssBadLevel));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /elevation-shadow\(\): 'invalid-level' is not a valid elevation token\./);
 
   // Invalid level type (non-string)
   const scssBadLevelType = createTestScss('@include m.elevation-shadow(123);');
-  ({ css, error } = compileScss(scssBadLevelType));
+  ({ error } = compileScss(scssBadLevelType));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /elevation-shadow\(\): '123' is not a valid elevation token\./);
 
   // Invalid color type
   const scssBadColor = createTestScss('@include m.elevation-shadow("2", 123);');
-  ({ css, error } = compileScss(scssBadColor));
+  ({ error } = compileScss(scssBadColor));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$color' must be a string, got number/);
 
   // Empty color would produce invalid rgba() CSS
   const scssEmptyColor = createTestScss('@include m.elevation-shadow("2", "");');
-  ({ css, error } = compileScss(scssEmptyColor));
+  ({ error } = compileScss(scssEmptyColor));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$color' must be a non-empty string/);
 });
 
 // Test elevation mixin
-test('elevation mixin: rejects unknown tokens', async (t) => {
+test('elevation mixin: rejects unknown tokens', async () => {
   // Valid level
   const scss = createTestScss('@include m.elevation("2");');
-  let { css, error } = compileScss(scss);
+  let { error } = compileScss(scss);
   assert.ifError(error);
 
   // Invalid level
   const scssBadLevel = createTestScss('@include m.elevation("bogus");');
-  ({ css, error } = compileScss(scssBadLevel));
+  ({ error } = compileScss(scssBadLevel));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Key "bogus" not found in \$elevation/);
 });
 
 // Test radius mixin and radius-corners
-test('radius mixin: rejects unknown tokens', async (t) => {
+test('radius mixin: rejects unknown tokens', async () => {
   // Valid token
   const scss = createTestScss('@include m.radius("sm");');
   let { css, error } = compileScss(scss);
@@ -380,35 +381,35 @@ test('radius mixin: rejects unknown tokens', async (t) => {
   assert.match(error, /radius\(\): 'bogus' is not a valid radius token\./);
 });
 
-test('radius-corners: rejects unknown tokens', async (t) => {
+test('radius-corners: rejects unknown tokens', async () => {
   // Valid tokens
   const scss = createTestScss('@include m.radius-corners("lg", "lg", "none", "none");');
-  let { css, error } = compileScss(scss);
+  let { error } = compileScss(scss);
   assert.ifError(error);
 
   // Invalid token in one corner
   const scssBad = createTestScss('@include m.radius-corners("bogus", "lg", "none", "none");');
-  ({ css, error } = compileScss(scssBad));
+  ({ error } = compileScss(scssBad));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Key "bogus" not found in \$radius/);
 });
 
 // Test icon-padding-adjust mixin
-test('icon-padding-adjust: validates parameters', async (t) => {
+test('icon-padding-adjust: validates parameters', async () => {
   // Valid values
   const scss = createTestScss('@include m.icon-padding-adjust("end", "sm");');
-  let { css, error } = compileScss(scss);
+  let { error } = compileScss(scss);
   assert.ifError(error);
 
   // Invalid side
   const scssBadSide = createTestScss('@include m.icon-padding-adjust("middle", "sm");');
-  ({ css, error } = compileScss(scssBadSide));
+  ({ error } = compileScss(scssBadSide));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$side' must be one of start, end, got middle/);
 
   // Invalid size
   const scssBadSize = createTestScss('@include m.icon-padding-adjust("end", "invalid-size");');
-  ({ css, error } = compileScss(scssBadSize));
+  ({ error } = compileScss(scssBadSize));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(
     error,
@@ -417,47 +418,47 @@ test('icon-padding-adjust: validates parameters', async (t) => {
 });
 
 // Test concentric-radius mixin
-test('concentric-radius: validates padding', async (t) => {
+test('concentric-radius: validates padding', async () => {
   // Valid value (including zero)
   const scss = createTestScss('@include m.concentric-radius("md", 0);');
-  let { css, error } = compileScss(scss);
+  let { error } = compileScss(scss);
   assert.ifError(error);
 
   // Negative value
   const scssNegative = createTestScss('@include m.concentric-radius("md", -5);');
-  ({ css, error } = compileScss(scssNegative));
+  ({ error } = compileScss(scssNegative));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$padding' must be greater than or equal to 0, got -5/);
 
   // Invalid radius token
   const scssBadToken = createTestScss('@include m.concentric-radius("bogus", 4px);');
-  ({ css, error } = compileScss(scssBadToken));
+  ({ error } = compileScss(scssBadToken));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Key "bogus" not found in \$radius/);
 });
 
 // Test font-face mixin
-test('font-face: validates all parameters', async (t) => {
+test('font-face: validates all parameters', async () => {
   // Valid parameters
   const scss = createTestScss('@include m.font-face("TestFont", "/path/to/font", 400);');
-  let { css, error } = compileScss(scss);
+  let { error } = compileScss(scss);
   assert.ifError(error);
 
   // Empty name
   const scssEmptyName = createTestScss('@include m.font-face("", "/path/to/font", 400);');
-  ({ css, error } = compileScss(scssEmptyName));
+  ({ error } = compileScss(scssEmptyName));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$name' must be a non-empty string/);
 
   // Empty path
   const scssEmptyPath = createTestScss('@include m.font-face("TestFont", "", 400);');
-  ({ css, error } = compileScss(scssEmptyPath));
+  ({ error } = compileScss(scssEmptyPath));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$path' must be a non-empty string/);
 
   // Invalid weight
   const scssBadWeight = createTestScss('@include m.font-face("TestFont", "/path/to/font", -1);');
-  ({ css, error } = compileScss(scssBadWeight));
+  ({ error } = compileScss(scssBadWeight));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$weight' must be greater than or equal to 1, got -1/);
 
@@ -465,39 +466,39 @@ test('font-face: validates all parameters', async (t) => {
   const scssBadStyle = createTestScss(
     '@include m.font-face("TestFont", "/path/to/font", 400, 123);'
   );
-  ({ css, error } = compileScss(scssBadStyle));
+  ({ error } = compileScss(scssBadStyle));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$style' must be a string, got number/);
 });
 
 // Test transition mixin
-test('transition: validates parameters', async (t) => {
+test('transition: validates parameters', async () => {
   // Valid parameters
   const scss = createTestScss('@include m.transition(background-color, 0.2s, ease-out);');
-  let { css, error } = compileScss(scss);
+  let { error } = compileScss(scss);
   assert.ifError(error);
 
   // Invalid property (not string)
   const scssBadProp = createTestScss('@include m.transition(123, 0.2s);');
-  ({ css, error } = compileScss(scssBadProp));
+  ({ error } = compileScss(scssBadProp));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$property' must be a string, got number/);
 
   // Invalid duration (not a number)
   const scssBadDurType = createTestScss('@include m.transition(background-color, "fast");');
-  ({ css, error } = compileScss(scssBadDurType));
+  ({ error } = compileScss(scssBadDurType));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /transition\(\): '\$duration' must be a non-negative time value, got fast/);
 
   // Invalid duration (negative)
   const scssBadDur = createTestScss('@include m.transition(background-color, -0.1s);');
-  ({ css, error } = compileScss(scssBadDur));
+  ({ error } = compileScss(scssBadDur));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /transition\(\): '\$duration' must be a non-negative time value/);
 
   // Invalid duration (unitless zero — duration requires a time unit)
   const scssUnitlessZero = createTestScss('@include m.transition(background-color, 0);');
-  ({ css, error } = compileScss(scssUnitlessZero));
+  ({ error } = compileScss(scssUnitlessZero));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(
     error,
@@ -506,7 +507,7 @@ test('transition: validates parameters', async (t) => {
 
   // Invalid duration (wrong unit)
   const scssWrongUnit = createTestScss('@include m.transition(background-color, 10px);');
-  ({ css, error } = compileScss(scssWrongUnit));
+  ({ error } = compileScss(scssWrongUnit));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(
     error,
@@ -516,19 +517,19 @@ test('transition: validates parameters', async (t) => {
   // Valid durations: zero with time unit, s and ms
   for (const duration of ['0s', '0ms', '150ms']) {
     const scssValid = createTestScss(`@include m.transition(background-color, ${duration});`);
-    ({ css, error } = compileScss(scssValid));
+    ({ error } = compileScss(scssValid));
     assert.ifError(error);
   }
 
   // Invalid easing (not string)
   const scssBadEase = createTestScss('@include m.transition(background-color, 0.2s, 123);');
-  ({ css, error } = compileScss(scssBadEase));
+  ({ error } = compileScss(scssBadEase));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$easing' must be a string, got number/);
 });
 
 // Test respond-to-all mixin
-test('respond-to-all: validates breakpoint map', async (t) => {
+test('respond-to-all: validates breakpoint map', async () => {
   // Valid map
   const scss = createTestScss('@include m.respond-to-all((sm: 576px, md: 768px)) { color: red; }');
   let { css, error } = compileScss(scss);
@@ -545,7 +546,7 @@ test('respond-to-all: validates breakpoint map', async (t) => {
 });
 
 // Test respond-to / respond-below mixins
-test('respond-to / respond-below: reject unknown breakpoints', async (t) => {
+test('respond-to / respond-below: reject unknown breakpoints', async () => {
   // Valid breakpoint
   const scss = createTestScss('@include m.respond-to("md") { color: red; }');
   let { css, error } = compileScss(scss);
@@ -568,21 +569,21 @@ test('respond-to / respond-below: reject unknown breakpoints', async (t) => {
 });
 
 // Test spacing-utility mixin
-test('spacing-utility: validates parameters', async (t) => {
+test('spacing-utility: validates parameters', async () => {
   // Valid parameters
   const scss = createTestScss('@include m.spacing-utility("u-m-", "margin");');
-  let { css, error } = compileScss(scss);
+  let { error } = compileScss(scss);
   assert.ifError(error);
 
   // Empty prefix
   const scssEmptyPrefix = createTestScss('@include m.spacing-utility("", "margin");');
-  ({ css, error } = compileScss(scssEmptyPrefix));
+  ({ error } = compileScss(scssEmptyPrefix));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$prefix' must be a non-empty string/);
 
   // Invalid property
   const scssBadProp = createTestScss('@include m.spacing-utility("u-m-", "border");');
-  ({ css, error } = compileScss(scssBadProp));
+  ({ error } = compileScss(scssBadProp));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(
     error,
@@ -591,7 +592,7 @@ test('spacing-utility: validates parameters', async (t) => {
 });
 
 // Test hover-active-pressed and active-pressed (they share similar validation via prefix)
-test('hover-active-pressed: validates prefix parameter', async (t) => {
+test('hover-active-pressed: validates prefix parameter', async () => {
   // No-argument call must default to 'btn' (original .btn--pressed selector)
   const scssDefault = createTestScss('@include m.hover-active-pressed { color: red; }');
   let { css, error } = compileScss(scssDefault);
@@ -617,21 +618,21 @@ test('hover-active-pressed: validates prefix parameter', async (t) => {
   assert.match(error, /Invalid argument: '\$prefix' must be a non-empty string/);
 });
 
-test('active-pressed: validates prefix parameter', async (t) => {
+test('active-pressed: validates prefix parameter', async () => {
   // Valid prefix
   const scss = createTestScss('@include m.active-pressed("test-prefix") { color: red; }');
-  let { css, error } = compileScss(scss);
+  let { error } = compileScss(scss);
   assert.ifError(error);
 
   // Invalid (non-string)
   const scssBadPrefix = createTestScss('@include m.active-pressed(123) { color: red; }');
-  ({ css, error } = compileScss(scssBadPrefix));
+  ({ error } = compileScss(scssBadPrefix));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$prefix' must be a string, got number/);
 
   // Empty prefix
   const scssEmptyPrefix = createTestScss('@include m.active-pressed("") { color: red; }');
-  ({ css, error } = compileScss(scssEmptyPrefix));
+  ({ error } = compileScss(scssEmptyPrefix));
   assert.ok(error, 'Expected Sass error but got none');
   assert.match(error, /Invalid argument: '\$prefix' must be a non-empty string/);
 });

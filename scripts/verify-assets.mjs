@@ -21,7 +21,7 @@ if (!fs.existsSync(MANIFEST_PATH)) {
 
 const manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf-8'));
 
-console.log('Verifying naming convention in assets/ (against manifest.json)...');
+console.error('Verifying naming convention in assets/ (against manifest.json)...');
 
 for (const [source, entry] of Object.entries(manifest)) {
   const expectedBase = path.basename(source, path.extname(source));
@@ -66,7 +66,7 @@ for (const entry of fs.readdirSync(ASSETS_DIR, { withFileTypes: true })) {
 }
 
 if (!failed) {
-  console.log(
+  console.error(
     '✅ assets/ conforms to the convention: no hash, no .min, no subfolders, names 1:1 with source.'
   );
   process.exit(0);
