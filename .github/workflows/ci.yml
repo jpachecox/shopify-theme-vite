@@ -14,10 +14,16 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   build-and-verify:
     name: Lint, Sass, Types, Build
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
@@ -31,8 +37,26 @@ jobs:
       - name: Enable Corepack (Yarn Berry)
         run: corepack enable
 
+      - name: Cache node_modules
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
       - name: Install dependencies
         run: yarn install --immutable
+
+      - name: Cache ESLint/Stylelint
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: |
+            .eslintcache
+            .stylelintcache
+          key: ${{ runner.os }}-lint-cache-${{ hashFiles('yarn.lock', 'frontend/**/*.{js,jsx,ts,tsx,scss}', '{scripts,utils}/**/*.{js,mjs}') }}
+          restore-keys: |
+            ${{ runner.os }}-lint-cache-
 
       - name: Dependency audit
         run: yarn audit
@@ -55,6 +79,9 @@ jobs:
   theme-check:
     name: Shopify Theme Check
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
@@ -62,3 +89,20 @@ jobs:
 
       - name: Run Shopify Theme Check
         uses: Shopify/theme-check-action@58fd69afdfc30110f997ba9e212b302671e00d3b # v2.2.0
+
+  actionlint:
+    name: Lint GitHub Actions workflows
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Install actionlint
+        run: bash <(curl -sL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.9/scripts/download-actionlint.bash)
+
+      - name: Run actionlint
+        run: ./actionlint -color
