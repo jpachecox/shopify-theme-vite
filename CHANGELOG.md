@@ -91,6 +91,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   type-stripped files against non-erasable syntax.
 - `format`/`lint:js`/lint-staged globs and the CI lint-cache key now target
   `{scripts,utils}/**/*.ts` instead of the removed `.js`/`.mjs` files.
+- Shared compiler options extracted into `tsconfig.base.json`, extended by
+  both `tsconfig.json` and `tsconfig.node.json`; the Node tooling
+  (`utils/`, `scripts/`) now compiles under `verbatimModuleSyntax`,
+  `noUnusedLocals`/`noUnusedParameters`, `isolatedModules`,
+  `forceConsistentCasingInFileNames`, and `skipLibCheck`.
+- Deprecated `baseUrl` removed from `tsconfig.json`; the `@/*` path alias is
+  now resolved relative to the config file.
 - `eslint.config.js` split into JS and TS scopes: TypeScript files now run
   type-aware rules (`recommended-type-checked`) against the two tsconfig
   projects; `.js`/`.mjs` files use the espree parser with core recommended
