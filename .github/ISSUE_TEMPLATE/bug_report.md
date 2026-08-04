@@ -1,49 +1,49 @@
 ---
 name: "🐛 Bug Report"
-about: Algo se rompe, compila mal, o produce output incorrecto
+about: Something breaks, compiles incorrectly, or produces wrong output
 title: ""
 labels: bug
 ---
 
-## Descripción del bug
+## Bug description
 
-<!-- Qué está pasando, en 1-3 líneas -->
+<!-- What's happening, in 1-3 lines -->
 
-## Comportamiento esperado
+## Expected behavior
 
-<!-- Qué debería pasar en su lugar -->
+<!-- What should happen instead -->
 
-## Comportamiento actual
+## Current behavior
 
-<!-- Qué pasa realmente. Incluye mensaje de error exacto / output si aplica -->
+<!-- What actually happens. Include the exact error message / output if applicable -->
 
 ```text
 
 ```
 
-## Pasos para reproducir
+## Steps to reproduce
 
 1.
 2.
 3.
 
-## Contexto
+## Context
 
-<!-- Rama, versión de node/yarn, browser (si aplica), archivo(s) involucrados -->
+<!-- Branch, node/yarn version, browser (if applicable), file(s) involved -->
 
-- **Rama:**
-- **Archivo(s):**
+- **Branch:**
+- **File(s):**
 
-## Alcance del fix (si ya se conoce)
+## Fix scope (if already known)
 
-**Incluye:**
-
--
-
-**No incluye:**
+**In scope:**
 
 -
 
-## Criterios de aceptación
+**Out of scope:**
+
+-
+
+## Acceptance criteria
 
 -
