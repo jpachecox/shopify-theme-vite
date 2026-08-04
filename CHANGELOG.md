@@ -5,6 +5,13 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.0.0 (2026-08-04)
+
+
+### Features
+
+* add Shopify Vite asset pipeline ([43153db](https://github.com/jpachecox/shopify-theme-vite/commit/43153dba68b72ffec2c75b10d447e6e31a94a1c7))
+
 ## [Unreleased]
 
 ### Added
