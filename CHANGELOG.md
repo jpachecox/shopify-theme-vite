@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Vitest unit testing: `vitest`, `@vitest/coverage-v8`, `jsdom`, and Testing
+  Library devDependencies, `vitest.config.mjs` (jsdom, `@` alias, v8 coverage
+  for `frontend/`), and `frontend/test/setup.ts` (jest-dom matchers, automatic
+  cleanup after each test).
+- `yarn test`, `yarn test:watch`, and `yarn test:coverage` scripts, plus the
+  first component test: `frontend/components/counter` (100% covered).
+- `frontend/vite-env.d.ts`: Vite client types and a `*.scss` module declaration
+  for typed Sass imports.
+- `@types/node` devDependency, matching `"engines"` and `.nvmrc`.
+- `tsconfig.json`: `noUncheckedIndexedAccess`, `noImplicitOverride`,
+  `exactOptionalPropertyTypes`, `noUnusedLocals`/`noUnusedParameters`,
+  `verbatimModuleSyntax`, ES2022 target/lib, and `@/*` path alias resolving to
+  `frontend/*`.
+- `tsconfig.node.json`: `checkJs: true` with strict flags, so JS config files
+  and scripts are type-checked too.
 - `.github/workflows/ci.yml`: `workflow_dispatch` trigger for manual re-runs;
   uploads `dist/` as a debug artifact when `build:verify` fails.
 - `.github/CODEOWNERS`: `@jpachecox` as owner of the whole repo.
@@ -68,6 +83,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `vite.config.js`: added the `@` → `frontend/` alias; removed
+  `api: 'modern-compiler'` (removed in Vite 8) and the `removeViewBox` SVGO
+  entry (`active: false` is ignored by SVGO v4, so the plugin was silently
+  active).
+- 57 `checkJs` type errors fixed via JSDoc across `eslint.config.js`,
+  `utils/tools.mjs`, `utils/*.test.mjs`, and `scripts/verify-assets.mjs`.
+- `.github/workflows/ci.yml`: added a "Component tests (Vitest)" step; README
+  commands table gained the `test`/`test:watch`/`test:coverage` rows.
 - `.yarnrc.yml`: `npmMinimalAgeGate` raised from `0` to `1` (rejects
   packages published in the last 24h); `approvedGitRepositories` restricted
   from `"**"` to an explicit (currently empty) allowlist.
@@ -116,6 +139,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Type-checking was a no-op for JavaScript files (`checkJs` was off in
+  `tsconfig.node.json`), so configs, utils, and tests were never type-checked.
 - `CLAUDE.md`: removed a duplicated "PR titles" bullet under PR Conventions.
 - `fn.breakpoint()` no longer fails when called without an explicit map (build
   regression from strict validation).
