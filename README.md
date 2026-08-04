@@ -75,6 +75,9 @@ Do not edit generated entrypoints or `snippets/vite-tag.liquid` directly.
 | `yarn check:types`       | Checks frontend and Node/Vite configuration types without emitting files.               |
 | `yarn check:entrypoints` | Tests generated-entrypoint naming rules.                                                |
 | `yarn check:sass`        | Compiles Sass fixtures to validate function and mixin arguments (27 tests).             |
+| `yarn test`              | Runs React component tests with Vitest + Testing Library.                               |
+| `yarn test:watch`        | Runs component tests in watch mode.                                                     |
+| `yarn test:coverage`     | Runs component tests with a V8 coverage report.                                         |
 | `yarn clean`             | Removes dependencies, build artifacts, and caches.                                      |
 | `yarn clean:build`       | Removes build artifacts and Vite caches only.                                           |
 | `yarn fresh`             | Cleans, installs, builds, and verifies.                                                 |
