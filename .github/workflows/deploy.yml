@@ -1,0 +1,70 @@
+name: Deploy
+
+# Manual-only for now: no Shopify store/theme has been provisioned yet.
+# Once dev/QA and production themes exist, fill in the TODOs below
+# (store domain, theme IDs, and the SHOPIFY_CLI_THEME_TOKEN secret per
+# environment) and this workflow is ready to use as-is.
+#
+# Required secrets (per environment, once provisioned):
+#   SHOPIFY_FLAG_STORE         e.g. your-store.myshopify.com
+#   SHOPIFY_CLI_THEME_TOKEN    Theme access token (Shopify admin →
+#                               Apps → Develop apps, or `shopify theme
+#                               token` from an authenticated CLI session)
+#   SHOPIFY_THEME_ID           Numeric theme ID to push to
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - development
+          - production
+
+jobs:
+  deploy:
+    name: Deploy theme (${{ inputs.environment }})
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Enable Corepack (Yarn Berry)
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build and verify assets
+        run: yarn build:verify
+
+      # TODO: uncomment once the store/theme are provisioned and the
+      # secrets above are configured in this environment's settings
+      # (Settings → Environments → development / production).
+      #
+      # - name: Install Shopify CLI
+      #   run: npm install -g @shopify/cli @shopify/theme
+      #
+      # - name: Deploy to Shopify
+      #   env:
+      #     SHOPIFY_FLAG_STORE: ${{ secrets.SHOPIFY_FLAG_STORE }}
+      #     SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
+      #   run: |
+      #     shopify theme push \
+      #       --theme=${{ secrets.SHOPIFY_THEME_ID }} \
+      #       --allow-live=${{ inputs.environment == 'production' }}
+
+      - name: Placeholder — deploy not yet configured
+        run: |
+          echo "::warning::Deploy step is a placeholder. Provision the ${{ inputs.environment }} Shopify store/theme and configure secrets before enabling the real deploy step."
