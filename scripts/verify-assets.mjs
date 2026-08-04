@@ -6,6 +6,9 @@ const ASSETS_DIR = 'assets';
 const MANIFEST_PATH = path.join(ASSETS_DIR, '.vite', 'manifest.json');
 
 let failed = false;
+/**
+ * @param {string} msg
+ */
 const fail = (msg) => {
   console.error(`❌ ${msg}`);
   failed = true;

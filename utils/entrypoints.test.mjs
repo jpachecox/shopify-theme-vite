@@ -11,6 +11,13 @@ import {
   getEntrypointBaseName,
 } from './entrypoints.mjs';
 
+/**
+ * @param {(paths: {
+ *   root: string;
+ *   stylesDirectory: string;
+ *   entrypointsDirectory: string;
+ * }) => void} callback
+ */
 const withTemporaryDirectories = (callback) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'shopify-entrypoints-'));
   const stylesDirectory = path.join(root, 'styles', 'component');
