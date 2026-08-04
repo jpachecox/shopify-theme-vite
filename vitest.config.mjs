@@ -10,13 +10,24 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    // utils/ and scripts/ are plain Node code (no DOM) — running them
+    // under jsdom works but adds unnecessary setup cost per file.
+    environmentMatchGlobs: [
+      ['utils/**', 'node'],
+      ['scripts/**', 'node'],
+    ],
     setupFiles: ['./frontend/test/setup.ts'],
-    include: ['frontend/**/*.test.{ts,tsx}'],
+    include: ['frontend/**/*.test.{ts,tsx}', 'utils/**/*.test.ts', 'scripts/**/*.test.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text'],
-      include: ['frontend/**/*.{ts,tsx}'],
-      exclude: ['frontend/**/*.test.{ts,tsx}', 'frontend/test/**'],
+      include: ['frontend/**/*.{ts,tsx}', 'utils/**/*.ts', 'scripts/**/*.ts'],
+      exclude: [
+        'frontend/**/*.test.{ts,tsx}',
+        'frontend/test/**',
+        'utils/**/*.test.ts',
+        'scripts/**/*.test.ts',
+      ],
     },
   },
 });

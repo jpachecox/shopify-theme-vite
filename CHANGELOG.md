@@ -68,6 +68,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Consolidated all tests onto Vitest.** `check:sass` and
+  `check:entrypoints` now run via `vitest run <file>` instead of
+  `node --test`; `utils/sass-validation.test.ts` and
+  `utils/entrypoints.test.ts` were rewritten from `node:assert` to
+  Vitest's `expect(...)` API. `vitest.config.mjs` now scopes environments
+  per glob (`jsdom` for `frontend/**`, plain `node` for `utils/**` and
+  `scripts/**`) instead of running everything under `jsdom`. No
+  `node --test` usage remains anywhere in the project. Documented in
+  `CLAUDE.md` under "Testing".
 - `.yarnrc.yml`: `npmMinimalAgeGate` raised from `0` to `1` (rejects
   packages published in the last 24h); `approvedGitRepositories` restricted
   from `"**"` to an explicit (currently empty) allowlist.

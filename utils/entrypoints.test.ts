@@ -1,8 +1,8 @@
-import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import test from 'node:test';
+
+import { expect, it } from 'vitest';
 
 import type { EntrypointName } from './entrypoints.ts';
 import {
@@ -33,29 +33,28 @@ const withTemporaryDirectories = (callback: (paths: TemporaryPaths) => void): vo
   }
 };
 
-await test('preserves valid lowercase kebab-case entrypoint names', () => {
-  assert.equal(getEntrypointBaseName('component', 'button-group'), 'component-button-group');
-  assert.equal(
-    getEntrypointBaseName('component', 'component-button-group'),
+it('preserves valid lowercase kebab-case entrypoint names', () => {
+  expect(getEntrypointBaseName('component', 'button-group')).toBe('component-button-group');
+  expect(getEntrypointBaseName('component', 'component-button-group')).toBe(
     'component-button-group'
   );
-  assert.equal(getEntrypointBaseName('section', 'rich-text'), 'section-rich-text');
+  expect(getEntrypointBaseName('section', 'rich-text')).toBe('section-rich-text');
 });
 
-await test('rejects digits, underscores, uppercase characters, and symbols in partial names', () => {
-  assert.throws(() => getEntrypointBaseName('component', 'button-group-2'), /invalid partial name/);
-  assert.throws(
-    () => getEntrypointBaseName('component', 'button_group'),
+it('rejects digits, underscores, uppercase characters, and symbols in partial names', () => {
+  expect(() => getEntrypointBaseName('component', 'button-group-2')).toThrow(
+    /invalid partial name/
+  );
+  expect(() => getEntrypointBaseName('component', 'button_group')).toThrow(
     /invalid partial name "_button_group\.scss"/
   );
-  assert.throws(
-    () => getEntrypointBaseName('component', 'Button-group'),
+  expect(() => getEntrypointBaseName('component', 'Button-group')).toThrow(
     /invalid partial name "_Button-group\.scss"/
   );
-  assert.throws(() => getEntrypointBaseName('component', 'button.group'), /invalid partial name/);
+  expect(() => getEntrypointBaseName('component', 'button.group')).toThrow(/invalid partial name/);
 });
 
-await test('generates an entrypoint from a valid partial and preserves its source name', () => {
+it('generates an entrypoint from a valid partial and preserves its source name', () => {
   withTemporaryDirectories(({ stylesDirectory, entrypointsDirectory }) => {
     fs.writeFileSync(
       path.join(stylesDirectory, '_button-group.scss'),
@@ -69,15 +68,14 @@ await test('generates an entrypoint from a valid partial and preserves its sourc
     );
     const entrypoint = path.join(entrypointsDirectory, 'component-button-group.scss');
 
-    assert.deepEqual(generatedFiles, new Set(['component-button-group.scss']));
-    assert.match(
-      fs.readFileSync(entrypoint, 'utf-8'),
+    expect(generatedFiles).toEqual(new Set(['component-button-group.scss']));
+    expect(fs.readFileSync(entrypoint, 'utf-8')).toMatch(
       /@use '\.\.\/styles\/component\/button-group';/
     );
   });
 });
 
-await test('rejects an entrypoint collision and never overwrites a manual file', () => {
+it('rejects an entrypoint collision and never overwrites a manual file', () => {
   withTemporaryDirectories(({ stylesDirectory, entrypointsDirectory }) => {
     fs.writeFileSync(path.join(stylesDirectory, '_card.scss'), '.card { display: block; }');
     fs.writeFileSync(
@@ -85,34 +83,30 @@ await test('rejects an entrypoint collision and never overwrites a manual file',
       '.card { display: grid; }'
     );
 
-    assert.throws(
-      () =>
-        generateEntrypointsFromSources(
-          [{ dir: stylesDirectory, importBase: 'component' }],
-          entrypointsDirectory,
-          'frontend/styles'
-        ),
-      /name collision/
-    );
+    expect(() =>
+      generateEntrypointsFromSources(
+        [{ dir: stylesDirectory, importBase: 'component' }],
+        entrypointsDirectory,
+        'frontend/styles'
+      )
+    ).toThrow(/name collision/);
 
     fs.rmSync(path.join(stylesDirectory, '_component-card.scss'));
     const manualEntrypoint = path.join(entrypointsDirectory, 'component-card.scss');
     fs.writeFileSync(manualEntrypoint, '@use "manual";');
 
-    assert.throws(
-      () =>
-        generateEntrypointsFromSources(
-          [{ dir: stylesDirectory, importBase: 'component' }],
-          entrypointsDirectory,
-          'frontend/styles'
-        ),
-      /refusing to overwrite manual entrypoint/
-    );
-    assert.equal(fs.readFileSync(manualEntrypoint, 'utf-8'), '@use "manual";');
+    expect(() =>
+      generateEntrypointsFromSources(
+        [{ dir: stylesDirectory, importBase: 'component' }],
+        entrypointsDirectory,
+        'frontend/styles'
+      )
+    ).toThrow(/refusing to overwrite manual entrypoint/);
+    expect(fs.readFileSync(manualEntrypoint, 'utf-8')).toBe('@use "manual";');
   });
 });
 
-await test('removes orphaned generated entrypoints while preserving manual files', () => {
+it('removes orphaned generated entrypoints while preserving manual files', () => {
   withTemporaryDirectories(({ entrypointsDirectory }) => {
     const orphanedEntrypoint = path.join(entrypointsDirectory, 'component-orphan.scss');
     const manualEntrypoint = path.join(entrypointsDirectory, 'base.scss');
@@ -125,12 +119,12 @@ await test('removes orphaned generated entrypoints while preserving manual files
 
     cleanupOrphanedEntrypoints(entrypointsDirectory, new Set());
 
-    assert.equal(fs.existsSync(orphanedEntrypoint), false);
-    assert.equal(fs.existsSync(manualEntrypoint), true);
+    expect(fs.existsSync(orphanedEntrypoint)).toBe(false);
+    expect(fs.existsSync(manualEntrypoint)).toBe(true);
   });
 });
 
-await test('keeps generated entrypoints when the branded output feeds cleanup', () => {
+it('keeps generated entrypoints when the branded output feeds cleanup', () => {
   withTemporaryDirectories(({ stylesDirectory, entrypointsDirectory }) => {
     fs.writeFileSync(path.join(stylesDirectory, '_button.scss'), '.button { color: red; }');
 
@@ -146,8 +140,8 @@ await test('keeps generated entrypoints when the branded output feeds cleanup', 
 
     cleanupOrphanedEntrypoints(entrypointsDirectory, generatedFiles);
 
-    assert.equal(fs.existsSync(path.join(entrypointsDirectory, 'component-button.scss')), true);
-    assert.equal(fs.existsSync(path.join(entrypointsDirectory, 'component-orphan.scss')), false);
+    expect(fs.existsSync(path.join(entrypointsDirectory, 'component-button.scss'))).toBe(true);
+    expect(fs.existsSync(path.join(entrypointsDirectory, 'component-orphan.scss'))).toBe(false);
   });
 });
 
