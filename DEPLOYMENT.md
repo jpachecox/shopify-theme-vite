@@ -2,10 +2,10 @@
 
 ## Environments
 
-| Branch | Environment | Shopify theme |
-|---|---|---|
+| Branch    | Environment  | Shopify theme       |
+| --------- | ------------ | ------------------- |
 | `develop` | QA / staging | Not yet provisioned |
-| `main` | Production | Not yet provisioned |
+| `main`    | Production   | Not yet provisioned |
 
 Deploys are triggered manually via the `Deploy` workflow
 (`.github/workflows/deploy.yml`, `workflow_dispatch`) — there is no
@@ -17,7 +17,7 @@ target theme.
 > `shopify theme push` step commented out. Once a store and theme(s)
 > exist, uncomment that step and configure the secrets listed in the
 > workflow's header comment under `Settings → Environments →
-> development` / `production`.
+development` / `production`.
 
 ## Rollback
 
@@ -30,10 +30,12 @@ If a deploy to `main` (production) needs to be reverted:
    CLI access.
 
 2. **Alternative — pull the previous version locally and re-push:**
+
    ```bash
    shopify theme pull --theme=<previous-theme-id>
    shopify theme push --theme=<production-theme-id> --allow-live
    ```
+
    Use this if the previous theme was already deleted from the theme
    library and needs to be reconstructed from a known-good git tag
    instead.
