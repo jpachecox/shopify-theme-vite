@@ -51,7 +51,7 @@ const sharedRules = {
 
   // General JavaScript/TypeScript best practices
   'no-console': ['warn', { allow: ['warn', 'error'] }],
-  'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+  'no-debugger': 'error',
   'prefer-const': 'error',
 
   // Formatting (indentation, quotes, semicolons, trailing commas, line
