@@ -15,8 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.husky/commit-msg` + `commitlint.config.js`: enforces Conventional
   Commits locally via `@commitlint/cli`/`@commitlint/config-conventional`.
 - `"engines": { "node": ">=24.16.0" }` in `package.json`, matching `.nvmrc`.
-- `check:sass`/`check:entrypoints` now run with
-  `--experimental-test-coverage`, printing a coverage summary.
 - `CLAUDE.md`: documents Dependabot (not Renovate) as the single
   version-update tool, and notes CI failure notifications are not yet
   configured.
@@ -30,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   convention and the rollback procedure (Shopify admin republish,
   `shopify theme pull`/`push`, and `git revert`).
 - `yarn check:sass` script: compiles Sass fixtures to validate function and mixin
-  arguments (`utils/sass-validation.test.mjs`).
+  arguments (`utils/sass-validation.test.ts`).
 - Strict token accessors: `fn.radius()`, `fn.breakpoint()`, `fn.spacing()`,
   `fn.elevation()` now fail the build with `@error` on unknown tokens, listing
   the available keys.
@@ -68,6 +66,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Consolidated all tests onto Vitest.** `check:sass` and
+  `check:entrypoints` now run via `vitest run <file>` instead of
+  `node --test`; `utils/sass-validation.test.ts` and
+  `utils/entrypoints.test.ts` were rewritten from `node:assert` to
+  Vitest's `expect(...)` API. `vitest.config.mjs` now defaults the test
+  environment to plain `node`, with `jsdom` opted into per file via a
+  `// @vitest-environment jsdom` docblock (`environmentMatchGlobs` was
+  removed in Vitest 4) — instead of running everything under `jsdom`. No
+  `node --test` usage remains anywhere in the project. Documented in
+  `CLAUDE.md` under "Testing".
 - `.yarnrc.yml`: `npmMinimalAgeGate` raised from `0` to `1` (rejects
   packages published in the last 24h); `approvedGitRepositories` restricted
   from `"**"` to an explicit (currently empty) allowlist.
