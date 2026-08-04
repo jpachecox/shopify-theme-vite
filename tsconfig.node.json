@@ -11,6 +11,7 @@
     "checkJs": true,
     "esModuleInterop": true,
     "types": ["node"],
+    "allowImportingTsExtensions": true,
     "noEmit": true
   },
   "include": ["*.config.*", "scripts/**/*", "utils/**/*"]

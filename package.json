@@ -21,7 +21,7 @@
     "format": "prettier --write \"frontend/**/*.{js,jsx,ts,tsx,scss,css,json,md}\" \"{scripts,utils}/**/*.{js,mjs}\" \"*.{js,json,md}\"",
     "lint": "yarn lint:scss && yarn lint:js",
     "lint:fix": "yarn lint:scss --fix && yarn lint:js --fix",
-    "lint:js": "eslint \"frontend/**/*.{js,jsx,ts,tsx}\" \"{scripts,utils}/**/*.{js,mjs}\" eslint.config.js --cache",
+    "lint:js": "eslint \"frontend/**/*.{js,jsx,ts,tsx}\" \"{scripts,utils}/**/*.{js,mjs,ts}\" eslint.config.js --cache",
     "lint:scss": "stylelint \"frontend/styles/**/*.scss\" --cache",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
