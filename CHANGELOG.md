@@ -99,3 +99,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   values (`''`/`false`).
 - `mix.elevation-shadow()` rejects an empty `$color` string, which previously
   compiled to invalid `rgba()` CSS.
+- `snippets/` is now tracked with a `.gitkeep` placeholder — a fresh clone was
+  missing the directory entirely, causing `vite build` to fail with `ENOENT`
+  when `vite-plugin-shopify` tried to write `vite-tag.liquid` (surfaced by
+  the new CI workflow).
