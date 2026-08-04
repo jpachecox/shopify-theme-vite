@@ -83,6 +83,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `eslint.config.js` split into JS and TS scopes: TypeScript files now run
+  type-aware rules (`recommended-type-checked`) against the two tsconfig
+  projects; `.js`/`.mjs` files use the espree parser with core recommended
+  rules (they were previously excluded by the TS-parser glob).
+- Lint-driven cleanup in `utils/sass-validation.test.mjs`: unused `node:test`
+  callback params and `css` destructures removed; import order fixed.
 - `utils/entrypoints.mjs` migrated to TypeScript (`utils/entrypoints.ts`) with a
   branded `EntrypointName` type; same public API and behavior.
 - `vite.config.js`: added the `@` → `frontend/` alias; removed
