@@ -1,7 +1,7 @@
 # Shopify Theme Vite
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen?style=for-the-badge)
-![Vite](https://img.shields.io/badge/Vite-8.1.5-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8.2.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Sass](https://img.shields.io/badge/Sass-1.100-CC6699?style=for-the-badge&logo=sass&logoColor=white)
 ![Shopify](https://img.shields.io/badge/Shopify-95BF47?style=for-the-badge&logo=shopify&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-grey?style=for-the-badge&logo=javascript&logoColor=white)
@@ -25,7 +25,7 @@ Build tooling for Shopify themes using Vite, Sass, optional React, and a flat
 
 ```text
 frontend/
-├── entrypoints/       # base.scss/base.jsx plus generated SCSS entrypoints
+├── entrypoints/       # base.scss/base.mts plus generated SCSS entrypoints
 ├── styles/
 │   ├── component/     # reusable UI styles
 │   ├── section/       # Shopify section styles
@@ -75,9 +75,9 @@ Do not edit generated entrypoints or `snippets/vite-tag.liquid` directly.
 | `yarn check:types`       | Checks frontend and Node/Vite configuration types without emitting files.               |
 | `yarn check:entrypoints` | Tests generated-entrypoint naming rules.                                                |
 | `yarn check:sass`        | Compiles Sass fixtures to validate function and mixin arguments (27 tests).             |
-| `yarn test`              | Runs React component tests with Vitest + Testing Library.                               |
-| `yarn test:watch`        | Runs component tests in watch mode.                                                     |
-| `yarn test:coverage`     | Runs component tests with a V8 coverage report.                                         |
+| `yarn test`              | Runs the full Vitest suite (React components, Sass validation, entrypoints). |
+| `yarn test:watch`        | Runs the suite in watch mode.                                                 |
+| `yarn test:coverage`     | Runs the suite with a V8 coverage report.                                     |
 | `yarn clean`             | Removes dependencies, build artifacts, and caches.                                      |
 | `yarn clean:build`       | Removes build artifacts and Vite caches only.                                           |
 | `yarn fresh`             | Cleans, installs, builds, and verifies.                                                 |

@@ -79,6 +79,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.yarnrc.yml`: `npmMinimalAgeGate` raised from `0` to `1` (rejects
   packages published in the last 24h); `approvedGitRepositories` restricted
   from `"**"` to an explicit (currently empty) allowlist.
+- `$gray-light` (`settings/_colors.scss`) is now an alias of
+  `$gray-values` — the 11-step grayscale scale has a single source of truth
+  (moved from `settings/_tokens.scss`) instead of two copied maps.
+- `[data-theme='dark']` (`settings/_tokens.scss`) now sets
+  `color-scheme: dark` so native controls (scrollbars, inputs, selects)
+  follow the theme instead of staying in light mode.
+- README: Vite badge updated to the installed version (8.2.0), entrypoint
+  reference corrected (`base.mts`, not `base.jsx`), and the `yarn test`
+  family descriptions now reflect the full Vitest suite (35 tests) rather
+  than React components only.
 
 - `fn.map-get-strict()` error messages now include the available map keys.
 - `fn.breakpoint()` reports the actual map name in errors when a custom map is
@@ -124,6 +134,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `component/_link.scss`: removed a self-referencing
+  `--link-underline-offset` custom property (guaranteed-invalid; the
+  underline offset silently fell back to `auto`). The value now comes from
+  the global token in `settings/_tokens.scss`.
+- Focus rings (`mix.focus-outline()` and the global `:focus-visible`) now
+  use `--focus-ring-color` instead of the undefined `--color-focus` token.
+- `fn.rem()` now rejects values with non-px units (`1em`/`2vh`) that were
+  silently treated as pixels.
+- `respond-below()` now rejects unitless or non-px breakpoints with a clear
+  message instead of a confusing arithmetic compile error.
 - `CLAUDE.md`: removed a duplicated "PR titles" bullet under PR Conventions.
 - `fn.breakpoint()` no longer fails when called without an explicit map (build
   regression from strict validation).

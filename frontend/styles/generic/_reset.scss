@@ -74,7 +74,7 @@
   // consistent ring; this is a bare-minimum a11y safety net.
   // ---------------------------------------------------------------------------
   :focus-visible {
-    outline: 2px solid var(--color-focus, #005fcc);
+    outline: 2px solid var(--focus-ring-color, #005fcc);
     outline-offset: 2px;
   }
 

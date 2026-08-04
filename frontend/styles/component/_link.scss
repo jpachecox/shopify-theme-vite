@@ -33,7 +33,9 @@ $prefix: 'link';
     --link-color: rgb(var(--_link-color-rgb), var(--_link-alpha));
     --link-color-hover: rgb(var(--_link-color-rgb));
     --link-decoration-color: rgb(var(--_link-color-rgb), var(--link-decoration-alpha, 0.4));
-    --link-underline-offset: var(--link-underline-offset, 0.2em);
+
+    // Underline offset comes from the global token (settings/_tokens.scss);
+    // redefining it here caused a self-referencing var() (guaranteed-invalid).
     --link-font-size: inherit;
     --link-font-weight: inherit;
     --link-gap: 0.375em;

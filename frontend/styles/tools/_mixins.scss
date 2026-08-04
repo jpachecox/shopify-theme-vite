@@ -96,6 +96,13 @@
 /// @param $map - (Optional) Breakpoint map to use, defaults to global $breakpoints
 @mixin respond-below($breakpoint, $map: null) {
   $value: fn.breakpoint($breakpoint, $map);
+  $unit: math.unit($value);
+
+  @if math.is-unitless($value) {
+    @error "Invalid argument: breakpoint '#{$breakpoint}' must have a length unit.";
+  } @else if $unit != 'px' {
+    @error "Invalid argument: breakpoint '#{$breakpoint}' must be in px, got '#{$unit}'.";
+  }
 
   @media screen and (max-width: ($value - 1px)) {
     @content;
@@ -154,7 +161,7 @@
 /// Consistent focus‑visible outline that respects accessibility.
 /// usage: @include focus-outline;
 @mixin focus-outline {
-  outline: 2px solid var(--color-focus, #005fcc);
+  outline: 2px solid var(--focus-ring-color, #005fcc);
   outline-offset: 2px;
 }
 
