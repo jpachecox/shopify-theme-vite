@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `type-coverage` devDependency with the `check:types:coverage` script
+  (`--strict`, 100% threshold, `--report-unused-ignore`) gating both tsconfig
+  projects in CI: frontend at 65/65 and Node tooling at 1657/1657, with the
+  intentional `EntrypointName` brand assertion ignored inline via
+  `type-coverage:ignore-next-line`.
 - Vitest unit testing: `vitest`, `@vitest/coverage-v8`, `jsdom`, and Testing
   Library devDependencies, `vitest.config.mjs` (jsdom, `@` alias, v8 coverage
   for `frontend/`), and `frontend/test/setup.ts` (jest-dom matchers, automatic
@@ -107,6 +112,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   type-aware rules (`recommended-type-checked`) against the two tsconfig
   projects; `.js`/`.mjs` files use the espree parser with core recommended
   rules (they were previously excluded by the TS-parser glob).
+- Last JavaScript file removed: `frontend/entrypoints/base.jsx` migrated to
+  `base.mts` (`.mts` keeps the emitted `base.js` asset name, which sorts before
+  `base.scss` in the Vite entry scan and avoids the `base2.js` chunk rename);
+  `tsconfig.json`, ESLint/Prettier globs, and the CI lint-cache key now cover
+  `.mts` files.
+- `incremental` compilation enabled in `tsconfig.base.json`; both tsconfig
+  projects now write `.tsbuildinfo` files, and the `clean` script removes them.
+- Explicit `JSX.Element` return type added to the `Counter` component.
 - Lint-driven cleanup in `utils/sass-validation.test.mjs`: unused `node:test`
   callback params and `css` destructures removed; import order fixed.
 - `utils/entrypoints.mjs` migrated to TypeScript (`utils/entrypoints.ts`) with a

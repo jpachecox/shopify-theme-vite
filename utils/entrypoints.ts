@@ -11,7 +11,9 @@ export const AUTO_GENERATED_MARKER =
  */
 export type EntrypointName = string & { readonly __entrypointName: unique symbol };
 
-const toEntrypointName = (fileName: string): EntrypointName => fileName as EntrypointName;
+const toEntrypointName = (fileName: string): EntrypointName =>
+  // type-coverage:ignore-next-line the brand can only be produced by an assertion.
+  fileName as EntrypointName;
 
 /**
  * Converts a valid Sass partial basename into its Shopify-facing entrypoint
