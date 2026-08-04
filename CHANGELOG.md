@@ -9,26 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `type-coverage` devDependency with the `check:types:coverage` script
-  (`--strict`, 100% threshold, `--report-unused-ignore`) gating both tsconfig
-  projects in CI: frontend at 65/65 and Node tooling at 1657/1657, with the
-  intentional `EntrypointName` brand assertion ignored inline via
-  `type-coverage:ignore-next-line`.
-- Vitest unit testing: `vitest`, `@vitest/coverage-v8`, `jsdom`, and Testing
-  Library devDependencies, `vitest.config.mjs` (jsdom, `@` alias, v8 coverage
-  for `frontend/`), and `frontend/test/setup.ts` (jest-dom matchers, automatic
-  cleanup after each test).
-- `yarn test`, `yarn test:watch`, and `yarn test:coverage` scripts, plus the
-  first component test: `frontend/components/counter` (100% covered).
-- `frontend/vite-env.d.ts`: Vite client types and a `*.scss` module declaration
-  for typed Sass imports.
-- `@types/node` devDependency, matching `"engines"` and `.nvmrc`.
-- `tsconfig.json`: `noUncheckedIndexedAccess`, `noImplicitOverride`,
-  `exactOptionalPropertyTypes`, `noUnusedLocals`/`noUnusedParameters`,
-  `verbatimModuleSyntax`, ES2022 target/lib, and `@/*` path alias resolving to
-  `frontend/*`.
-- `tsconfig.node.json`: `checkJs: true` with strict flags, so JS config files
-  and scripts are type-checked too.
 - `.github/workflows/ci.yml`: `workflow_dispatch` trigger for manual re-runs;
   uploads `dist/` as a debug artifact when `build:verify` fails.
 - `.github/CODEOWNERS`: `@jpachecox` as owner of the whole repo.
@@ -85,62 +65,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and empty map) and for non-string `elevation-shadow()` levels; error
   assertions decoupled from token-map contents so adding a token no longer
   breaks tests.
-- `utils/entrypoints.test.ts`: compile-time contract tests for the
-  `EntrypointName` brand type (plain strings are rejected, branded values
-  flow between `generateEntrypointsFromSources` and
-  `cleanupOrphanedEntrypoints`, enforced by `yarn check:types`), plus a
-  runtime round-trip test proving the returned `Set` survives cleanup.
 
 ### Changed
 
-- Dependency migration (declined dependabot PR #48, minus the breaking
-  `typescript 7.0.2` bump): `vite` 8.2.0, `@vitejs/plugin-react` 6.0.5,
-  `@types/node` 26.1.2, `@types/react` 19.2.18, `@types/react-dom` 19.2.4.
-  `eslint` stays on 9.x: `@shopify/cli` (installed by the CI `theme-check`
-  action via npm) fails peer resolution against ESLint 10 —
-  `eslint-plugin-import` and `eslint-plugin-react` do not declare ESLint 10
-  support yet.
-- Dependabot now ignores `typescript` major updates in the npm group until
-  typescript-eslint and type-coverage support the native TS 7 API.
-- Remaining tooling migrated to TypeScript: `utils/tools.ts`, both
-  `utils/*.test.ts` suites, and `scripts/verify-assets.ts` (Spanish comments
-  translated to English); `node --test` runs the `.ts` files directly via
-  Node 24 type stripping.
-- `erasableSyntaxOnly` enabled in `tsconfig.node.json`, guarding the
-  type-stripped files against non-erasable syntax.
-- `format`/`lint:js`/lint-staged globs and the CI lint-cache key now target
-  `{scripts,utils}/**/*.ts` instead of the removed `.js`/`.mjs` files.
-- Shared compiler options extracted into `tsconfig.base.json`, extended by
-  both `tsconfig.json` and `tsconfig.node.json`; the Node tooling
-  (`utils/`, `scripts/`) now compiles under `verbatimModuleSyntax`,
-  `noUnusedLocals`/`noUnusedParameters`, `isolatedModules`,
-  `forceConsistentCasingInFileNames`, and `skipLibCheck`.
-- Deprecated `baseUrl` removed from `tsconfig.json`; the `@/*` path alias is
-  now resolved relative to the config file.
-- `eslint.config.js` split into JS and TS scopes: TypeScript files now run
-  type-aware rules (`recommended-type-checked`) against the two tsconfig
-  projects; `.js`/`.mjs` files use the espree parser with core recommended
-  rules (they were previously excluded by the TS-parser glob).
-- Last JavaScript file removed: `frontend/entrypoints/base.jsx` migrated to
-  `base.mts` (`.mts` keeps the emitted `base.js` asset name, which sorts before
-  `base.scss` in the Vite entry scan and avoids the `base2.js` chunk rename);
-  `tsconfig.json`, ESLint/Prettier globs, and the CI lint-cache key now cover
-  `.mts` files.
-- `incremental` compilation enabled in `tsconfig.base.json`; both tsconfig
-  projects now write `.tsbuildinfo` files, and the `clean` script removes them.
-- Explicit `JSX.Element` return type added to the `Counter` component.
-- Lint-driven cleanup in `utils/sass-validation.test.mjs`: unused `node:test`
-  callback params and `css` destructures removed; import order fixed.
-- `utils/entrypoints.mjs` migrated to TypeScript (`utils/entrypoints.ts`) with a
-  branded `EntrypointName` type; same public API and behavior.
-- `vite.config.js`: added the `@` → `frontend/` alias; removed
-  `api: 'modern-compiler'` (removed in Vite 8) and the `removeViewBox` SVGO
-  entry (`active: false` is ignored by SVGO v4, so the plugin was silently
-  active).
-- 57 `checkJs` type errors fixed via JSDoc across `eslint.config.js`,
-  `utils/tools.mjs`, `utils/*.test.mjs`, and `scripts/verify-assets.mjs`.
-- `.github/workflows/ci.yml`: added a "Component tests (Vitest)" step; README
-  commands table gained the `test`/`test:watch`/`test:coverage` rows.
 - `.yarnrc.yml`: `npmMinimalAgeGate` raised from `0` to `1` (rejects
   packages published in the last 24h); `approvedGitRepositories` restricted
   from `"**"` to an explicit (currently empty) allowlist.
@@ -189,8 +116,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Type-checking was a no-op for JavaScript files (`checkJs` was off in
-  `tsconfig.node.json`), so configs, utils, and tests were never type-checked.
 - `CLAUDE.md`: removed a duplicated "PR titles" bullet under PR Conventions.
 - `fn.breakpoint()` no longer fails when called without an explicit map (build
   regression from strict validation).

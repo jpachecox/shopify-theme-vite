@@ -80,6 +80,8 @@ export const generateEntrypointsFromSources = (
 
       sourcesByEntrypoint.set(entryFileName, sourcePath);
 
+      const content = `${AUTO_GENERATED_MARKER}\n// Source: ${stylesRootLabel}/${importBase}/_${baseName}.scss\n@use '${importPath}';\n`;
+
       if (fs.existsSync(entryPath)) {
         const existingContent = fs.readFileSync(entryPath, 'utf-8');
 
@@ -88,9 +90,12 @@ export const generateEntrypointsFromSources = (
             `[auto-entrypoints] refusing to overwrite manual entrypoint "${entryPath}" generated from "${sourcePath}".`
           );
         }
-      }
 
-      const content = `${AUTO_GENERATED_MARKER}\n// Source: ${stylesRootLabel}/${importBase}/_${baseName}.scss\n@use '${importPath}';\n`;
+        if (existingContent === content) {
+          generatedFiles.add(entryFileName);
+          continue;
+        }
+      }
 
       fs.writeFileSync(entryPath, content);
       generatedFiles.add(entryFileName);
