@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 
+import type { EntrypointName } from './entrypoints.ts';
 import {
   AUTO_GENERATED_MARKER,
   cleanupOrphanedEntrypoints,
@@ -128,3 +129,44 @@ await test('removes orphaned generated entrypoints while preserving manual files
     assert.equal(fs.existsSync(manualEntrypoint), true);
   });
 });
+
+await test('keeps generated entrypoints when the branded output feeds cleanup', () => {
+  withTemporaryDirectories(({ stylesDirectory, entrypointsDirectory }) => {
+    fs.writeFileSync(path.join(stylesDirectory, '_button.scss'), '.button { color: red; }');
+
+    const generatedFiles: Set<EntrypointName> = generateEntrypointsFromSources(
+      [{ dir: stylesDirectory, importBase: 'component' }],
+      entrypointsDirectory,
+      'frontend/styles'
+    );
+    fs.writeFileSync(
+      path.join(entrypointsDirectory, 'component-orphan.scss'),
+      `${AUTO_GENERATED_MARKER}\n@use '../styles/component/orphan';\n`
+    );
+
+    cleanupOrphanedEntrypoints(entrypointsDirectory, generatedFiles);
+
+    assert.equal(fs.existsSync(path.join(entrypointsDirectory, 'component-button.scss')), true);
+    assert.equal(fs.existsSync(path.join(entrypointsDirectory, 'component-orphan.scss')), false);
+  });
+});
+
+/**
+ * Compile-time contract of the {@link EntrypointName} brand: never executed
+ * (Node 24 type-stripping erases it), but `yarn check:types` fails the build
+ * if any of the `@ts-expect-error` expectations stop holding.
+ */
+export const entrypointNameTypeContract = (): void => {
+  const generated = generateEntrypointsFromSources([], '/unused', 'unused');
+  cleanupOrphanedEntrypoints('/unused', generated);
+
+  const first = generated.values().next().value;
+  if (first !== undefined) {
+    const asString: string = first;
+    void asString;
+  }
+
+  // @ts-expect-error a plain string is not a branded entrypoint name
+  const unguarded: EntrypointName = 'component-card.scss';
+  void unguarded;
+};

@@ -80,6 +80,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and empty map) and for non-string `elevation-shadow()` levels; error
   assertions decoupled from token-map contents so adding a token no longer
   breaks tests.
+- `utils/entrypoints.test.ts`: compile-time contract tests for the
+  `EntrypointName` brand type (plain strings are rejected, branded values
+  flow between `generateEntrypointsFromSources` and
+  `cleanupOrphanedEntrypoints`, enforced by `yarn check:types`), plus a
+  runtime round-trip test proving the returned `Set` survives cleanup.
 
 ### Changed
 
