@@ -10,18 +10,18 @@
     "dev": "concurrently -k -n VITE,SHOPIFY -c blue,green \"vite\" \"shopify theme dev\"",
     "dev:vite": "vite",
     "build": "vite build",
-    "build:verify": "yarn build && node scripts/verify-assets.mjs",
-    "check:entrypoints": "node --test --experimental-test-coverage utils/entrypoints.test.mjs",
-    "check:sass": "node --test --experimental-test-coverage utils/sass-validation.test.mjs",
+    "build:verify": "yarn build && node scripts/verify-assets.ts",
+    "check:entrypoints": "node --test --experimental-test-coverage utils/entrypoints.test.ts",
+    "check:sass": "node --test --experimental-test-coverage utils/sass-validation.test.ts",
     "check:theme": "shopify theme check",
     "check:types": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
     "clean": "rimraf node_modules .vite dist .shopify/.cache assets/.vite .eslintcache .stylelintcache tsconfig.node.tsbuildinfo",
     "clean:build": "rimraf dist .vite assets/.vite",
     "fresh": "yarn clean && yarn install && yarn build:verify",
-    "format": "prettier --write \"frontend/**/*.{js,jsx,ts,tsx,scss,css,json,md}\" \"{scripts,utils}/**/*.{js,mjs}\" \"*.{js,json,md}\"",
+    "format": "prettier --write \"frontend/**/*.{js,jsx,ts,tsx,scss,css,json,md}\" \"{scripts,utils}/**/*.ts\" \"*.{js,json,md}\"",
     "lint": "yarn lint:scss && yarn lint:js",
     "lint:fix": "yarn lint:scss --fix && yarn lint:js --fix",
-    "lint:js": "eslint \"frontend/**/*.{js,jsx,ts,tsx}\" \"{scripts,utils}/**/*.{js,mjs,ts}\" eslint.config.js --cache",
+    "lint:js": "eslint \"frontend/**/*.{js,jsx,ts,tsx}\" \"{scripts,utils}/**/*.ts\" eslint.config.js --cache",
     "lint:scss": "stylelint \"frontend/styles/**/*.scss\" --cache",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
@@ -83,11 +83,11 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "utils/**/*.{js,mjs}": [
+    "utils/**/*.ts": [
       "eslint --fix",
       "prettier --write"
     ],
-    "scripts/**/*.{js,mjs}": [
+    "scripts/**/*.ts": [
       "eslint --fix",
       "prettier --write"
     ]

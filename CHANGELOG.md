@@ -83,6 +83,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Remaining tooling migrated to TypeScript: `utils/tools.ts`, both
+  `utils/*.test.ts` suites, and `scripts/verify-assets.ts` (Spanish comments
+  translated to English); `node --test` runs the `.ts` files directly via
+  Node 24 type stripping.
+- `erasableSyntaxOnly` enabled in `tsconfig.node.json`, guarding the
+  type-stripped files against non-erasable syntax.
+- `format`/`lint:js`/lint-staged globs and the CI lint-cache key now target
+  `{scripts,utils}/**/*.ts` instead of the removed `.js`/`.mjs` files.
 - `eslint.config.js` split into JS and TS scopes: TypeScript files now run
   type-aware rules (`recommended-type-checked`) against the two tsconfig
   projects; `.js`/`.mjs` files use the espree parser with core recommended
