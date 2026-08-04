@@ -3077,6 +3077,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chalk@npm:4.1.2, chalk@npm:^4.0.0, chalk@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "chalk@npm:4.1.2"
+  dependencies:
+    ansi-styles: "npm:^4.1.0"
+    supports-color: "npm:^7.1.0"
+  checksum: 10c0/4a3fef5cc34975c898ffe77141450f679721df9dde00f6c304353fa9c8b571929123b26a0e4617bde5018977eb655b31970c297b91b63ee83bb82aeb04666880
+  languageName: node
+  linkType: hard
+
 "chalk@npm:5.4.1":
   version: 5.4.1
   resolution: "chalk@npm:5.4.1"
@@ -3088,16 +3098,6 @@ __metadata:
   version: 5.6.2
   resolution: "chalk@npm:5.6.2"
   checksum: 10c0/99a4b0f0e7991796b1e7e3f52dceb9137cae2a9dfc8fc0784a550dc4c558e15ab32ed70b14b21b52beb2679b4892b41a0aa44249bcb996f01e125d58477c6976
-  languageName: node
-  linkType: hard
-
-"chalk@npm:^4.0.0, chalk@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "chalk@npm:4.1.2"
-  dependencies:
-    ansi-styles: "npm:^4.1.0"
-    supports-color: "npm:^7.1.0"
-  checksum: 10c0/4a3fef5cc34975c898ffe77141450f679721df9dde00f6c304353fa9c8b571929123b26a0e4617bde5018977eb655b31970c297b91b63ee83bb82aeb04666880
   languageName: node
   linkType: hard
 
@@ -4412,7 +4412,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:3.3.3, fast-glob@npm:^3.2.11, fast-glob@npm:^3.3.3":
+"fast-glob@npm:3, fast-glob@npm:3.3.3, fast-glob@npm:^3.2.11, fast-glob@npm:^3.3.3":
   version: 3.3.3
   resolution: "fast-glob@npm:3.3.3"
   dependencies:
@@ -6411,21 +6411,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:6 || 7 || 8 || 9 || 10, minimatch@npm:^10.2.2":
+  version: 10.2.6
+  resolution: "minimatch@npm:10.2.6"
+  dependencies:
+    brace-expansion: "npm:^5.0.8"
+  checksum: 10c0/4559a836243b98bd4d17ea9f7edae698717c76399eea7be374f3737f33164e4907f19e9726891ddeb122f750a5a7fa80d2ac43e851d6e5984dc4ff42ec127d3a
+  languageName: node
+  linkType: hard
+
 "minimatch@npm:9.0.8":
   version: 9.0.8
   resolution: "minimatch@npm:9.0.8"
   dependencies:
     brace-expansion: "npm:^5.0.2"
   checksum: 10c0/963e435e30546a5dd09900f916c785efa78aea3b416f0c7b3f5876b23538fecd8056c619b8b00ab545c1bcedbc385566e46735461e45a44e864710f86ed4ed23
-  languageName: node
-  linkType: hard
-
-"minimatch@npm:^10.2.2":
-  version: 10.2.6
-  resolution: "minimatch@npm:10.2.6"
-  dependencies:
-    brace-expansion: "npm:^5.0.8"
-  checksum: 10c0/4559a836243b98bd4d17ea9f7edae698717c76399eea7be374f3737f33164e4907f19e9726891ddeb122f750a5a7fa80d2ac43e851d6e5984dc4ff42ec127d3a
   languageName: node
   linkType: hard
 
@@ -6456,7 +6456,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimist@npm:^1.2.0, minimist@npm:^1.2.6":
+"minimist@npm:1, minimist@npm:^1.2.0, minimist@npm:^1.2.6":
   version: 1.2.8
   resolution: "minimist@npm:1.2.8"
   checksum: 10c0/19d3fcdca050087b84c2029841a093691a91259a47def2f18222f41e7645a0b7c44ef4b40e88a1e58a40c84d2ef0ee6047c55594d298146d0eb3f6b737c20ce6
@@ -6624,7 +6624,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"normalize-path@npm:^3.0.0":
+"normalize-path@npm:3, normalize-path@npm:^3.0.0":
   version: 3.0.0
   resolution: "normalize-path@npm:3.0.0"
   checksum: 10c0/e008c8142bcc335b5e38cf0d63cfd39d6cf2d97480af9abdbe9a439221fd4d749763bab492a8ee708ce7a194bb00c9da6d0a115018672310850489137b3da046
@@ -8171,6 +8171,7 @@ __metadata:
     stylelint-scss: "npm:^7.2.0"
     stylelint-selector-bem-pattern: "npm:^5.0.0"
     svgo: "npm:^4.0.2"
+    type-coverage: "npm:^2.30.1"
     typescript: "npm:^5.0.0"
     vite: "npm:8.1.5"
     vite-plugin-image-optimizer: "npm:^2.0.3"
@@ -9019,10 +9020,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0":
+"tslib@npm:1 || 2, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^1.8.1":
+  version: 1.14.1
+  resolution: "tslib@npm:1.14.1"
+  checksum: 10c0/69ae09c49eea644bc5ebe1bca4fa4cc2c82b7b3e02f43b84bd891504edf66dbc6b2ec0eef31a957042de2269139e4acff911e6d186a258fb14069cd7f6febce2
+  languageName: node
+  linkType: hard
+
+"tsutils@npm:3":
+  version: 3.21.0
+  resolution: "tsutils@npm:3.21.0"
+  dependencies:
+    tslib: "npm:^1.8.1"
+  peerDependencies:
+    typescript: ">=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta"
+  checksum: 10c0/02f19e458ec78ead8fffbf711f834ad8ecd2cc6ade4ec0320790713dccc0a412b99e7fd907c4cda2a1dc602c75db6f12e0108e87a5afad4b2f9e90a24cabd5a2
   languageName: node
   linkType: hard
 
@@ -9032,6 +9051,34 @@ __metadata:
   dependencies:
     prelude-ls: "npm:^1.2.1"
   checksum: 10c0/7b3fd0ed43891e2080bf0c5c504b418fbb3e5c7b9708d3d015037ba2e6323a28152ec163bcb65212741fa5d2022e3075ac3c76440dbd344c9035f818e8ecee58
+  languageName: node
+  linkType: hard
+
+"type-coverage-core@npm:^2.30.1":
+  version: 2.30.1
+  resolution: "type-coverage-core@npm:2.30.1"
+  dependencies:
+    fast-glob: "npm:3"
+    minimatch: "npm:6 || 7 || 8 || 9 || 10"
+    normalize-path: "npm:3"
+    tslib: "npm:1 || 2"
+    tsutils: "npm:3"
+  peerDependencies:
+    typescript: 2 || 3 || 4 || 5 || 6 || 7
+  checksum: 10c0/dd61b7f59d28bcfdefebc230e6407dd587c9409b8b778639da023542d87b58420b229dccc8495403a96494f9ed184314290046d81e98337275bb25c9b109719a
+  languageName: node
+  linkType: hard
+
+"type-coverage@npm:^2.30.1":
+  version: 2.30.1
+  resolution: "type-coverage@npm:2.30.1"
+  dependencies:
+    chalk: "npm:4.1.2"
+    minimist: "npm:1"
+    type-coverage-core: "npm:^2.30.1"
+  bin:
+    type-coverage: bin/type-coverage
+  checksum: 10c0/485f735182ba395e91ce8a322e41889b721aa964256961294f6c6c9ee0adb8a634f2214310b6d64edf4412414cb71358653174c4029e0059119a8e5a7fad603f
   languageName: node
   linkType: hard
 

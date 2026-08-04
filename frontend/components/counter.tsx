@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { JSX } from 'react';
 
 type CounterProps = {
   label: string;
@@ -8,7 +9,7 @@ type CounterProps = {
  * Sample component validating the Vitest + Testing Library harness.
  * Replace with real design-system components.
  */
-export function Counter({ label }: CounterProps) {
+export function Counter({ label }: CounterProps): JSX.Element {
   const [count, setCount] = useState(0);
 
   return (
