@@ -2,14 +2,17 @@
   "name": "shopify-theme-vite",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=24.16.0"
+  },
   "scripts": {
     "audit": "yarn npm audit --severity moderate --all",
     "dev": "concurrently -k -n VITE,SHOPIFY -c blue,green \"vite\" \"shopify theme dev\"",
     "dev:vite": "vite",
     "build": "vite build",
     "build:verify": "yarn build && node scripts/verify-assets.mjs",
-    "check:entrypoints": "node --test utils/entrypoints.test.mjs",
-    "check:sass": "node --test utils/sass-validation.test.mjs",
+    "check:entrypoints": "node --test --experimental-test-coverage utils/entrypoints.test.mjs",
+    "check:sass": "node --test --experimental-test-coverage utils/sass-validation.test.mjs",
     "check:theme": "shopify theme check",
     "check:types": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
     "clean": "rimraf node_modules .vite dist .shopify/.cache assets/.vite .eslintcache .stylelintcache tsconfig.node.tsbuildinfo",
@@ -22,6 +25,8 @@
     "lint:scss": "stylelint \"frontend/styles/**/*.scss\" --cache"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
     "@driver-digital/vite-plugin-shopify-clean": "^2.0.0",
     "@eslint/js": "^9.39.0",
     "@types/react": "^19.2.17",
