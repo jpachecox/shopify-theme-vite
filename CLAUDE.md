@@ -9,4 +9,14 @@ Guidance for Claude Code sessions working in this repository.
 - Always link the related issue with `Closes #<number>` under Description. This only auto-closes the issue on merge to the default branch (`main`); if the flow merges to `develop` first, the issue won't close until `develop` reaches `main`.
 - Delete unused "Changes" subsections (Fixes/Feature/Refactor/Tests/Docs) rather than leaving them empty.
 - PR titles: short, describe what the PR does, not how (e.g. "Harden Sass mixin argument validation", not "Fixed some bugs in mixins").
-- PR titles: short, describe what the PR does, not how (e.g. "Harden Sass mixin argument validation", not "Fixed some bugs in mixins").
+
+## Dependency & CI tooling decisions
+
+- **Version updates:** Dependabot (`.github/dependabot.yml`) is the single
+  tool for dependency updates — Renovate is not used. Reconsider only if
+  auto-merge or custom grouping/labeling needs outgrow what Dependabot
+  offers.
+- **CI failure notifications:** not yet configured. No Slack/Discord
+  webhook exists. Revisit once the team grows beyond a single maintainer
+  or once `deploy.yml` goes live (failed deploys are the point where
+  notifications matter most).

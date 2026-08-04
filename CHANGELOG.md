@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `.github/workflows/ci.yml`: `workflow_dispatch` trigger for manual re-runs;
+  uploads `dist/` as a debug artifact when `build:verify` fails.
+- `.github/CODEOWNERS`: `@jpachecox` as owner of the whole repo.
+- `.husky/commit-msg` + `commitlint.config.js`: enforces Conventional
+  Commits locally via `@commitlint/cli`/`@commitlint/config-conventional`.
+- `"engines": { "node": ">=24.16.0" }` in `package.json`, matching `.nvmrc`.
+- `check:sass`/`check:entrypoints` now run with
+  `--experimental-test-coverage`, printing a coverage summary.
+- `CLAUDE.md`: documents Dependabot (not Renovate) as the single
+  version-update tool, and notes CI failure notifications are not yet
+  configured.
 - `.github/workflows/ci.yml`: `actionlint` job validating workflow files;
   Yarn dependency caching and an ESLint/Stylelint cache on `build-and-verify`;
   `permissions: contents: read` and `timeout-minutes` on every job.
@@ -105,6 +116,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `CLAUDE.md`: removed a duplicated "PR titles" bullet under PR Conventions.
 - `fn.breakpoint()` no longer fails when called without an explicit map (build
   regression from strict validation).
 - Assertion helpers interpolated the parameter name (`#{$name}`) correctly in
