@@ -83,6 +83,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `utils/entrypoints.mjs` migrated to TypeScript (`utils/entrypoints.ts`) with a
+  branded `EntrypointName` type; same public API and behavior.
 - `vite.config.js`: added the `@` → `frontend/` alias; removed
   `api: 'modern-compiler'` (removed in Vite 8) and the `removeViewBox` SVGO
   entry (`active: false` is ignored by SVGO v4, so the plugin was silently
