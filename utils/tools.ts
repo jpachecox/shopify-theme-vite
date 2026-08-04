@@ -1,11 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-<<<<<<< HEAD:utils/tools.ts
 import type { Plugin } from 'vite';
 
-=======
->>>>>>> main:utils/tools.mjs
 import { generateEntrypointsFromSources, cleanupOrphanedEntrypoints } from './entrypoints.ts';
 
 const DEFAULT_SOURCES = ['component', 'section', 'snippet'];
