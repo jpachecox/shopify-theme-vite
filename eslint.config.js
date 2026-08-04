@@ -7,6 +7,12 @@ import pluginReact from 'eslint-plugin-react';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 
+// plugin-prettier ships legacy-union types for its flat config; the runtime
+// value is a plain rules object, so cast it for the spread below.
+const prettierRecommendedRules =
+  /** @type {Record<string, Record<string, unknown>> | undefined} */ (pluginPrettier.configs)
+    ?.recommended?.rules ?? {};
+
 export default [
   {
     ignores: ['assets/', 'node_modules/', 'dist/', '.vite/', 'coverage/'],
@@ -39,8 +45,8 @@ export default [
       ...pluginJs.configs.recommended.rules,
       ...pluginReact.configs.recommended.rules,
       ...pluginReactHooks.configs.recommended.rules,
-      ...tsPlugin.configs.recommended.rules,
-      ...pluginPrettier.configs.recommended.rules,
+      ...(tsPlugin.configs.recommended?.rules ?? {}),
+      ...prettierRecommendedRules,
 
       // Alphabetical import order — same convention as previous project.
       // Doesn't cover Sass @use/@forward: no equivalent rule exists in the

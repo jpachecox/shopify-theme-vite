@@ -31,15 +31,23 @@ export default defineConfig({
         effort: 10,
       },
       svg: {
-        plugins: [{ name: 'removeViewBox', active: false }, { name: 'removeDimensions' }],
+        // SVGO v4 dropped the `active` flag: a plugin is disabled by simply
+        // not listing it. removeViewBox is omitted on purpose so responsive
+        // SVGs keep their viewBox.
+        plugins: [{ name: 'removeDimensions' }],
       },
     }),
   ],
 
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'frontend'),
+    },
+  },
+
   css: {
     preprocessorOptions: {
       scss: {
-        api: 'modern-compiler',
         loadPaths: [path.resolve(__dirname, 'frontend/styles')],
       },
     },

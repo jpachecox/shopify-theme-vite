@@ -9,8 +9,8 @@ const DEFAULT_SOURCES = ['component', 'section', 'snippet'];
  * found in `stylesRoot/{components,sections,snippets}/`, and removes orphaned
  * entrypoints whose source partial no longer exists.
  *
- * @param {object} options
- * @param {string} options.root - project root directory (typically __dirname from vite.config.js)
+ * @param {object} [options]
+ * @param {string} [options.root] - project root directory (typically __dirname from vite.config.js)
  * @param {string} [options.entrypointsDir] - relative to root
  * @param {string} [options.stylesRoot] - relative to root
  * @param {string[]} [options.sources] - subdirectory names to scan within stylesRoot
