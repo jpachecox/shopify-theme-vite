@@ -12,6 +12,7 @@
     "esModuleInterop": true,
     "types": ["node"],
     "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
     "noEmit": true
   },
   "include": ["*.config.*", "scripts/**/*", "utils/**/*"]

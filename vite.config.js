@@ -7,7 +7,7 @@ import { defineConfig } from 'vite';
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import shopify from 'vite-plugin-shopify';
 
-import { autoEntrypointsFromStyles } from './utils/tools.mjs';
+import { autoEntrypointsFromStyles } from './utils/tools.ts';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

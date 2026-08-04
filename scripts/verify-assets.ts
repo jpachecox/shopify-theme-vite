@@ -5,11 +5,15 @@ import path from 'node:path';
 const ASSETS_DIR = 'assets';
 const MANIFEST_PATH = path.join(ASSETS_DIR, '.vite', 'manifest.json');
 
+type ManifestEntry = {
+  file: string;
+  css?: string[];
+  assets?: string[];
+};
+
 let failed = false;
-/**
- * @param {string} msg
- */
-const fail = (msg) => {
+
+const fail = (msg: string): void => {
   console.error(`❌ ${msg}`);
   failed = true;
 };
@@ -19,15 +23,18 @@ if (!fs.existsSync(MANIFEST_PATH)) {
   process.exit(1);
 }
 
-const manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf-8'));
+const manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf-8')) as Record<
+  string,
+  ManifestEntry
+>;
 
 console.error('Verifying naming convention in assets/ (against manifest.json)...');
 
 for (const [source, entry] of Object.entries(manifest)) {
   const expectedBase = path.basename(source, path.extname(source));
 
-  // Entrypoints: JS/CSS generados directamente por un entrypoint
-  const entryFiles = [];
+  // Entrypoints: JS/CSS emitted directly from an entrypoint.
+  const entryFiles: string[] = [];
   if (entry.file) entryFiles.push(entry.file);
   if (Array.isArray(entry.css)) entryFiles.push(...entry.css);
 
@@ -43,15 +50,15 @@ for (const [source, entry] of Object.entries(manifest)) {
     }
   }
 
-  // Assets referenciados (imágenes, fuentes, SVG importados desde .scss/.jsx)
+  // Referenced assets (images, fonts, SVGs imported from .scss/.jsx).
   if (Array.isArray(entry.assets)) {
     for (const assetFile of entry.assets) {
       if (assetFile.includes('.min.')) {
         fail(`Asset "${assetFile}" contains .min suffix (not allowed)`);
       }
-      // Detecta hash de contenido: Rollup usa 8 chars hex tipo -a1b2c3d4
-      // antes de la extensión SOLO cuando no se pudo respetar el
-      // patrón [name][extname] (ej. colisión real de nombres).
+      // Content hash detection: Rollup emits an 8-char hex suffix like
+      // -a1b2c3d4 before the extension ONLY when the [name][extname]
+      // pattern can't be honored (e.g. real name collisions).
       if (/-[0-9a-f]{8}\.\w+$/i.test(assetFile)) {
         fail(`Asset "${assetFile}" has hash in filename — check for a real source name collision`);
       }
