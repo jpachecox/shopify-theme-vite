@@ -22,9 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `radius-corners`, `elevation`, `elevation-shadow`, `respond-to`,
   `respond-below`, `shadow-border`, `emit-type-scale-tokens`, `button-variant`),
   and restored utilities (`rem`, `strip-unit`, `gray`, `font-stack`).
-- README badges: `JavaScript`, `Build` (`build-passing`), `CI`, and `Tests`;
-  the `CI`/`Tests` badges are dynamic and will show their status once
-  `.github/workflows/ci.yml` exists.
+- README badges: `JavaScript`, `CI`, and `Tests`; both are dynamic and
+  reflect the real workflow status.
+- `.github/workflows/ci.yml`: runs `lint`, `check:sass`, `check:types`, and
+  `build:verify` on pull requests and pushes to `main`/`develop`.
 - `settings/README.md` documents the end-to-end editable-token flow:
   `config/settings_schema.json` → `layout/theme.liquid` `{% style %}` → CSS
   custom properties → Sass `var()` consumption, with a concrete example.
@@ -65,6 +66,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Function and mixin doc comments translated to English.
 - README badges restyled with `style=for-the-badge`; `yarn check:sass` entry
   added to the commands table.
+- Removed the static `Build: passing` README badge, now redundant with the
+  real `CI`/`Tests` status badges.
 
 ### Docs
 
@@ -96,3 +99,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   values (`''`/`false`).
 - `mix.elevation-shadow()` rejects an empty `$color` string, which previously
   compiled to invalid `rgba()` CSS.
+- `snippets/` is now tracked with a `.gitkeep` placeholder — a fresh clone was
+  missing the directory entirely, causing `vite build` to fail with `ENOENT`
+  when `vite-plugin-shopify` tried to write `vite-tag.liquid` (surfaced by
+  the new CI workflow).
