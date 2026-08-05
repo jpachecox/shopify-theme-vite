@@ -6,15 +6,17 @@ ITCSS "components" layer. Reusable, styled UI pieces — BEM
 `component-` prefix automatically). Names use lowercase letters and hyphens
 only after the leading underscore.
 
-| File                 | Component                                                                                                                                              |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `_accordion.scss`    | `.accordion` — `<details>`/`<summary>`-based disclosure.                                                                                               |
-| `_button.scss`       | `.button` — base button layout, focus state, disabled state, icon alignment, and full-width modifier.                                                  |
-| `_button-group.scss` | Reserved stylesheet entrypoint for grouped-button styles.                                                                                              |
-| `_card.scss`         | `.card` — base card block.                                                                                                                             |
-| `_link.scss`         | `.link` — inline link with icon support, size (`--sm`/`--md`/`--lg`) and tone (`--destructive`) modifiers. Uses `--_link-*` private custom properties. |
+**SCSS only:** this folder never holds `.liquid` files or any other
+Shopify-specific resource. Those live in the theme root (`snippets/`,
+`sections/`, or within a `.liquid` schema block).
 
-## Conventions worth keeping consistent
+Currently empty — no components shipped in this repository's styles. This
+folder exists so real Shopify projects can map their own component styles:
+drop a `_name.scss` partial here and the auto-entrypoints generator emits
+the matching `component-name.scss` entrypoint and compiled `component-name.css`
+asset automatically.
+
+## Conventions to follow when adding a component
 
 - Always namespace function calls (`fn.spacing('2')`, `fn.radius('sm')`) —
   a bare `spacing('2')` compiles silently as invalid literal CSS instead of

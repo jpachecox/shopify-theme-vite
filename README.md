@@ -4,7 +4,9 @@
 ![Vite](https://img.shields.io/badge/Vite-8.2.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Sass](https://img.shields.io/badge/Sass-1.100-CC6699?style=for-the-badge&logo=sass&logoColor=white)
 ![Shopify](https://img.shields.io/badge/Shopify-95BF47?style=for-the-badge&logo=shopify&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-grey?style=for-the-badge&logo=javascript&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-4.1.10-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)
+![React](https://img.shields.io/badge/React-19.2.7-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![CI](https://img.shields.io/github/actions/workflow/status/jpachecox/shopify-theme-vite/ci.yml?style=for-the-badge&label=CI)
 ![Tests](https://img.shields.io/github/actions/workflow/status/jpachecox/shopify-theme-vite/ci.yml?style=for-the-badge&label=Tests)
 ![GitHub repo size](https://img.shields.io/github/repo-size/jpachecox/shopify-theme-vite?style=for-the-badge)
@@ -75,9 +77,9 @@ Do not edit generated entrypoints or `snippets/vite-tag.liquid` directly.
 | `yarn check:types`       | Checks frontend and Node/Vite configuration types without emitting files.               |
 | `yarn check:entrypoints` | Tests generated-entrypoint naming rules.                                                |
 | `yarn check:sass`        | Compiles Sass fixtures to validate function and mixin arguments (27 tests).             |
-| `yarn test`              | Runs the full Vitest suite (React components, Sass validation, entrypoints). |
-| `yarn test:watch`        | Runs the suite in watch mode.                                                 |
-| `yarn test:coverage`     | Runs the suite with a V8 coverage report.                                     |
+| `yarn test`              | Runs the full Vitest suite (React components, Sass validation, entrypoints).            |
+| `yarn test:watch`        | Runs the suite in watch mode.                                                           |
+| `yarn test:coverage`     | Runs the suite with a V8 coverage report.                                               |
 | `yarn clean`             | Removes dependencies, build artifacts, and caches.                                      |
 | `yarn clean:build`       | Removes build artifacts and Vite caches only.                                           |
 | `yarn fresh`             | Cleans, installs, builds, and verifies.                                                 |

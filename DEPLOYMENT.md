@@ -48,16 +48,11 @@ If a deploy to `main` (production) needs to be reverted:
 
 ## Release process
 
-Version bumps and `CHANGELOG.md` updates are automated via
-[release-please](https://github.com/googleapis/release-please) —
-see `.github/workflows/release-please.yml`. Merging a PR with
-conventional commit messages to `main` triggers a release PR that,
-once merged, tags the release and updates the changelog automatically.
+Releases are created manually for full control of each version:
 
-> **Note:** `release-please` generates changelog entries from
-> conventional commit messages going forward. The existing manually
-> written `[Unreleased]` section in `CHANGELOG.md` predates this
-> automation and should be reconciled (moved into a versioned section,
-> or cleared) before the first `release-please` run — otherwise the
-> tool's auto-generated entries will sit alongside manually written
-> ones in a confusing way.
+1. Move the accumulated `[Unreleased]` entries in `CHANGELOG.md` into a
+   versioned `## x.y.z (YYYY-MM-DD)` section.
+2. Commit and merge the changelog update to `main`.
+3. Create a tag on `main`: `git tag v1.0.0 && git push origin v1.0.0`.
+4. Create a GitHub release from the tag, using the versioned changelog
+   section as the description.

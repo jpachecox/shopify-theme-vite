@@ -7,8 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- Removed the bundled component and section stylesheets
+  (`frontend/styles/component/_*.scss`, `frontend/styles/section/_rich-text.scss`)
+  and their generated entrypoints/compiled assets (`component-*.scss`/`.css`,
+  `section-rich-text.css`). The `component/`, `section/`, and `snippet/` folders
+  stay as SCSS-only mapping targets for real Shopify themes (no `.liquid`
+  files inside them).
+- Removed the release-please automation (`.github/workflows/release-please.yml`,
+  `release-please-config.json`, `.release-please-manifest.json`): releases are
+  now created manually (tag + GitHub release) for full control of each version.
+
 ### Added
 
+- `secrets-scan` job in `.github/workflows/ci.yml` running
+  `gitleaks/gitleaks-action` (v2.3.5, pinned by SHA) — fails the build on any
+  detected leak; PR commenting and SARIF artifact upload disabled so the job
+  needs only `contents: read`.
+- `mix.visually-hidden()` now also sets `clip-path: inset(50%)` (keeping
+  `clip: rect()` as legacy fallback) and `mix.visually-shown()` resets with
+  `clip-path: none`.
+- `component/`, `section/`, and `snippet/` READMEs rewritten to document the
+  folders as SCSS-only mapping targets (empty by default, never hold `.liquid`
+  files); `frontend/styles/README.md` table updated to match.
 - `.github/workflows/ci.yml`: `workflow_dispatch` trigger for manual re-runs;
   uploads `dist/` as a debug artifact when `build:verify` fails.
 - `.github/CODEOWNERS`: `@jpachecox` as owner of the whole repo.
@@ -21,9 +43,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.github/workflows/ci.yml`: `actionlint` job validating workflow files;
   Yarn dependency caching and an ESLint/Stylelint cache on `build-and-verify`;
   `permissions: contents: read` and `timeout-minutes` on every job.
-- `.github/workflows/release-please.yml`, `release-please-config.json`,
-  `.release-please-manifest.json`: automated version bump, `CHANGELOG.md`
-  update, and GitHub release/tag from conventional commits merged to `main`.
 - `DEPLOYMENT.md`: documents the `develop`=QA / `main`=production branch
   convention and the rollback procedure (Shopify admin republish,
   `shopify theme pull`/`push`, and `git revert`).
@@ -40,8 +59,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `radius-corners`, `elevation`, `elevation-shadow`, `respond-to`,
   `respond-below`, `shadow-border`, `emit-type-scale-tokens`, `button-variant`),
   and restored utilities (`rem`, `strip-unit`, `gray`, `font-stack`).
-- README badges: `JavaScript`, `CI`, and `Tests`; both are dynamic and
-  reflect the real workflow status.
+- README badges: `TypeScript`, `Vitest`, `React`, `CI`, and `Tests`; the
+  workflow badges are dynamic and reflect the real status.
 - `.github/workflows/ci.yml`: runs `lint`, `check:sass`, `check:types`, and
   `build:verify` on pull requests and pushes to `main`/`develop`.
 - `.github/workflows/ci.yml`: `yarn audit` step (fails on moderate+ severity
