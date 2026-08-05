@@ -3,16 +3,16 @@
 ITCSS "settings" layer. It holds design tokens and emits shared custom
 properties under `@layer settings`; it does not style application elements.
 
-| File                | Holds                                                                                                                                                                                              |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `_breakpoints.scss` | `$breakpoints` map (`sm`/`md`/`lg`/`xl`), consumed by `tools/_mixins.scss`'s `respond-to()` family.                                                                                                |
-| `_colors.scss`      | Grayscale scale (`$gray-light`) and alpha constants (`$alpha-link`, etc.) — the only color-related values that genuinely belong in Sass. See "Colors" below for everything else.                   |
-| `_elevation.scss`   | `$elevation` box-shadow tokens (`fn.elevation('2')` / `mix.elevation-shadow('2', $color)`), `$elevation-offset`, and `$elevation-opacity` maps.                                                    |
-| `_opacity.scss`     | Core `$opacity` scale tokens (0 to 100), consumed by `utilities/_opacities.scss` and component design tokens.                                                                                      |
-| `_radius.scss`      | `$radius` border-radius tokens, consumed via `mix.radius()` / `mix.radius-corners()` / `mix.radius-top()` / `mix.radius-bottom()` in `tools/_mixins.scss`.                                         |
-| `_spacing.scss`     | `$spacing` scale, consumed via `fn.spacing('key')`.                                                                                                                                                |
-| `_tokens.scss`      | Emits shared custom properties in `@layer settings`: alpha, image outline, shadow-border, font-weight scale, and grayscale fallback.                                                               |
-| `_typography.scss`  | Modular type scale, `$font-size`/`$line-height`/`$letter-spacing`/`$font-style`/generic `$font-weight` maps. Does **not** hold body/heading font family, style, or scale — see "Typography" below. |
+| File                | Holds                                                                                                                                                                                                       |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `_breakpoints.scss` | `$breakpoints` map (`sm`/`md`/`lg`/`xl`), consumed by `tools/_mixins.scss`'s `respond-to()` family.                                                                                                         |
+| `_colors.scss`      | Grayscale scale (`$gray-values`, aliased as `$gray-light`) and alpha constants (`$alpha-link`, etc.) — the only color-related values that genuinely belong in Sass. See "Colors" below for everything else. |
+| `_elevation.scss`   | `$elevation` box-shadow tokens (`fn.elevation('2')` / `mix.elevation-shadow('2', $color)`), `$elevation-offset`, and `$elevation-opacity` maps.                                                             |
+| `_opacity.scss`     | Core `$opacity` scale tokens (0 to 100), consumed by `utilities/_opacities.scss`.                                                                                                                           |
+| `_radius.scss`      | `$radius` border-radius tokens, consumed via `mix.radius()` / `mix.radius-corners()` / `mix.radius-top()` / `mix.radius-bottom()` in `tools/_mixins.scss`.                                                  |
+| `_spacing.scss`     | `$spacing` scale, consumed via `fn.spacing('key')`.                                                                                                                                                         |
+| `_tokens.scss`      | Emits shared custom properties in `@layer settings`: alpha, image outline, shadow-border, font-weight scale, and grayscale fallback.                                                                        |
+| `_typography.scss`  | Modular type scale, `$font-size`/`$line-height`/`$letter-spacing`/`$font-style`/generic `$font-weight` maps. Does **not** hold body/heading font family, style, or scale — see "Typography" below.          |
 
 ## Editable token flow
 

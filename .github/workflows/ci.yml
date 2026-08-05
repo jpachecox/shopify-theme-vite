@@ -121,3 +121,20 @@ jobs:
 
       - name: Run actionlint
         run: ./actionlint -color
+
+  secrets-scan:
+    name: Scan for leaked secrets
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Run secret scanning
+        uses: gitleaks/gitleaks-action@f19e05d966f1890683f5960ff182f6d5a82e2e90 # v2.3.5
+        env:
+          GITLEAKS_ENABLE_COMMENTS: "false"
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "false"
