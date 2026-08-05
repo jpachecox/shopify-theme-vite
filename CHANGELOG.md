@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-08-05
+
 ### Removed
 
 - Removed the bundled component and section stylesheets
@@ -22,9 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `secrets-scan` job in `.github/workflows/ci.yml` running
-  `gitleaks/gitleaks-action` (v2.3.5, pinned by SHA) — fails the build on any
-  detected leak; PR commenting and SARIF artifact upload disabled so the job
-  needs only `contents: read`.
+  `gitleaks/gitleaks-action` (v3.0.0, pinned by SHA) — fails the build on any
+  detected leak; PR commenting and SARIF artifact upload disabled; scans the
+  full history via `fetch-depth: 0` and authenticates with `GITHUB_TOKEN`
+  (`pull-requests: read`).
 - `mix.visually-hidden()` now also sets `clip-path: inset(50%)` (keeping
   `clip: rect()` as legacy fallback) and `mix.visually-shown()` resets with
   `clip-path: none`.
