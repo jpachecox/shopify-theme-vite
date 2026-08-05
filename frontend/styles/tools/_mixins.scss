@@ -124,6 +124,9 @@
 
   white-space: nowrap;
 
+  // clip-path is the modern technique; clip: rect() is the legacy fallback.
+  clip-path: inset(50%);
+
   clip: rect(0, 0, 0, 0);
 }
 
@@ -140,6 +143,8 @@
   padding: 0;
 
   white-space: normal;
+
+  clip-path: none;
 
   clip: auto;
 }
