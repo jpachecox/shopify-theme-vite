@@ -29,9 +29,9 @@ Build tooling for Shopify themes using Vite, Sass, optional React, and a flat
 frontend/
 ├── entrypoints/       # base.scss/base.mts plus generated SCSS entrypoints
 ├── styles/
-│   ├── component/     # optional component styles (SCSS only)
-│   ├── section/       # optional section styles (SCSS only)
-│   ├── snippet/       # optional snippet styles (SCSS only)
+│   ├── component/     # reusable UI styles
+│   ├── section/       # Shopify section styles
+│   ├── snippet/       # Shopify snippet styles
 │   └── …              # settings, tools, generic, elements, objects, utilities
 ├── images/
 ├── fonts/
