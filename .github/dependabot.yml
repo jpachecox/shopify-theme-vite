@@ -5,10 +5,20 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Bogota"
+    # Submit PRs to develop
+    target-branch: "develop"
     groups:
-      npm-dependencies:
+      # Group minor updates and patches into a single secure PR
+      minor-and-patch:
         patterns:
           - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Major updates will be submitted as individual PRs for manual review
     ignore:
       # typescript-eslint and type-coverage crash on the native TS 7 API;
       # re-enable once the toolchain supports it (tracked upstream #10940).
@@ -16,6 +26,9 @@ updates:
         update-types:
           - "version-update:semver-major"
     open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "automated"
     commit-message:
       prefix: "build(deps)"
 
@@ -23,10 +36,15 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # Submit PRs to develop
+    target-branch: "develop"
     groups:
       actions-dependencies:
         patterns:
           - "*"
     open-pull-requests-limit: 5
+    labels:
+      - "ci"
+      - "automated"
     commit-message:
       prefix: "build(deps)"
