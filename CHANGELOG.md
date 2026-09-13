@@ -7,6 +7,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-09-13
+### Added
+- Added resolutions field for liquidjs@^10.29.0 to address CVEs in vite-plugin-shopify dependency tree.
+
+### Changed
+- Bumped vitest to exact version 5.0.0 to align with @vitest/coverage-v8@^5.0.0 peer dependency requirement.
+
+### Fixed
+- No functional changes; dependency tree stabilization to resolve moderate vulnerabilities.
+
+## [0.3.0] - 2026-09-13
+### Added
+- Added smoke test utilities for build and config assertions.
+- Added Dependabot PR grouping and redirect to develop branch.
+- Added release cleanup workflow and manual trigger for CI.
+
+### Changed
+- Updated vite-plugin-shopify to 5.0.0.
+- Bumped @vitest/coverage-v8 to 5.0.0 and @eslint/js to 10.0.1.
+- Migrated remaining utility modules to TypeScript.
+- Updated Node.js engine requirement to >=24.16.0.
+
+### Fixed
+- Patched transitive vulnerabilities in js-yaml and fast-uri dependencies.
+- Fixed Sass rem() function validation and strip-unit() type checking.
+- Resolved TypeScript configuration issues and extended coverage gate.
+
+## [0.2.0] - 2026-09-13
+### Added
+- Established core build pipeline with Vite 8, Sass preprocessing, and image optimization.
+- Implemented Vitest testing framework with component-test harness using Testing Library.
+- Added ESLint and Stylelint configurations with Prettier integration.
+- Configured Dependabot for automated dependency updates.
+- Added engine specifications for Node.js and Yarn.
+
+### Changed
+- Consolidated all test runners onto Vitest, migrating from node:test.
+- Updated npm dependencies to latest compatible versions.
+- Restructured TypeScript configuration with base tsconfig.
+- Updated README badges and documentation for development workflow.
+
+### Fixed
+- Resolved Sass validation errors in rem() function and strip-unit() mixin.
+- Fixed focus token and link underline offset custom properties.
+- Removed bundled component stylesheets and release-please automation.
+- Corrected TypeScript compiler options and validation helpers.
+
 ## [0.1.0] - 2026-08-05
 
 ### Removed
