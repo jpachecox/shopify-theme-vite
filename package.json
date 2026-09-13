@@ -45,7 +45,7 @@
     "@vitejs/plugin-react": "6.0.5",
     "@vitest/coverage-v8": "^4.1.10",
     "concurrently": "^10.0.3",
-    "eslint": "^9.39.0",
+    "eslint": "^10.10.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prettier": "^5.5.6",
