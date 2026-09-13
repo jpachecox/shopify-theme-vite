@@ -80,6 +80,9 @@ jobs:
       - name: Component tests (Vitest)
         run: yarn test
 
+      - name: Test coverage
+        run: yarn test:coverage
+
       - name: Build and verify assets
         run: yarn build:verify
 
