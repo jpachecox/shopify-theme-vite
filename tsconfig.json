@@ -17,7 +17,7 @@
     "frontend/**/*.tsx",
     "frontend/**/*.mts",
     "frontend/**/*.js",
-    "frontend/**/*.jsx",
+    "frontend/**/*.jsx"
   ],
   "exclude": ["node_modules", ".git", "dist", "coverage", ".vite", "tmp", ".cache"]
 }
