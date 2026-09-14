@@ -25,6 +25,8 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: read
+    env:
+      VITE_VISUALIZE: true
 
     steps:
       - name: Checkout
@@ -92,6 +94,14 @@ jobs:
         with:
           name: dist-debug
           path: dist/
+          retention-days: 7
+
+      - name: Upload bundle visualization artifact
+        if: success() && env.VITE_VISUALIZE == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: bundle-visualization
+          path: stats.html
           retention-days: 7
 
   theme-check:

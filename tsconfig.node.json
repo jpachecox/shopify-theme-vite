@@ -4,7 +4,8 @@
     "checkJs": true,
     "types": ["node"],
     "allowImportingTsExtensions": true,
-    "erasableSyntaxOnly": true
+    "erasableSyntaxOnly": true,
+    "esModuleInterop": true
   },
   "include": ["*.config.*", "scripts/**/*", "utils/**/*"]
 }

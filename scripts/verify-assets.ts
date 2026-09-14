@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import fs from 'node:fs';
-import path from 'node:path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 const ASSETS_DIR = 'assets';
 const MANIFEST_PATH = path.join(ASSETS_DIR, '.vite', 'manifest.json');
@@ -70,6 +70,34 @@ for (const entry of fs.readdirSync(ASSETS_DIR, { withFileTypes: true })) {
   if (entry.isDirectory() && entry.name !== '.vite') {
     fail(`Subfolder not allowed inside assets/: ${entry.name}`);
   }
+}
+
+// Bundle size check (strict enforcement)
+const JS_SIZE = fs.statSync(path.join(ASSETS_DIR, 'base.js')).size / 1024; // KB
+const CSS_SIZE = fs.statSync(path.join(ASSETS_DIR, 'base.css')).size / 1024; // KB
+
+// Fixed budgets based on baseline + reasonable margin
+// Baseline: base.js=0.01 kB, base.css=35.25 kB
+// Budgets: JS=5 kB, CSS=45 kB
+const JS_THRESHOLD_KB = 5;
+const CSS_THRESHOLD_KB = 45;
+
+// Print clear report
+console.warn(`📊 Bundle size report:`);
+console.warn(
+  `   base.js: ${JS_SIZE.toFixed(2)} kB / ${JS_THRESHOLD_KB} kB (${((JS_SIZE / JS_THRESHOLD_KB) * 100).toFixed(1)}%)`
+);
+console.warn(
+  `   base.css: ${CSS_SIZE.toFixed(2)} kB / ${CSS_THRESHOLD_KB} kB (${((CSS_SIZE / CSS_THRESHOLD_KB) * 100).toFixed(1)}%)`
+);
+
+if (JS_SIZE > JS_THRESHOLD_KB) {
+  console.error(`❌ Bundle size error: base.js exceeds budget of ${JS_THRESHOLD_KB} kB`);
+  failed = true;
+}
+if (CSS_SIZE > CSS_THRESHOLD_KB) {
+  console.error(`❌ Bundle size error: base.css exceeds budget of ${CSS_THRESHOLD_KB} kB`);
+  failed = true;
 }
 
 if (!failed) {
