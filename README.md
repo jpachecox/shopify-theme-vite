@@ -96,6 +96,16 @@ The declaration is emitted first by `frontend/entrypoints/base.scss`. See
 [frontend/styles/README.md](frontend/styles/README.md) for folder-specific
 conventions and the merchant color-token bridge.
 
+## Browser support
+
+This project targets the last 2 versions of evergreen browsers (Chrome, Edge, Firefox, Safari). This baseline is informed by the use of modern CSS features including CSS Cascade Layers (@layer) and CSS custom properties, which require:
+
+- Chrome 99+ or Edge 99+
+- Firefox 97+
+- Safari 15.4+
+
+Internet Explorer is not supported.
+
 ## Installation
 
 Use the Yarn version pinned in `package.json`:

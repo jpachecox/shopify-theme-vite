@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added browser support section to README.md documenting that the project targets the last 2 versions of evergreen browsers (Chrome, Edge, Firefox, Safari), informed by the use of modern CSS features including CSS Cascade Layers (@layer) and CSS custom properties.
+- Integración de un control de umbral de cobertura de pruebas (coverage threshold gate) estricto en Vitest y CI, garantizando que los builds fallen si la cobertura de código disminuye. (#104)
+- Adición del paso de verificación de formato de código (prettier --check) al pipeline de CI para garantizar el cumplimiento de estilo sin modificar código en ejecución. (#106)
+- Integración de rollup-plugin-visualizer activable con VITE_VISUALIZE=true y subida automática del reporte stats.html como artifact en GitHub Actions. (#105)
+
+### Performance
+
+- Implementación de un presupuesto estricto de tamaño de bundle en scripts/verify-assets.ts con límites fijos (base.js: 5 KB, base.css: 45 KB) que hace fallar la verificación en CI si hay regresiones. (#105)
+
+### Security
+
+- Pin de todas las acciones de GitHub Actions (actions/checkout, actions/setup-node, actions/cache, gitleaks, etc.) a sus hashes de commit SHA completos e inmutables para mitigar riesgos de seguridad en la cadena de suministro (supply chain security). (#103)
+
 ## [0.4.0] - 2026-09-13
 
 ### Added
