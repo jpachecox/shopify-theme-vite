@@ -21,6 +21,7 @@
     "clean:build": "rimraf dist .vite assets/.vite",
     "fresh": "yarn clean && yarn install && yarn build:verify",
     "format": "prettier --write \"frontend/**/*.{js,jsx,ts,tsx,mts,scss,css,json,md}\" \"{scripts,utils}/**/*.ts\" \"*.{js,json,md}\"",
+    "format:check": "prettier --check \"frontend/**/*.{js,jsx,ts,tsx,mts,scss,css,json,md}\" \"{scripts,utils}/**/*.ts\" \"*.{js,json,md}\"",
     "lint": "yarn lint:scss && yarn lint:js",
     "lint:fix": "yarn lint:scss --fix && yarn lint:js --fix",
     "lint:js": "eslint \"frontend/**/*.{js,jsx,ts,tsx,mts}\" \"{scripts,utils}/**/*.ts\" eslint.config.js --cache",
