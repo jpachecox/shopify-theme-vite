@@ -67,6 +67,9 @@ jobs:
       - name: Lint (Sass + JS/TS)
         run: yarn lint
 
+      - name: Format check
+        run: yarn format:check
+
       - name: Validate Sass compile-time checks
         run: yarn check:sass
 
