@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-09-14
+
 ### Added
 
 - Added browser support section to README.md documenting that the project targets the last 2 versions of evergreen browsers (Chrome, Edge, Firefox, Safari), informed by the use of modern CSS features including CSS Cascade Layers (@layer) and CSS custom properties.
@@ -14,9 +16,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adición del paso de verificación de formato de código (prettier --check) al pipeline de CI para garantizar el cumplimiento de estilo sin modificar código en ejecución. (#106)
 - Integración de rollup-plugin-visualizer activable con VITE_VISUALIZE=true y subida automática del reporte stats.html como artifact en GitHub Actions. (#105)
 
+### Changed
+
+- Bumped Vite from 8.2.2 to 8.3.0 (routine patch/minor update). (#114)
+
 ### Performance
 
 - Implementación de un presupuesto estricto de tamaño de bundle en scripts/verify-assets.ts con límites fijos (base.js: 5 KB, base.css: 45 KB) que hace fallar la verificación en CI si hay regresiones. (#105)
+
+### Fixed
+
+- Reverted @eslint/js to ^9.39.x to match the eslint core version, resolving an invalid peer-dependency tree left by an earlier major-only bump (#94) that upgraded @eslint/js without eslint core alongside it. (#116)
+- Corrected the Vitest coverage thresholds config shape — removed the unsupported `global` wrapper key so the gate added in #109 actually enforces — and set realistic baseline thresholds (statements 46%, branches 39%, functions 75%, lines 48%) matching real current coverage. (#118)
 
 ### Security
 

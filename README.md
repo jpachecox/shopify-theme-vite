@@ -1,12 +1,12 @@
 # Shopify Theme Vite
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen?style=for-the-badge)
-![Vite](https://img.shields.io/badge/Vite-8.2.2-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8.3.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Sass](https://img.shields.io/badge/Sass-1.104.0-CC6699?style=for-the-badge&logo=sass&logoColor=white)
 ![Shopify](https://img.shields.io/badge/Shopify-95BF47?style=for-the-badge&logo=shopify&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Vitest](https://img.shields.io/badge/Vitest-5.0.0-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)
-![React](https://img.shields.io/badge/React-19.2.7-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![React](https://img.shields.io/badge/React-19.3.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![CI](https://img.shields.io/github/actions/workflow/status/jpachecox/shopify-theme-vite/ci.yml?style=for-the-badge&label=CI)
 ![Tests](https://img.shields.io/github/actions/workflow/status/jpachecox/shopify-theme-vite/ci.yml?style=for-the-badge&label=Tests)
 ![GitHub repo size](https://img.shields.io/github/repo-size/jpachecox/shopify-theme-vite?style=for-the-badge)
