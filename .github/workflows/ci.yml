@@ -25,13 +25,15 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: read
+    env:
+      VITE_VISUALIZE: true
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: ".nvmrc"
 
@@ -39,7 +41,7 @@ jobs:
         run: corepack enable
 
       - name: Cache node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: node_modules
           key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
@@ -50,7 +52,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Cache ESLint/Stylelint
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
             .eslintcache
@@ -64,6 +66,9 @@ jobs:
 
       - name: Lint (Sass + JS/TS)
         run: yarn lint
+
+      - name: Format check
+        run: yarn format:check
 
       - name: Validate Sass compile-time checks
         run: yarn check:sass
@@ -80,15 +85,26 @@ jobs:
       - name: Component tests (Vitest)
         run: yarn test
 
+      - name: Test coverage
+        run: yarn test:coverage
+
       - name: Build and verify assets
         run: yarn build:verify
 
       - name: Upload dist/ on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: dist-debug
           path: dist/
+          retention-days: 7
+
+      - name: Upload bundle visualization artifact
+        if: success() && env.VITE_VISUALIZE == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: bundle-visualization
+          path: stats.html
           retention-days: 7
 
   theme-check:
@@ -100,10 +116,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: ".nvmrc"
 
@@ -125,7 +141,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Install actionlint
         run: bash <(curl -sL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.9/scripts/download-actionlint.bash)
@@ -143,12 +159,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
 
       - name: Run secret scanning
-        uses: gitleaks/gitleaks-action@v2.3.9
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_ENABLE_COMMENTS: "false"

@@ -27,6 +27,7 @@ runner, no `node --test` anywhere in the project anymore.
   it in config.
 - Assertions use Vitest's `expect(...)` API (`toBe`, `toEqual`, `toMatch`,
   `toThrow`, `toBeNull`, `toBeTruthy`) — not `node:assert`.
+- **Coverage threshold gate**: The project now enforces minimum coverage thresholds via `yarn test:coverage`. Current thresholds are: 50% statements, 40% branches, 75% functions, 50% lines. These are set conservatively based on current coverage levels to avoid breaking CI immediately while encouraging improvement.
 
 ## Dependency & CI tooling decisions
 

@@ -28,6 +28,12 @@ export default defineConfig({
         'utils/**/*.test.ts',
         'scripts/**/*.test.ts',
       ],
+      thresholds: {
+        statements: 46,
+        branches: 39,
+        functions: 75,
+        lines: 48,
+      },
     },
   },
 });

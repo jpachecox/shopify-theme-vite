@@ -6,38 +6,53 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import shopify from 'vite-plugin-shopify';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 import { autoEntrypointsFromStyles } from './utils/tools.ts';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const plugins = [
+  autoEntrypointsFromStyles({ root: __dirname }),
+  shopifyClean(),
+  shopify({
+    themeRoot: './',
+    sourceCodeDir: 'frontend',
+    entrypointsDir: 'frontend/entrypoints',
+    versionNumbers: true,
+  }),
+  react(),
+  ViteImageOptimizer({
+    png: { quality: 80 },
+    jpeg: { quality: 75 },
+    jpg: { quality: 75 },
+    webp: { quality: 80 },
+    gif: {
+      effort: 10,
+    },
+    svg: {
+      // SVGO v4 dropped the `active` flag: a plugin is disabled by simply
+      // not listing it. removeViewBox is omitted on purpose so responsive
+      // SVGs keep their viewBox.
+      plugins: [{ name: 'removeDimensions' }],
+    },
+  }),
+];
+
+if (process.env.VITE_VISUALIZE === 'true') {
+  plugins.push(
+    // @ts-ignore: VisualizerPlugin types don't fully match Vite Plugin types but works at runtime
+    visualizer({
+      open: false,
+      gzipSize: true,
+      brotliSize: true,
+      filename: 'stats.html',
+    })
+  );
+}
+
 export default defineConfig({
-  plugins: [
-    autoEntrypointsFromStyles({ root: __dirname }),
-    shopifyClean(),
-    shopify({
-      themeRoot: './',
-      sourceCodeDir: 'frontend',
-      entrypointsDir: 'frontend/entrypoints',
-      versionNumbers: true,
-    }),
-    react(),
-    ViteImageOptimizer({
-      png: { quality: 80 },
-      jpeg: { quality: 75 },
-      jpg: { quality: 75 },
-      webp: { quality: 80 },
-      gif: {
-        effort: 10,
-      },
-      svg: {
-        // SVGO v4 dropped the `active` flag: a plugin is disabled by simply
-        // not listing it. removeViewBox is omitted on purpose so responsive
-        // SVGs keep their viewBox.
-        plugins: [{ name: 'removeDimensions' }],
-      },
-    }),
-  ],
+  plugins,
 
   resolve: {
     alias: {

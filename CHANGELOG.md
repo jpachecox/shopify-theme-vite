@@ -7,35 +7,71 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.4.0] - 2026-09-13
+## [0.5.0] - 2026-09-14
+
 ### Added
+
+- Added browser support section to README.md documenting that the project targets the last 2 versions of evergreen browsers (Chrome, Edge, Firefox, Safari), informed by the use of modern CSS features including CSS Cascade Layers (@layer) and CSS custom properties.
+- Integración de un control de umbral de cobertura de pruebas (coverage threshold gate) estricto en Vitest y CI, garantizando que los builds fallen si la cobertura de código disminuye. (#104)
+- Adición del paso de verificación de formato de código (prettier --check) al pipeline de CI para garantizar el cumplimiento de estilo sin modificar código en ejecución. (#106)
+- Integración de rollup-plugin-visualizer activable con VITE_VISUALIZE=true y subida automática del reporte stats.html como artifact en GitHub Actions. (#105)
+
+### Changed
+
+- Bumped Vite from 8.2.2 to 8.3.0 (routine patch/minor update). (#114)
+
+### Performance
+
+- Implementación de un presupuesto estricto de tamaño de bundle en scripts/verify-assets.ts con límites fijos (base.js: 5 KB, base.css: 45 KB) que hace fallar la verificación en CI si hay regresiones. (#105)
+
+### Fixed
+
+- Reverted @eslint/js to ^9.39.x to match the eslint core version, resolving an invalid peer-dependency tree left by an earlier major-only bump (#94) that upgraded @eslint/js without eslint core alongside it. (#116)
+- Corrected the Vitest coverage thresholds config shape — removed the unsupported `global` wrapper key so the gate added in #109 actually enforces — and set realistic baseline thresholds (statements 46%, branches 39%, functions 75%, lines 48%) matching real current coverage. (#118)
+
+### Security
+
+- Pin de todas las acciones de GitHub Actions (actions/checkout, actions/setup-node, actions/cache, gitleaks, etc.) a sus hashes de commit SHA completos e inmutables para mitigar riesgos de seguridad en la cadena de suministro (supply chain security). (#103)
+
+## [0.4.0] - 2026-09-13
+
+### Added
+
 - Added resolutions field for liquidjs@^10.29.0 to address CVEs in vite-plugin-shopify dependency tree.
 
 ### Changed
+
 - Bumped vitest to exact version 5.0.0 to align with @vitest/coverage-v8@^5.0.0 peer dependency requirement.
 
 ### Fixed
+
 - No functional changes; dependency tree stabilization to resolve moderate vulnerabilities.
 
 ## [0.3.0] - 2026-09-13
+
 ### Added
+
 - Added smoke test utilities for build and config assertions.
 - Added Dependabot PR grouping and redirect to develop branch.
 - Added release cleanup workflow and manual trigger for CI.
 
 ### Changed
+
 - Updated vite-plugin-shopify to 5.0.0.
 - Bumped @vitest/coverage-v8 to 5.0.0 and @eslint/js to 10.0.1.
 - Migrated remaining utility modules to TypeScript.
 - Updated Node.js engine requirement to >=24.16.0.
 
 ### Fixed
+
 - Patched transitive vulnerabilities in js-yaml and fast-uri dependencies.
 - Fixed Sass rem() function validation and strip-unit() type checking.
 - Resolved TypeScript configuration issues and extended coverage gate.
 
 ## [0.2.0] - 2026-09-13
+
 ### Added
+
 - Established core build pipeline with Vite 8, Sass preprocessing, and image optimization.
 - Implemented Vitest testing framework with component-test harness using Testing Library.
 - Added ESLint and Stylelint configurations with Prettier integration.
@@ -43,12 +79,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added engine specifications for Node.js and Yarn.
 
 ### Changed
+
 - Consolidated all test runners onto Vitest, migrating from node:test.
 - Updated npm dependencies to latest compatible versions.
 - Restructured TypeScript configuration with base tsconfig.
 - Updated README badges and documentation for development workflow.
 
 ### Fixed
+
 - Resolved Sass validation errors in rem() function and strip-unit() mixin.
 - Fixed focus token and link underline offset custom properties.
 - Removed bundled component stylesheets and release-please automation.
