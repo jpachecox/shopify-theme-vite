@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-06
+
+### Changed
+
+- Bumped the SHA-pinned GitHub Actions in ci.yml: actions/checkout v4 → v7.0.1, actions/setup-node v4 → v7.0.0, actions/cache v4 → v6.1.0, and actions/upload-artifact v4 → v7.0.1. (#120)
+- Bumped dev dependencies via the minor-and-patch groups: Vite 8.3.0 → 8.3.2, Vitest and @vitest/coverage-v8 5.0.0 → 5.0.3, sass-embedded 1.104.0 → 1.105.1, Prettier 3.9.6 → 3.9.9, Stylelint 17.15.0 → 17.16.0, @typescript-eslint/* 8.70.0 → 8.71.0, and others. (#121, #123, #125)
+- Dependabot now ignores major updates of eslint and @eslint/js until eslint-plugin-import and eslint-plugin-react declare ESLint 10 support. (#127)
+- Refreshed the Vite, Sass and Vitest version badges in README.md. (#129)
+- Aligned the coverage thresholds documented in CLAUDE.md with vitest.config.mjs (46/39/75/48). (#131)
+- Redesigned README.md with a unified dark visual system: added hero, build-pipeline, style-entrypoint and ITCSS-layer diagrams in `frontend/svg/`, restructured the header as H1 → hero → tagline → badges, and added How a build works, Quick start, Quality gates, Deployment and releases and License sections. (#133)
+- Replaced the pinned Vite, Sass, Vitest and React version badges in README.md with dynamic CI, release and license badges, so library versions no longer need manual refreshes. (#129, #133)
+
 ## [0.5.0] - 2026-09-14
 
 ### Added

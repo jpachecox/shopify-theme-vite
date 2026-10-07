@@ -25,6 +25,16 @@ updates:
       - dependency-name: "typescript"
         update-types:
           - "version-update:semver-major"
+      # eslint-plugin-import (peer ^9) and eslint-plugin-react (peer ^9.7)
+      # don't declare ESLint 10 support yet, so a 10.x bump breaks the peer
+      # tree (YN0060/YN0086, issue #126). Re-enable once both plugins ship
+      # ESLint 10-compatible peers.
+      - dependency-name: "eslint"
+        update-types:
+          - "version-update:semver-major"
+      - dependency-name: "@eslint/js"
+        update-types:
+          - "version-update:semver-major"
     open-pull-requests-limit: 10
     labels:
       - "dependencies"

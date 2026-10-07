@@ -27,7 +27,7 @@ runner, no `node --test` anywhere in the project anymore.
   it in config.
 - Assertions use Vitest's `expect(...)` API (`toBe`, `toEqual`, `toMatch`,
   `toThrow`, `toBeNull`, `toBeTruthy`) — not `node:assert`.
-- **Coverage threshold gate**: The project now enforces minimum coverage thresholds via `yarn test:coverage`. Current thresholds are: 50% statements, 40% branches, 75% functions, 50% lines. These are set conservatively based on current coverage levels to avoid breaking CI immediately while encouraging improvement.
+- **Coverage threshold gate**: `yarn test:coverage` fails when coverage drops below the minimums in `vitest.config.mjs` — that file is the source of truth for these numbers, not this bullet. Enforced thresholds: 46% statements, 39% branches, 75% functions, 48% lines. Current baseline (latest full run): 46.95% statements, 39.65% branches, 80% functions, 48.62% lines — the thresholds sit just below it.
 
 ## Dependency & CI tooling decisions
 
