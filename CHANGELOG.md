@@ -16,8 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dependabot now ignores major updates of eslint and @eslint/js until eslint-plugin-import and eslint-plugin-react declare ESLint 10 support. (#127)
 - Refreshed the Vite, Sass and Vitest version badges in README.md. (#129)
 - Aligned the coverage thresholds documented in CLAUDE.md with vitest.config.mjs (46/39/75/48). (#131)
-- Redesigned README.md with a unified dark visual system: added hero, build-pipeline, style-entrypoint and ITCSS-layer diagrams in `frontend/svg/`, restructured the header as H1 → hero → tagline → badges, and added How a build works, Quick start, Quality gates, Deployment and releases and License sections. (#<PR>)
-- Replaced the pinned Vite, Sass, Vitest and React version badges in README.md with dynamic CI, release and license badges, so library versions no longer need manual refreshes. (#<PR>, #129)
+- Redesigned README.md with a unified dark visual system: added hero, build-pipeline, style-entrypoint and ITCSS-layer diagrams in `frontend/svg/`, restructured the header as H1 → hero → tagline → badges, and added How a build works, Quick start, Quality gates, Deployment and releases and License sections. (#133)
+- Replaced the pinned Vite, Sass, Vitest and React version badges in README.md with dynamic CI, release and license badges, so library versions no longer need manual refreshes. (#129, #133)
 
 ## [0.5.0] - 2026-09-14
 
