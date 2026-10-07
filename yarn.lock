@@ -8111,7 +8111,7 @@ __metadata:
     stylelint-scss: "npm:^7.3.0"
     stylelint-selector-bem-pattern: "npm:^5.0.0"
     svgo: "npm:^4.1.0"
-    type-coverage: "npm:^2.30.2"
+    type-coverage: "npm:^2.30.3"
     typescript: "npm:^5.0.0"
     vite: "npm:8.3.2"
     vite-plugin-image-optimizer: "npm:^2.0.3"
@@ -8987,9 +8987,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-coverage-core@npm:^2.30.2":
-  version: 2.30.2
-  resolution: "type-coverage-core@npm:2.30.2"
+"type-coverage-core@npm:^2.30.3":
+  version: 2.30.3
+  resolution: "type-coverage-core@npm:2.30.3"
   dependencies:
     fast-glob: "npm:3"
     minimatch: "npm:6 || 7 || 8 || 9 || 10"
@@ -8998,20 +8998,20 @@ __metadata:
     tsutils: "npm:3"
   peerDependencies:
     typescript: 2 || 3 || 4 || 5 || 6 || 7
-  checksum: 10c0/a6bf3f062409e3f6866aadbee8da647db175c482a7a58b0ccc04161accf40f8de85f0cab93ed6b148c70113029e3c38b323a3514637841e32779a73820bd8654
+  checksum: 10c0/169a9475e41a6bc52d93cbdf73902aff3b0db22015686d280f8adcf1136eaf5bb0b6f15857677949905e7e34b061e6be4923ddf650e02485a30a99bbaf529cba
   languageName: node
   linkType: hard
 
-"type-coverage@npm:^2.30.2":
-  version: 2.30.2
-  resolution: "type-coverage@npm:2.30.2"
+"type-coverage@npm:^2.30.3":
+  version: 2.30.3
+  resolution: "type-coverage@npm:2.30.3"
   dependencies:
     chalk: "npm:4.1.2"
     minimist: "npm:1"
-    type-coverage-core: "npm:^2.30.2"
+    type-coverage-core: "npm:^2.30.3"
   bin:
     type-coverage: bin/type-coverage
-  checksum: 10c0/093bce760ad300d1a9cc8259e15bef8499086461418ac75fcd5c62d7a27e029b99c7ec7e6505ba87cb325823e81e2ac902a19839672a71234dccd4d2160e0a35
+  checksum: 10c0/e9b5ef66bb560c7592442b6c36989dafbfdf5b03c9e90b6f07ac01cdd5201e37021fd83bd49423f8cf662ece442a2d184db54a6ce7de9bfe1a0c4dd1a450fdda
   languageName: node
   linkType: hard
 
