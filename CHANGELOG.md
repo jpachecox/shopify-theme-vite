@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-10-09
+
+### Security
+
+- Forced patched `shell-quote` (critical, GHSA-pqg4-j6r4-53mv) and `brace-expansion` (GHSA-q2hr-2g5m-vwhr) versions through `resolutions`; both are pulled in transitively by `concurrently` and `minimatch`.
+- Updated `source-map-js` to 1.2.2 and `http-cache-semantics` to 4.3.0 (Dependabot alerts 51 and 50). (#135)
+- Updated `fast-uri` to 3.1.8 in the lockfile.
+
+### Changed
+
+- `yarn audit` now audits transitive dependencies (`--recursive`, `--no-deprecations`) and ignores two advisories that can't be patched yet (`braces`, `@opentelemetry/core`), documented in `.yarnrc.yml`. (#<this PR>)
+- Bumped `type-coverage` to 2.30.3. (#136)
+
 ## [0.6.0] - 2026-10-06
 
 ### Changed
