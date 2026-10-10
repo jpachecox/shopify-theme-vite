@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- `yarn audit` now audits transitive dependencies (`--recursive`, `--no-deprecations`) and ignores two advisories that can't be patched yet (`braces`, `@opentelemetry/core`), documented in `.yarnrc.yml`. (#<this PR>)
+- `yarn audit` now audits transitive dependencies (`--recursive`, `--no-deprecations`) and ignores two advisories that can't be patched yet (`braces`, `@opentelemetry/core`), documented in `.yarnrc.yml`. (#138)
 - Bumped `type-coverage` to 2.30.3. (#136)
 
 ## [0.6.0] - 2026-10-06
