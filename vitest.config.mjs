@@ -10,29 +10,22 @@ export default defineConfig({
   },
   test: {
     // Default environment is plain Node — correct for utils/ and scripts/
-    // (no DOM needed). Files that render components opt into jsdom
-    // individually via a `// @vitest-environment jsdom` docblock comment
-    // at the top of the file (see frontend/components/counter.test.tsx).
-    // `environmentMatchGlobs` would be the glob-based equivalent, but it
-    // was removed entirely in Vitest 4 in favor of `projects` — not worth
-    // the extra config structure for what's currently a single DOM test file.
-    setupFiles: ['./frontend/test/setup.ts'],
+    // (no DOM needed). Tests that need a DOM can install jsdom and opt a
+    // file into it with a `// @vitest-environment jsdom` docblock at the
+    // top. `environmentMatchGlobs` was removed in Vitest 4 in favor of
+    // `projects`, so a single file-level docblock keeps the config
+    // framework-agnostic.
     include: ['frontend/**/*.test.{ts,tsx}', 'utils/**/*.test.ts', 'scripts/**/*.test.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text'],
       include: ['frontend/**/*.{ts,tsx}', 'utils/**/*.ts', 'scripts/**/*.ts'],
-      exclude: [
-        'frontend/**/*.test.{ts,tsx}',
-        'frontend/test/**',
-        'utils/**/*.test.ts',
-        'scripts/**/*.test.ts',
-      ],
+      exclude: ['frontend/**/*.test.{ts,tsx}', 'utils/**/*.test.ts', 'scripts/**/*.test.ts'],
       thresholds: {
-        statements: 46,
+        statements: 44,
         branches: 39,
-        functions: 75,
-        lines: 48,
+        functions: 70,
+        lines: 46,
       },
     },
   },

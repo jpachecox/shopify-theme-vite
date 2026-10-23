@@ -3,8 +3,6 @@ import tsPlugin from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import importPlugin from 'eslint-plugin-import';
 import pluginPrettier from 'eslint-plugin-prettier';
-import pluginReact from 'eslint-plugin-react';
-import pluginReactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 
 // plugin-prettier ships legacy-union types for its flat config; the runtime
@@ -40,15 +38,6 @@ const sharedRules = {
   ],
   'import/no-duplicates': 'error',
 
-  // React-specific rules
-  'react/react-in-jsx-scope': 'off', // Not needed with new JSX transform
-  'react/jsx-uses-vars': 'warn',
-  'react/jsx-no-target-blank': 'off',
-
-  // React hooks
-  'react-hooks/rules-of-hooks': 'error',
-  'react-hooks/exhaustive-deps': 'warn',
-
   // General JavaScript/TypeScript best practices
   'no-console': ['warn', { allow: ['warn', 'error'] }],
   'no-debugger': 'error',
@@ -79,16 +68,9 @@ export default [
       },
     },
     plugins: {
-      react: pluginReact,
-      'react-hooks': pluginReactHooks,
       '@typescript-eslint': tsPlugin,
       prettier: pluginPrettier,
       import: importPlugin,
-    },
-    settings: {
-      react: {
-        version: 'detect',
-      },
     },
   },
   {

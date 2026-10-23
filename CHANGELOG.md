@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-23
+
+### Removed
+
+- **BREAKING:** removed React and all framework-specific tooling (Vite plugin, ESLint plugins, Testing Library, jsdom, sample component); frameworks are now opt-in. (#<this PR>)
+
+### Changed
+
+- Lowered the coverage thresholds to match the new baseline after removing the sample component. (#<this PR>)
+
+### Added
+
+- README section explaining how to add a front-end framework. (#<this PR>)
+
+### Security
+
+- Forced `zod` 4.6.7 through `resolutions` to patch GHSA-mrhx-c7xc-m3w5 (high); `@shopify/cli-kit` 4.8.0 still pins the vulnerable 3.25.76 and no patched 3.x exists. (#<this PR>)
+
 ## [0.6.1] - 2026-10-09
 
 ### Security

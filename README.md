@@ -1,11 +1,11 @@
 # Shopify Theme Vite
 
 <p align="center">
-  <img src="./frontend/svg/hero.svg" width="100%" alt="Shopify Theme Vite — a Vite build pipeline for Shopify themes: flat, CDN-safe assets and a generated Liquid snippet. Capabilities: Sass, optional React, cascade layers, flat assets. The panel shows the vite-tag render tag and the flat assets it emits with the ?v= cache query.">
+  <img src="./frontend/svg/hero.svg" width="100%" alt="Shopify Theme Vite — a Vite build pipeline for Shopify themes: flat, CDN-safe assets and a generated Liquid snippet. Capabilities: Sass, opt-in front-end frameworks, cascade layers, flat assets. The panel shows the vite-tag render tag and the flat assets it emits with the ?v= cache query.">
 </p>
 
-Build tooling for Shopify themes using Vite, Sass, optional React, and a flat
-`assets/` output compatible with Shopify's CDN.
+Build tooling for Shopify themes using Vite, Sass, and a flat `assets/` output
+compatible with Shopify's CDN.
 
 ![CI status](https://img.shields.io/github/actions/workflow/status/jpachecox/shopify-theme-vite/ci.yml?style=flat&label=CI)
 ![Latest release](https://img.shields.io/github/v/release/jpachecox/shopify-theme-vite?style=flat&label=release)
@@ -66,7 +66,7 @@ yarn dev
 | `yarn check:types`       | Checks frontend and Node/Vite configuration types without emitting files.               |
 | `yarn check:entrypoints` | Tests generated-entrypoint naming rules.                                                |
 | `yarn check:sass`        | Compiles Sass fixtures to validate function and mixin arguments (27 tests).             |
-| `yarn test`              | Runs the full Vitest suite (React components, Sass validation, entrypoints).            |
+| `yarn test`              | Runs the full Vitest suite (Sass validation, entrypoints, utilities).                   |
 | `yarn test:watch`        | Runs the suite in watch mode.                                                           |
 | `yarn test:coverage`     | Runs the suite with a V8 coverage report.                                               |
 | `yarn clean`             | Removes dependencies, build artifacts, and caches.                                      |
@@ -90,6 +90,34 @@ frontend/
 assets/                # generated files published to Shopify
 snippets/vite-tag.liquid # generated at build time
 ```
+
+## Adding a front-end framework (optional)
+
+The core is framework-agnostic: no framework-specific Vite plugin, ESLint
+plugin, or component/testing harness is installed. To add one:
+
+1. Install the framework and its Vite plugin.
+2. Import the plugin in `vite.config.js` and add it to the `plugins` array.
+3. If the framework compiles JSX/TSX, set `compilerOptions.jsx` in
+   `tsconfig.json` to the value its tooling expects (for example, `react-jsx`
+   for React).
+4. Optionally install the framework's ESLint plugin and add it to
+   `eslint.config.js`.
+5. Create a component under `frontend/components/` and an entrypoint under
+   `frontend/entrypoints/` that imports and mounts it.
+6. Load the entrypoint from Liquid:
+
+```liquid
+{% render 'vite-tag', entry: 'counter.js' %}
+```
+
+Framework plugins (verified on npm):
+
+| Framework | Vite plugin                    |
+| --------- | ------------------------------ |
+| React     | `@vitejs/plugin-react`         |
+| Vue       | `@vitejs/plugin-vue`           |
+| Svelte    | `@sveltejs/vite-plugin-svelte` |
 
 ## Style entrypoints
 
@@ -146,8 +174,8 @@ CI (`.github/workflows/ci.yml`) runs the same checks you can run locally:
   arguments (27 tests).
 - `yarn check:entrypoints` — generated-entrypoint naming rules.
 - `yarn test` and `yarn test:coverage` — Vitest suite; coverage fails below the
-  thresholds in `vitest.config.mjs`: 46% statements, 39% branches, 75%
-  functions, 48% lines.
+  thresholds in `vitest.config.mjs`: 44% statements, 39% branches, 70%
+  functions, 46% lines.
 - `yarn build:verify` — flat names, no hashes, and manifest parity.
 - `yarn check:theme` and a dependency audit (`yarn audit`, CI at
   `--severity high`); workflows are linted with actionlint.
