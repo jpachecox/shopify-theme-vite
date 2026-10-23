@@ -2,7 +2,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import shopifyClean from '@driver-digital/vite-plugin-shopify-clean';
-import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import shopify from 'vite-plugin-shopify';
@@ -21,7 +20,6 @@ const plugins = [
     entrypointsDir: 'frontend/entrypoints',
     versionNumbers: true,
   }),
-  react(),
   ViteImageOptimizer({
     png: { quality: 80 },
     jpeg: { quality: 75 },

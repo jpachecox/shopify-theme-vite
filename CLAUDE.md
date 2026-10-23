@@ -20,14 +20,14 @@ runner, no `node --test` anywhere in the project anymore.
   single file, kept as named scripts so CI shows them as distinct,
   separately-failing steps instead of one big "test" step.
 - Test environment defaults to plain `node` (build tooling and
-  Sass-compilation checks have no DOM). Files that render components opt
-  into `jsdom` via a `// @vitest-environment jsdom` docblock comment at
-  the top of the file (see `frontend/components/counter.test.tsx`).
+  Sass-compilation checks have no DOM). Tests that need a DOM can install
+  `jsdom` and opt into it per file with a `// @vitest-environment jsdom`
+  docblock comment at the top of the file.
   Note: `environmentMatchGlobs` does not exist in Vitest 4 — do not use
   it in config.
 - Assertions use Vitest's `expect(...)` API (`toBe`, `toEqual`, `toMatch`,
   `toThrow`, `toBeNull`, `toBeTruthy`) — not `node:assert`.
-- **Coverage threshold gate**: `yarn test:coverage` fails when coverage drops below the minimums in `vitest.config.mjs` — that file is the source of truth for these numbers, not this bullet. Enforced thresholds: 46% statements, 39% branches, 75% functions, 48% lines. Current baseline (latest full run): 46.95% statements, 39.65% branches, 80% functions, 48.62% lines — the thresholds sit just below it.
+- **Coverage threshold gate**: `yarn test:coverage` fails when coverage drops below the minimums in `vitest.config.mjs` — that file is the source of truth for these numbers, not this bullet. Enforced thresholds: 44% statements, 39% branches, 70% functions, 46% lines. Current baseline (latest full run): 45.53% statements, 39.65% branches, 75% functions, 47.16% lines — the thresholds sit just below it.
 
 ## Dependency & CI tooling decisions
 
