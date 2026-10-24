@@ -192,8 +192,9 @@ Internet Explorer is not supported.
 
 ## Deployment and releases
 
-[DEPLOYMENT.md](DEPLOYMENT.md) covers environments, the release process, and
-rollback steps. Version history lives in [CHANGELOG.md](CHANGELOG.md).
+[DEPLOYMENT.md](DEPLOYMENT.md) covers environments and rollback steps.
+[RELEASING.md](RELEASING.md) documents the release runbook. Version history
+lives in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
