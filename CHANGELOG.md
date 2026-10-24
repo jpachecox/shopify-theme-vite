@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `RELEASING.md` runbook and a "Changelog check" CI step that fails on unresolved PR-number placeholders and malformed version headings.
+
+### Changed
+
+- `DEPLOYMENT.md` now points to `RELEASING.md` for the release process.
+
 ## [0.7.1] - 2026-10-23
 
 ### Security
