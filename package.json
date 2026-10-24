@@ -68,7 +68,6 @@
   },
   "resolutions": {
     "liquidjs": "^10.29.0",
-    "shell-quote": "^1.11.0",
     "zod": "^4.6.7",
     "brace-expansion@npm:^1.1.7": "^1.1.21",
     "brace-expansion@npm:^2.0.1": "^2.1.7",
