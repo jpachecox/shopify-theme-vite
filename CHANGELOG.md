@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-10-23
+
+### Security
+
+- Updated `undici` to 8.12.3 and `fast-uri` to 3.1.9 in the lockfile, resolving the open Dependabot alerts (three `undici` advisories, one of them high, and four `fast-uri` advisories). (#147)
+
+### Changed
+
+- Bumped dev dependencies via the minor-and-patch group: `@commitlint/*` 21.2.4, `@typescript-eslint/*` 8.72.0 and PostCSS 8.5.31, among others. (#148)
+
+### Removed
+
+- Dropped the redundant `shell-quote` resolution (`concurrently` 10.0.6 pins 1.12.0) and the obsolete `braces` audit ignore.
+
 ## [0.7.0] - 2026-10-23
 
 ### Removed
