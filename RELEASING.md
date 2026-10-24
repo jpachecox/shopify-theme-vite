@@ -26,6 +26,7 @@ Open a PR with:
 - **Template:** `.github/PULL_REQUEST_TEMPLATE.md` (include `Closes #N` if an issue tracks the release)
 - **Merge method:** "Create a merge commit" (required; never squash — squash makes `main` diverge from `develop`)
 - **Prerequisite:** Repository setting **Settings → General → Pull Requests → Allow merge commits** must be enabled
+- **Enforced:** a ruleset on `main` only allows merge commits, so the merge button cannot squash release PRs. (Regular PRs into `develop` can still be squashed.)
 
 Wait for all CI checks to pass and the PR to show **"Able to merge"**. The maintainer merges it.
 
