@@ -7,13 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.2] - 2026-10-24
+
 ### Added
 
-- `RELEASING.md` runbook and a "Changelog check" CI step that fails on unresolved PR-number placeholders and malformed version headings.
+- `RELEASING.md` runbook and a "Changelog check" CI step that fails on unresolved PR-number placeholders and malformed version headings. (#153)
+- "Release and merge rules" section in `CLAUDE.md`. (#153)
 
 ### Changed
 
-- `DEPLOYMENT.md` now points to `RELEASING.md` for the release process.
+- `DEPLOYMENT.md` now points to `RELEASING.md` for the release process. (#153)
+- Bumped dev dependencies via the minor-and-patch group: `@commitlint/*` 21.2.4, `@typescript-eslint/*` 8.72.0 and PostCSS 8.5.31. (#148)
+
+### Fixed
+
+- Removed a dependency bump that did not ship from the v0.7.1 entry.
 
 ## [0.7.1] - 2026-10-23
 
