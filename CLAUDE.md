@@ -39,3 +39,12 @@ runner, no `node --test` anywhere in the project anymore.
   webhook exists. Revisit once the team grows beyond a single maintainer
   or once `deploy.yml` goes live (failed deploys are the point where
   notifications matter most).
+
+## Release and merge rules
+
+- Agents **never** merge, rebase, or push to `main` or `develop`.
+- The maintainer performs every merge (release PRs, regular PRs).
+- Never leave `#<...>` or `(#<this PR>)` placeholders in the CHANGELOG —
+  the "Changelog check" CI step will fail.
+- All commits must be signed (conventional commits with `-S`).
+- Base branch for feature work is `develop`.

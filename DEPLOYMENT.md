@@ -48,11 +48,4 @@ If a deploy to `main` (production) needs to be reverted:
 
 ## Release process
 
-Releases are created manually for full control of each version:
-
-1. Move the accumulated `[Unreleased]` entries in `CHANGELOG.md` into a
-   versioned `## x.y.z (YYYY-MM-DD)` section.
-2. Commit and merge the changelog update to `main`.
-3. Create a tag on `main`: `git tag v1.0.0 && git push origin v1.0.0`.
-4. Create a GitHub release from the tag, using the versioned changelog
-   section as the description.
+See [RELEASING.md](RELEASING.md) for the complete release runbook.
