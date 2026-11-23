@@ -33,7 +33,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
-    "@driver-digital/vite-plugin-shopify-clean": "^2.0.2",
+    "@driver-digital/vite-plugin-shopify-clean": "^3.0.0",
     "@eslint/js": "^9.39.0",
     "@types/node": "^26",
     "@typescript-eslint/eslint-plugin": "^8.72.2",

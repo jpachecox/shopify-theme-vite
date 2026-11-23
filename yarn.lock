@@ -474,12 +474,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@driver-digital/vite-plugin-shopify-clean@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "@driver-digital/vite-plugin-shopify-clean@npm:2.0.2"
+"@driver-digital/vite-plugin-shopify-clean@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@driver-digital/vite-plugin-shopify-clean@npm:3.0.0"
   peerDependencies:
     vite: ">=6.0.0"
-  checksum: 10c0/747fe56978f92b16b12e1b222215da3fa95706c5f87f4fcb1b4a777388ee2fede2757e6899cf3bd3dac6aa9b4758a968af7ea31699c6f12fee90bf059a10282e
+  checksum: 10c0/a0f53b9308b1b23a2ef72da6983199a8b81a0f7ab69d6bddbaf333cabaab7862482b114c1e775c865e6dfc028fa3e8f90d559ee43159f47c774b6348310caecb
   languageName: node
   linkType: hard
 
@@ -7428,7 +7428,7 @@ __metadata:
   dependencies:
     "@commitlint/cli": "npm:^21.2.4"
     "@commitlint/config-conventional": "npm:^21.2.4"
-    "@driver-digital/vite-plugin-shopify-clean": "npm:^2.0.2"
+    "@driver-digital/vite-plugin-shopify-clean": "npm:^3.0.0"
     "@eslint/js": "npm:^9.39.0"
     "@types/node": "npm:^26"
     "@typescript-eslint/eslint-plugin": "npm:^8.72.2"
